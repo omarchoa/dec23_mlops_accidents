@@ -20,9 +20,9 @@ class BddLogin:
             with open(bdd_login_filename, "wb") as bdd:
                 pickle.dump(self.user_data, bdd)
 
-    def is_(self, right, login, password):
+    def is_(self, rights, login, password):
         key = f"{login}_{password}"
-        if key in self.user_data and self.user_data[key] == right:
+        if key in self.user_data and self.user_data[key] == rights:
             return True
         return False
 
