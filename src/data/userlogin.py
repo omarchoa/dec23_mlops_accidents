@@ -22,7 +22,7 @@ class BddLogin:
 
     def is_(self, rights, login, password):
         key = f"{login}_{password}"
-        if key in self.user_data and self.user_data[key] == rights:
+        if key in self.user_data.keys() and self.user_data[key] == rights:
             return True
         return False
 
