@@ -29,7 +29,9 @@ class BddLogin:
 
 if __name__ == "__main__":
     bdd = BddLogin()
-    print(bdd.is_("user", "tom", ""))  # should be False
-    print(bdd.is_("user", "fabrice", ""))  # should be False
-    print(bdd.is_("user", "alexandre", "winger"))  # should be True
-    print(bdd.is_("admin", "alban", "thuet"))  # should be True
+    print(bdd.is_(rights="user", login="tom", password=""))  # should be False
+    print(bdd.is_(rights="user", login="fabrice", password=""))  # should be False
+    print(
+        bdd.is_(rights="user", login="alexandre", password="winger")
+    )  # should be True
+    print(bdd.is_(rights="admin", login="alban", password="thuet"))  # should be True
