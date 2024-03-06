@@ -4,6 +4,7 @@ import pickle
 
 class BddLogin:
     def __init__(self, user_data=None):
+        self.user_data = user_data
         bdd_login_filename = "login_bdd"  # full path to the bdd filemane
         if os.path.isfile(bdd_login_filename):
             with open(bdd_login_filename, "rb") as bdd:
