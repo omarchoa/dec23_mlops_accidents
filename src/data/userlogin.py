@@ -30,9 +30,13 @@ class BddLogin:
                     self.user_data, bdd
                 )  # use pickle to convert .user_data from a Python object to a binary file byte stream, store it in bdd, and write bdd to bdd_login_filename
 
-    def is_(self, rights, login, password):
-        key = f"{login}_{password}"
-        if key in self.user_data and self.user_data[key] == rights:
+    def is_(
+        self, rights, login, password
+    ):  # define custom method .is_() with attributes .rights, .login, .password
+        key = f"{login}_{password}"  # construct authentication chain
+        if (
+            key in self.user_data and self.user_data[key] == rights
+        ):  # if authentication chain is in .user_data dictionary keys, and if requested rights match corresponding .user_data dictionary value
             return True
         return False
 
