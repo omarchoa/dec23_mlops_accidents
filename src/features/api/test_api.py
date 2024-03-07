@@ -30,7 +30,7 @@ class TestAPI(unittest.TestCase):
     def test_remove_user(self):
         old_user_data = {"user": "test_user"}
         # Envoi d'une requête DELETE à l'endpoint /remove_user avec l'en-tête d'identification
-        response = client.delete(f'/remove_user?user={old_user_data["user"]}', headers={"identification": "admin:4dmin"})
+        response = client.request(method="DELETE", url='/remove_user', json=old_user_data, headers={"identification": "admin:4dmin"})
         # Vérification que la réponse est OK (code 200)
         self.assertTrue(response.status_code == 200, "Test remove_user: FAILED")
         print("Test remove_user: PASSED")
