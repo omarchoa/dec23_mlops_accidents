@@ -116,8 +116,8 @@ users_passwords_db = json.load(users_db)
             name="Suppression d'un utilisateur existant.",
             tags=['USERS'], responses=responses)
 async def remove_user(old_user: OldUser, identification=Header(None)):
-    """Fonction pour ajouter un nouvel utilisateur.
-       Il faut être administrateur pour pouvoir ajouter un nouvel utilisateur.
+    """Fonction pour supprimer un nouvel utilisateur.
+       Il faut être administrateur pour pouvoir supprimer un nouvel utilisateur.
        Identification: entrez votre identifiant et votre mot de passe
        au format identifiant:mot_de_passe
     """
