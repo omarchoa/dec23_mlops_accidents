@@ -37,7 +37,7 @@ class TestAPI(unittest.TestCase):
 
     def test_predict_from_test(self):
         # Récupérer un utilisateur et son mot de passe à partir du fichier users_db.json
-        user, psw = "nouvel_utilisateur", "mot_de_passe"
+        user, psw = "fdo", "c0ps"
         # Envoi d'une requête GET à l'endpoint /predict_from_test avec l'en-tête d'identification
         response = client.get('/predict_from_test', headers={"identification": f"{user}:{psw}"})
         # Vérification que la réponse est OK (code 200)
