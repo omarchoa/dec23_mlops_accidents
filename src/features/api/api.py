@@ -168,7 +168,7 @@ async def get_pred_from_test(identification=Header(None)):
     if users_passwords_db[user][0] == psw:
 
         # Chargement du modèle:
-        rdf = joblib.load("../../models/trained_model.joblib")
+        rdf = joblib.load("../../../models/trained_model.joblib")
 
         # Chargement des données test:
         X_test = pd.read_csv("../../../data/preprocessed/X_test.csv")
@@ -244,7 +244,7 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
     if users_passwords_db[user][0] == psw:
 
         # Chargement du modèle:
-        rdf = joblib.load("../../models/trained_model.joblib")
+        rdf = joblib.load("../../../models/trained_model.joblib")
 
         # Chargement des données test:
         test = pd.DataFrame.from_dict(dict(data), orient='index').T
