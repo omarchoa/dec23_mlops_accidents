@@ -61,8 +61,11 @@ Convention : All python scripts must be run from the root specifying the relativ
     `python -m venv my_env`
 
 ###   Activate it 
-
+    on Windows
     `./my_env/Scripts/activate`
+    on Linux
+    `chmod +x ./my_env/bin/activate
+    ./my_env/bin/activate`
 
 ###   Install the packages from requirements.txt
 
