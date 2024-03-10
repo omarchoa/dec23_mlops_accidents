@@ -61,28 +61,32 @@ Convention : All python scripts must be run from the root specifying the relativ
     `python -m venv my_env`
 
 ###   Activate it 
-    on Windows
+##### on Windows
     `./my_env/Scripts/activate`
-    on Linux
+##### on Linux
     `chmod +x ./my_env/bin/activate
     ./my_env/bin/activate`
 
 ###   Install the packages from requirements.txt
-
+##### on Windows
     `pip install -r .\requirements.txt` ### You will have an error in "setup.py" but this won't interfere with the rest
-
+##### on Linux
+    `pip install -r requirements.txt`
 ### 2- Execute import_raw_data.py to import the 4 datasets.
-
+##### on Windows
     `python .\src\data\import_raw_data.py` ### It will ask you to create a new folder, accept it.
-
+##### on Linux
+    `python src/data/import_raw_data.py` ### It will ask you to create a new folder, accept it.
 ### 3- Execute make_dataset.py initializing `./data/raw` as input file path and `./data/preprocessed` as output file path.
-
+##### on Windows
     `python .\src\data\make_dataset.py`
-
+##### on Linux
+    `python src/data/make_dataset.py`
 ### 4- Execute train_model.py to instanciate the model in joblib format
-
+##### on Windows
     `python .\src\models\train_model.py`
-
+##### on Linux
+    `python src/models/train_model.py`
 ### 5- Finally, execute predict_model.py with respect to one of these rules :
   
   - Provide a json file as follow : 
