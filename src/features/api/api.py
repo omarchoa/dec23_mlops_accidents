@@ -8,6 +8,11 @@ import joblib
 from typing import Optional
 from pydantic import BaseModel
 
+from sklearn.metrics import f1_score
+import time
+import datetime
+
+
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
     200: {"description": "OK"},
@@ -172,10 +177,38 @@ async def get_pred_from_test(identification=Header(None)):
 
         # Chargement des données test:
         X_test = pd.read_csv("../../../data/preprocessed/X_test.csv")
+        y_test = pd.read_csv("../../../data/preprocessed/y_test.csv")
 
         # Prédiction d'une donnée aléatoire:
         i = random.choice(X_test.index)
+        pred_time_start = time.time()
         pred = rdf.predict(X_test.iloc[[i]])
+        pred_time_end = time.time()
+
+        # Prédiction générale de y
+        y_pred = rdf.predict(X_test)
+        y_true = y_test
+
+        # Calcul du F1 score macro average
+        f1_score_macro_average = f1_score(y_true=y_true,
+                                          y_pred=y_pred,
+                                          average="macro")
+
+        # Préparation des métadonnées pour exportation
+        metadata_dictionary = {
+            "time_stamp": str(datetime.datetime.now()),
+            "input_features": X_test.iloc[[i]].to_dict(orient="records")[0],
+            "output_prediction": int(pred),
+            "f1_score_macro_average": f1_score_macro_average,
+            "prediction_time": pred_time_end - pred_time_start
+            }
+        metadata_json = json.dumps(obj=metadata_dictionary,
+                                   indent=4,
+                                   separators=(', ', ': '))
+
+        # Exportation des métadonnées
+        with open("../../../logs/pred_test.jsonl", "a") as file:
+            file.write(metadata_json + "\n")
 
         # Réponse:
         priority = pred[0]
