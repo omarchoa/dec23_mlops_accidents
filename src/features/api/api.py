@@ -8,6 +8,11 @@ import joblib
 from typing import Optional
 from pydantic import BaseModel
 
+from sklearn.metrics import f1_score
+import time
+import datetime
+
+
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
     200: {"description": "OK"},
@@ -247,11 +252,46 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
         rdf = joblib.load("../../models/trained_model.joblib")
 
         # Chargement des données test:
+        X_test = pd.read_csv("../../../data/preprocessed/X_test.csv")
+        y_test = pd.read_csv("../../../data/preprocessed/y_test.csv")
+
+        # Chargement des données saisies
         test = pd.DataFrame.from_dict(dict(data), orient='index').T
         test.rename(columns={"inter": "int"}, inplace=True)
 
         # Prédiction :
+        pred_time_start = time.time()
         pred = rdf.predict(test)
+        pred_time_end = time.time()
+
+        # Ajout des données de la prédiction aux DataFrames des données de test
+        X_test = pd.concat([X_test, test])
+        y_test = pd.concat([y_test, pd.DataFrame(data={"grav": pred})])
+
+        # Prédiction générale de y
+        y_pred = rdf.predict(X_test)
+        y_true = y_test
+
+        # Calcul du F1 score macro average
+        f1_score_macro_average = f1_score(y_true=y_true,
+                                          y_pred=y_pred,
+                                          average="macro")
+
+        # Préparation des métadonnées pour exportation
+        metadata_dictionary = {
+            "time_stamp": str(datetime.datetime.now()),
+            "input_features": test.to_dict(orient="records")[0],
+            "output_prediction": int(pred),
+            "f1_score_macro_average": f1_score_macro_average,
+            "prediction_time": pred_time_end - pred_time_start
+            }
+        metadata_json = json.dumps(obj=metadata_dictionary,
+                                   indent=4,
+                                   separators=(', ', ': '))
+
+        # Exportation des métadonnées
+        with open("../../../logs/pred_call.jsonl", "a") as file:
+            file.write(metadata_json + "\n")
 
         # Réponse:
         priority = pred[0]
