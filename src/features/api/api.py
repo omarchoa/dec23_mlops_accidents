@@ -255,6 +255,13 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
         X_test = pd.read_csv("../../../data/preprocessed/X_test.csv")
         y_test = pd.read_csv("../../../data/preprocessed/y_test.csv")
 
+        # Chargement des données des prédictions passées
+        try:
+            X_runs = pd.read_csv("../../../data/runs/X_runs.csv")
+            y_runs = pd.read_csv("../../../data/runs/y_runs.csv")
+        except:
+            pass
+
         # Chargement des données saisies
         test = pd.DataFrame.from_dict(dict(data), orient='index').T
         test.rename(columns={"inter": "int"}, inplace=True)
@@ -264,9 +271,20 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
         pred = rdf.predict(test)
         pred_time_end = time.time()
 
-        # Ajout des données de la prédiction aux DataFrames des données de test
-        X_test = pd.concat([X_test, test])
-        y_test = pd.concat([y_test, pd.DataFrame(data={"grav": pred})])
+        # Conversion de `pred` en DataFrame
+        pred_df = pd.DataFrame(data={"grav": pred})
+
+        # Exportation des données de la prédiction
+        test.to_csv("../../../data/runs/X_runs.csv", header=False, index=False, mode="a")
+        pred_df.to_csv("../../../data/runs/y_runs.csv", header=False, index=False, mode="a")
+
+        # Consolidation des données pour la prédiction générale
+        try:
+            X_test = pd.concat([X_test, X_runs, test])
+            y_test = pd.concat([y_test, y_runs, pred_df])
+        except:
+            X_test = pd.concat([X_test, test])
+            y_test = pd.concat([y_test, pred_df])
 
         # Prédiction générale de y
         y_pred = rdf.predict(X_test)
