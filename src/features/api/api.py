@@ -1,17 +1,25 @@
 # ---------------------------- Imports ----------------------------------------
+
+# external
+import datetime
 from fastapi import FastAPI, Header, HTTPException
 import pandas as pd
-import json
-import random
 import joblib
-
-from typing import Optional
+import json
+import os
+from pathlib import Path
 from pydantic import BaseModel
-
+import random
 from sklearn.metrics import f1_score
+import sys
 import time
-import datetime
+from typing import Optional
 
+# internal
+# add path to import datalib which is in src/data
+root_path = Path(os.path.realpath(__file__)).parents[3]  # 3 folders upper of the current
+sys.path.append(os.path.join(root_path, "src", "data"))
+import datalib
 
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
@@ -312,10 +320,13 @@ async def get_train():
 
 # ---------- 7. Mise à jour de la base de données -----------------------------
 
+class UpdateData(BaseModel):
+    start_year: int
+    end_year: int
 
-@api.get('/update_data',
-         name='Mise à jour des données accidents',
-         tags=['UPDATE'])
-async def get_update_data():
+@api.post('/update_data', name='Mise à jour des données accidents', tags=['UPDATE'])
+async def update_data(update_data: UpdateData, identification=Header(None)):
     """Fonction pour mettre à jour les données accidents.
     """
+    # download, clean and preprocess data => X_train.csv, X_test.csv, y_train.csv, y_test.csv files
+    data = datalib.Data(update_data.start_year, update_data.end_year, root_path)
