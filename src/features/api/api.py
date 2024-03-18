@@ -357,7 +357,30 @@ async def get_train(identification=Header(None)):
             rf_classifier = ensemble.RandomForestClassifier(n_jobs=-1)
 
             # Entrainement du modèle:
+            train_time_start = time.time()
             rf_classifier.fit(X_train, y_train)
+            train_time_end = time.time()
+
+            # Préparation des métadonnées pour exportation
+            metadata_dictionary = {
+                "request_id": "".join(random.choices(string.digits, k=16)),
+                "time_stamp": str(datetime.datetime.now()),
+                "user_name": user,
+                "response_status_code": 200,
+                "estimator_type": str(type(rf_classifier)),
+                "estimator_parameters": rf_classifier.get_params(),
+                "feature_importances": dict(zip(X_train.columns.to_list(),
+                                                list(rf_classifier.feature_importances_))),
+                "train_time": train_time_end - train_time_start
+                }
+            metadata_json = json.dumps(obj=metadata_dictionary,
+                                       indent=4,
+                                       separators=(', ', ': '))
+
+            # Exportation des métadonnées
+            path_log_file = os.path.join(path_logs, "train.jsonl")
+            with open(path_log_file, "a") as file:
+                file.write(metadata_json + "\n")
 
             # Sauvegarde du modèle:
             # Sauvegarde dans new_trained_model.joblib dans un premier temps
