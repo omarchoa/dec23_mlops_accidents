@@ -14,3 +14,4 @@ pathlib
 scikit-learn
 imbalanced-learn
 joblib
+httpx
