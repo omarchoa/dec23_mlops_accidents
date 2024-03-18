@@ -10,18 +10,19 @@ import os
 from pathlib import Path
 from pydantic import BaseModel
 import random
+from sklearn import ensemble
 from sklearn.metrics import f1_score
 import sys
 import time
 from typing import Optional
-import datalib
+import numpy as np
 
 # internal
 # add path to import datalib which is in src/data
 # 3 folders upper of the current
 root_path = Path(os.path.realpath(__file__)).parents[3]
 sys.path.append(os.path.join(root_path, "src", "data"))
-
+import datalib
 
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
@@ -65,7 +66,7 @@ api = FastAPI(
         {'name': 'UPDATE',
          'description': 'Mises à jour du modèle et des données'}
         ])
-    
+
 # ---------- 1. Vérification du fonctionnement de l’API: ----------------------
 
 
@@ -335,8 +336,22 @@ async def get_train(identification=Header(None)):
         # Test d'identification:
         if users_db[user]['password'] == psw:
 
+            # Chargement des données:
+            X_train = pd.read_csv('../../../data/preprocessed/X_train.csv')
+            y_train = pd.read_csv('../../../data/preprocessed/y_train.csv')
+            y_train = np.ravel(y_train)
+
+            rf_classifier = ensemble.RandomForestClassifier(n_jobs=-1)
+
             # Entrainement du modèle:
-            return {"Réentrainement du modèle"}
+            rf_classifier.fit(X_train, y_train)
+
+            # Sauvegarde du modèle:
+            # Sauvegarde dans new_trained_model.joblib dans un premier temps
+            # TODO: Versioning du modèle
+            model_filename = '../../models/new_trained_model.joblib'
+            joblib.dump(rf_classifier, model_filename)
+            return {"Modèle ré-entrainé et sauvegardé!"}
 
         else:
             raise HTTPException(
