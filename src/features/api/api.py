@@ -60,6 +60,11 @@ api = FastAPI(
          'description': 'Mises à jour du modèle et des données'}
         ])
 
+# Chemin relatif pour ouvrir users_db.json
+users_db_path = os.path.join(os.path.dirname(__file__), "users_db.json")
+with open(users_db_path, 'r') as users_db_file:
+    users_passwords_db = json.load(users_db_file)
+    
 # ---------- 1. Vérification du fonctionnement de l’API: ----------------------
 
 
