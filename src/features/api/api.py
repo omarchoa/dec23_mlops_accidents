@@ -32,6 +32,7 @@ responses = {
 # ---------------------------- Chargement base de données users ---------------
 file = open("users_db_bis.json", 'r')
 users_db = json.load(file)
+file.close()
 
 # ---------------------------- API --------------------------------------------
 

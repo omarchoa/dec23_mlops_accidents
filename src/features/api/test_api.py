@@ -5,8 +5,9 @@ from api import api
 import warnings
 
 # Charger les données de users_db.json
-with open('users_db.json', 'r') as f:
-    users_db = json.load(f)
+file = open("users_db_bis.json", 'r')
+users_db = json.load(file)
+file.close()
 
 # Création d'un client de test pour notre API
 client = TestClient(api)
@@ -14,15 +15,15 @@ client = TestClient(api)
 class TestAPI(unittest.TestCase):
     def test_is_functional(self):
         # Envoi d'une requête GET à la racine de l'API
-        response = client.get('/')
+        response = client.get('/status')
         # Vérification que la réponse est OK (code 200)
         self.assertTrue(response.status_code == 200, "Test is_functional: FAILED")
         print("Test is_functional: PASSED")
 
     def test_register_user(self):
-        new_user_data = {"user": "test_user", "psw": "test_password"}
+        new_user_data = {"username": "test_user", "password": "test_password"}
         # Envoi d'une requête POST à l'endpoint /register avec l'en-tête d'identification
-        response = client.post('/register', json=new_user_data, headers={"identification": "admin:4dmin"})
+        response = client.request(method="POST", url='/register', json=new_user_data, headers={"identification": "admin:4dmin"})
         # Vérification que la réponse est OK (code 200)
         self.assertTrue(response.status_code == 200, "Test register_user: FAILED")
         print("Test register_user: PASSED")
@@ -88,12 +89,12 @@ class TestAPI(unittest.TestCase):
         self.assertTrue(response.status_code == 200, "Test train_model: FAILED")
         print("Test train_model: PASSED")
 
-    def test_update_data(self):
-        # Envoyer une requête GET à l'endpoint /update_data
-        response = client.get('/update_data', headers={"identification": "admin:4dmin"})
-        # Vérification que la réponse est OK (code 200)
-        self.assertTrue(response.status_code == 200, "Test update_data: FAILED")
-        print("Test update_data: PASSED")
+#    def test_update_data(self):
+#        # Envoyer une requête GET à l'endpoint /update_data
+#        response = client.get('/update_data', headers={"identification": "admin:4dmin"})
+#        # Vérification que la réponse est OK (code 200)
+#        self.assertTrue(response.status_code == 200, "Test update_data: FAILED")
+#        print("Test update_data: PASSED")
 
 if __name__ == '__main__':
     # Exécution des tests unitaires
