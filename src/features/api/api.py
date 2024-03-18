@@ -24,6 +24,10 @@ root_path = Path(os.path.realpath(__file__)).parents[3]
 sys.path.append(os.path.join(root_path, "src", "data"))
 import datalib
 
+# set commonly used paths as variables
+path_data_preprocessed = os.path.join(root_path, "data", "preprocessed")
+path_logs = os.path.join(root_path, "logs")
+
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
     200: {"description": "OK"},
@@ -194,8 +198,8 @@ async def get_pred_from_test(identification=Header(None)):
         rdf = joblib.load("../../models/trained_model.joblib")
 
         # Chargement des données test:
-        path_X_test = os.path.join(root_path, "data", "preprocessed", "X_test.csv")
-        path_y_test = os.path.join(root_path, "data", "preprocessed", "y_test.csv")
+        path_X_test = os.path.join(path_data_preprocessed, "X_test.csv")
+        path_y_test = os.path.join(path_data_preprocessed, "y_test.csv")
         X_test = pd.read_csv(path_X_test)
         y_test = pd.read_csv(path_y_test)
 
@@ -227,7 +231,7 @@ async def get_pred_from_test(identification=Header(None)):
                                    separators=(', ', ': '))
 
         # Exportation des métadonnées
-        path_log_file = os.path.join(root_path, "logs", "pred_test.jsonl")
+        path_log_file = os.path.join(path_logs, "pred_test.jsonl")
         with open(path_log_file, "a") as file:
             file.write(metadata_json + "\n")
 
