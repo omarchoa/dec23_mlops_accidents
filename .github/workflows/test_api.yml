@@ -2,9 +2,9 @@ name: Python application
 
 on:
   push:
-    branches: [ "api" ]  # Déclencher le workflow sur la branche "api"
+    # branches: [ "api" ]  # Déclencher le workflow sur la branche "api"
   pull_request:
-    branches: [ "api" ]  # Déclencher le workflow sur la branche "api"
+    # branches: [ "api" ]  # Déclencher le workflow sur la branche "api"
 
 permissions:
   contents: read
