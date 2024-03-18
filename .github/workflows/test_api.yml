@@ -36,4 +36,4 @@ jobs:
         pytest
     - name: Run unit tests with unittest
       run: |
-        python -m unittest test_api.py  # Replace 'test_api.py' with the name of your test file
+        python -m unittest src/features/api/test_api.py
