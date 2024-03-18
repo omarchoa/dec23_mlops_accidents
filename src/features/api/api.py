@@ -417,7 +417,28 @@ async def update_data(update_data: UpdateData, identification=Header(None)):
         # Test d'identification:
         if users_db[user]['password'] == psw:
             # download, clean and preprocess data => X_train.csv, X_test.csv, y_train.csv, y_test.csv files
+            exec_time_start = time.time()
             data = datalib.Data(update_data.start_year, update_data.end_year, root_path)
+            exec_time_end = time.time()
+
+            # Préparation des métadonnées pour exportation
+            metadata_dictionary = {
+                "request_id": "".join(random.choices(string.digits, k=16)),
+                "time_stamp": str(datetime.datetime.now()),
+                "user_name": user,
+                "response_status_code": 200,
+                "start_year": update_data.start_year,
+                "end_year": update_data.end_year,
+                "execution_time": exec_time_end - exec_time_start
+                }
+            metadata_json = json.dumps(obj=metadata_dictionary,
+                                       indent=4,
+                                       separators=(', ', ': '))
+
+            # Exportation des métadonnées
+            path_log_file = os.path.join(path_logs, "update_data.jsonl")
+            with open(path_log_file, "a") as file:
+                file.write(metadata_json + "\n")
 
         else:
             raise HTTPException(
