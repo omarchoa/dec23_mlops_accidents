@@ -14,7 +14,7 @@ from sklearn.metrics import f1_score
 import sys
 import time
 from typing import Optional
-# import datalib
+import datalib
 
 # internal
 # add path to import datalib which is in src/data
