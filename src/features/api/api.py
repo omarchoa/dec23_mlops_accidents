@@ -344,8 +344,10 @@ async def get_train(identification=Header(None)):
         if users_db[user]['password'] == psw:
 
             # Chargement des données:
-            X_train = pd.read_csv('../../../data/preprocessed/X_train.csv')
-            y_train = pd.read_csv('../../../data/preprocessed/y_train.csv')
+            path_X_train = os.path.join(path_data_preprocessed, "X_train.csv")
+            path_y_train = os.path.join(path_data_preprocessed, "y_train.csv")
+            X_train = pd.read_csv(path_X_train)
+            y_train = pd.read_csv(path_y_train)
             y_train = np.ravel(y_train)
 
             rf_classifier = ensemble.RandomForestClassifier(n_jobs=-1)
