@@ -14,13 +14,13 @@ from sklearn.metrics import f1_score
 import sys
 import time
 from typing import Optional
-import datalib
+# import datalib
 
 # internal
 # add path to import datalib which is in src/data
 # 3 folders upper of the current
-root_path = Path(os.path.realpath(__file__)).parents[3]
-sys.path.append(os.path.join(root_path, "src", "data"))
+# root_path = Path(os.path.realpath(__file__)).parents[3]
+# sys.path.append(os.path.join(root_path, "src", "data"))
 
 
 # ---------------------------- HTTP Exceptions --------------------------------
@@ -28,6 +28,11 @@ responses = {
     200: {"description": "OK"},
     401: {"description": "Identifiant ou mot de passe invalide(s)"}
 }
+
+# ---------------------------- Chargement base de données users ---------------
+file = open("users_db_bis.json", 'r')
+users_db = json.load(file)
+
 # ---------------------------- API --------------------------------------------
 
 # DONE 1. / : vérification du fonctionnement de l’API
@@ -73,20 +78,16 @@ async def is_fonctionnal():
 # ---------- 2. Inscription d'un utilisateur: ---------------------------------
 
 
-class NewUser(BaseModel):
-    user: str
-    psw: str
+class User(BaseModel):
+    username: str
+    password: str
     rights: Optional[int] = 0  # Droits par défaut: utilisateur fdo
-
-
-users_db = open("users_db.json", 'r')
-users_passwords_db = json.load(users_db)
 
 
 @api.post('/register',
           name="Ajout d'un nouvel utilisateur",
           tags=['USERS'], responses=responses)
-async def post_user(new_user: NewUser, identification=Header(None)):
+async def post_user(new_user: User, identification=Header(None)):
     """Fonction pour ajouter un nouvel utilisateur.
        Il faut être administrateur pour pouvoir ajouter un nouvel utilisateur.
        Identification: entrez votre identifiant et votre mot de passe
@@ -96,16 +97,23 @@ async def post_user(new_user: NewUser, identification=Header(None)):
     user, psw = identification.split(":")
 
     # Test d'autorisation:
-    if users_passwords_db[user][1] == 1:
+    if users_db[user]['rights'] == 1:
 
         # Test d'identification:
-        if users_passwords_db[user][0] == psw:
+        if users_db[user]['password'] == psw:
 
             # Enregistrement du nouvel utilisateur:
-            users_passwords_db[new_user.user] = [new_user.psw, new_user.rights]
-            users_db = json.dumps(users_passwords_db)
-            with open("users_db.json", "w") as outfile:
-                outfile.write(users_db)
+            users_db[new_user.username] = {
+                "username": new_user.username,
+                "password": new_user.password,
+                "rights": new_user.rights
+            }
+            update_users_db = json.dumps(users_db, indent=4)
+            with open("users_db_bis.json", "w") as outfile:
+                outfile.write(update_users_db)
+
+            return {"Nouvel utilisateur ajouté!"}
+
         else:
             raise HTTPException(
                 status_code=401,
@@ -123,10 +131,6 @@ class OldUser(BaseModel):
     user: str
 
 
-users_db = open("users_db.json", 'r')
-users_passwords_db = json.load(users_db)
-
-
 @api.delete('/remove_user',
             name="Suppression d'un utilisateur existant.",
             tags=['USERS'], responses=responses)
@@ -140,17 +144,19 @@ async def remove_user(old_user: OldUser, identification=Header(None)):
     user, psw = identification.split(":")
 
     # Test d'autorisation:
-    if users_passwords_db[user][1] == 1:
+    if users_db[user]['rights'] == 1:
 
         # Test d'identification:
-        if users_passwords_db[user][0] == psw:
+        if users_db[user]['password'] == psw:
 
             # Suppression de l'ancien utilisateur:
             try:
-                users_passwords_db.pop(old_user.user)
-                users_db = json.dumps(users_passwords_db)
-                with open("users_db.json", "w") as outfile:
-                    outfile.write(users_db)
+                users_db.pop(old_user.user)
+                update_users_db = json.dumps(users_db, indent=4)
+                with open("users_db_bis.json", "w") as outfile:
+                    outfile.write(update_users_db)
+                return {"Utilisateur supprimé!"}
+
             except KeyError:
                 return "L'utilisateur spécifié n'existe pas."
 
@@ -180,7 +186,7 @@ async def get_pred_from_test(identification=Header(None)):
     user, psw = identification.split(":")
 
     # Test d'identification:
-    if users_passwords_db[user][0] == psw:
+    if users_db[user]['password'] == psw:
 
         # Chargement du modèle:
         rdf = joblib.load("../../models/trained_model.joblib")
@@ -284,7 +290,7 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
     user, psw = identification.split(":")
 
     # Test d'identification:
-    if users_passwords_db[user][0] == psw:
+    if users_db[user]['password'] == psw:
 
         # Chargement du modèle:
         rdf = joblib.load("../../models/trained_model.joblib")
@@ -316,9 +322,29 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
 @api.get('/train',
          name='Entrainement du modèle',
          tags=['UPDATE'])
-async def get_train():
+async def get_train(identification=Header(None)):
     """Fonction pour entrainer le modèle.
     """
+# Récupération des identifiants et mots de passe:
+    user, psw = identification.split(":")
+
+    # Test d'autorisation:
+    if users_db[user]['rights'] == 1:
+
+        # Test d'identification:
+        if users_db[user]['password'] == psw:
+
+            # Entrainement du modèle:
+            return {"Réentrainement du modèle"}
+
+        else:
+            raise HTTPException(
+                status_code=401,
+                detail="Identifiant ou mot de passe invalide(s)")
+    else:
+        raise HTTPException(
+                status_code=403,
+                detail="Vous n'avez pas les droits d'administrateur.")
 
 # ---------- 7. Mise à jour de la base de données -----------------------------
 
@@ -336,10 +362,10 @@ async def update_data(update_data: UpdateData, identification=Header(None)):
     user, psw = identification.split(":")
 
     # Test d'autorisation:
-    if users_passwords_db[user][1] == 1:
+    if users_db[user]['rights'] == 1:
 
         # Test d'identification:
-        if users_passwords_db[user][0] == psw:
+        if users_db[user]['password'] == psw:
             # download, clean and preprocess data => X_train.csv, X_test.csv, y_train.csv, y_test.csv files
             data = datalib.Data(update_data.start_year, update_data.end_year, root_path)
 
