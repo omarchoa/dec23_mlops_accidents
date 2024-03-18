@@ -216,7 +216,7 @@ async def get_pred_from_test(identification=Header(None)):
         metadata_dictionary = {
             "time_stamp": str(datetime.datetime.now()),
             "input_features": X_test.iloc[[i]].to_dict(orient="records")[0],
-            "output_prediction": int(pred),
+            "output_prediction": int(pred[0]),
             "f1_score_macro_average": f1_score_macro_average,
             "prediction_time": pred_time_end - pred_time_start
             }
