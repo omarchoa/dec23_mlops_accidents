@@ -14,12 +14,14 @@ from sklearn.metrics import f1_score
 import sys
 import time
 from typing import Optional
+import datalib
 
 # internal
 # add path to import datalib which is in src/data
-root_path = Path(os.path.realpath(__file__)).parents[3]  # 3 folders upper of the current
+# 3 folders upper of the current
+root_path = Path(os.path.realpath(__file__)).parents[3]
 sys.path.append(os.path.join(root_path, "src", "data"))
-import datalib
+
 
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
@@ -61,7 +63,7 @@ api = FastAPI(
 # ---------- 1. Vérification du fonctionnement de l’API: ----------------------
 
 
-@api.get('/', name="test de fonctionnement de l'API", tags=['GET'])
+@api.get('/status', name="test de fonctionnement de l'API", tags=['GET'])
 async def is_fonctionnal():
     """
     Vérifie que l'api fonctionne.
@@ -320,9 +322,11 @@ async def get_train():
 
 # ---------- 7. Mise à jour de la base de données -----------------------------
 
+
 class UpdateData(BaseModel):
     start_year: int
     end_year: int
+
 
 @api.post('/update_data', name='Mise à jour des données accidents', tags=['UPDATE'])
 async def update_data(update_data: UpdateData, identification=Header(None)):
