@@ -332,5 +332,22 @@ class UpdateData(BaseModel):
 async def update_data(update_data: UpdateData, identification=Header(None)):
     """Fonction pour mettre à jour les données accidents.
     """
-    # download, clean and preprocess data => X_train.csv, X_test.csv, y_train.csv, y_test.csv files
-    data = datalib.Data(update_data.start_year, update_data.end_year, root_path)
+    # Récupération des identifiants et mots de passe:
+    user, psw = identification.split(":")
+
+    # Test d'autorisation:
+    if users_passwords_db[user][1] == 1:
+
+        # Test d'identification:
+        if users_passwords_db[user][0] == psw:
+            # download, clean and preprocess data => X_train.csv, X_test.csv, y_train.csv, y_test.csv files
+            data = datalib.Data(update_data.start_year, update_data.end_year, root_path)
+
+        else:
+            raise HTTPException(
+                status_code=401,
+                detail="Identifiant ou mot de passe invalide(s)")
+    else:
+        raise HTTPException(
+                status_code=403,
+                detail="Vous n'avez pas les droits d'administrateur.")
