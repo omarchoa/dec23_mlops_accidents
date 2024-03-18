@@ -19,8 +19,8 @@ from typing import Optional
 # internal
 # add path to import datalib which is in src/data
 # 3 folders upper of the current
-# root_path = Path(os.path.realpath(__file__)).parents[3]
-# sys.path.append(os.path.join(root_path, "src", "data"))
+root_path = Path(os.path.realpath(__file__)).parents[3]
+sys.path.append(os.path.join(root_path, "src", "data"))
 
 
 # ---------------------------- HTTP Exceptions --------------------------------
