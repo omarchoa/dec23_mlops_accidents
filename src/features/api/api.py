@@ -16,6 +16,7 @@ import sys
 import time
 from typing import Optional
 import numpy as np
+import string
 
 # internal
 # add path to import datalib which is in src/data
@@ -220,6 +221,8 @@ async def get_pred_from_test(identification=Header(None)):
 
         # Préparation des métadonnées pour exportation
         metadata_dictionary = {
+            "request_id": "".join(random.choices(string.digits, k=16)),
+            "user_name": user,
             "time_stamp": str(datetime.datetime.now()),
             "input_features": X_test.iloc[[i]].to_dict(orient="records")[0],
             "output_prediction": int(pred[0]),
