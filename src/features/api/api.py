@@ -247,27 +247,6 @@ async def get_pred_from_test(identification=Header(None)):
             return "L'intervention n'est pas prioritaire."
 
     else:
-
-        # Préparation des métadonnées pour exportation
-        metadata_dictionary = {
-            "request_id": "".join(random.choices(string.digits, k=16)),
-            "time_stamp": str(datetime.datetime.now()),
-            "user_name": user,
-            "response_status_code": 401,
-            "input_features": None,
-            "output_prediction": None,
-            "f1_score_macro_average": None,
-            "prediction_time": None
-            }
-        metadata_json = json.dumps(obj=metadata_dictionary,
-                                   indent=4,
-                                   separators=(', ', ': '))
-
-        # Exportation des métadonnées
-        path_log_file = os.path.join(path_logs, "pred_test.jsonl")
-        with open(path_log_file, "a") as file:
-            file.write(metadata_json + "\n")
-
         raise HTTPException(
             status_code=401,
             detail="Identifiant ou mot de passe invalide(s)"

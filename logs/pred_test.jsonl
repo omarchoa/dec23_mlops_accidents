@@ -37,13 +37,3 @@
     "f1_score_macro_average": 0.743157518988617,
     "prediction_time": 0.016187191009521484
 }
-{
-    "request_id": "1948995315144244",
-    "time_stamp": "2024-03-18 20:20:26.106072",
-    "user_name": "fdo",
-    "response_status_code": 401,
-    "input_features": null,
-    "output_prediction": null,
-    "f1_score_macro_average": null,
-    "prediction_time": null
-}
