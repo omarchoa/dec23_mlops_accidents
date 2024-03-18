@@ -194,8 +194,10 @@ async def get_pred_from_test(identification=Header(None)):
         rdf = joblib.load("../../models/trained_model.joblib")
 
         # Chargement des données test:
-        X_test = pd.read_csv("../../../data/preprocessed/X_test.csv")
-        y_test = pd.read_csv("../../../data/preprocessed/y_test.csv")
+        path_X_test = os.path.join(root_path, "data", "preprocessed", "X_test.csv")
+        path_y_test = os.path.join(root_path, "data", "preprocessed", "y_test.csv")
+        X_test = pd.read_csv(path_X_test)
+        y_test = pd.read_csv(path_y_test)
 
         # Prédiction d'une donnée aléatoire:
         i = random.choice(X_test.index)
@@ -225,7 +227,8 @@ async def get_pred_from_test(identification=Header(None)):
                                    separators=(', ', ': '))
 
         # Exportation des métadonnées
-        with open("../../../logs/pred_test.jsonl", "a") as file:
+        path_log_file = os.path.join(root_path, "logs", "pred_test.jsonl")
+        with open(path_log_file, "a") as file:
             file.write(metadata_json + "\n")
 
         # Réponse:
