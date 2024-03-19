@@ -100,15 +100,17 @@ class TestAPI(unittest.TestCase):
 #        print("Test update_data: PASSED")
 
     def test_label(self):
+        """Test unitaire pour l'endpoint /label"""
+
         # Définition des données d'entrée
-        prediction = {"request_id": 9330446053352482, ## TODO request_id provient de pred_test.jsonl pour le moment, à remplacer avec une valeur provenant de pred_call.jsonl une fois ce dernier prêt
+        prediction = {"request_id": 6012919476848551,
                       "y_true": 0}
         header = {"identification": "fdo:c0ps"}
 
-        # Envoi d'une requête POST à l'endpoint /label avec les données d'entrée
+        # Envoi d'une requête POST à l'endpoint avec les données d'entrée
         response = client.post('/label', json=prediction, headers=header)
 
-        # Vérification du statut de la requête
+        # Vérification de la réponse
         self.assertTrue(response.status_code == 200, "Test label: FAILED")
         print("Test label: PASSED")
 
