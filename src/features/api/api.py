@@ -27,7 +27,13 @@ import datalib
 
 # set commonly used paths as variables
 path_data_preprocessed = os.path.join(root_path, "data", "preprocessed")
+path_X_train = os.path.join(path_data_preprocessed, "X_train.csv")
+path_y_train = os.path.join(path_data_preprocessed, "y_train.csv")
+path_X_test = os.path.join(path_data_preprocessed, "X_test.csv")
+path_y_test = os.path.join(path_data_preprocessed, "y_test.csv")
 path_logs = os.path.join(root_path, "logs")
+path_db_preds_unlabeled = os.path.join(path_logs, "preds_call.jsonl")
+path_db_preds_labeled = os.path.join(path_logs, "preds_labeled.jsonl")
 
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
@@ -199,8 +205,6 @@ async def get_pred_from_test(identification=Header(None)):
         rdf = joblib.load("../../models/trained_model.joblib")
 
         # Chargement des données test:
-        path_X_test = os.path.join(path_data_preprocessed, "X_test.csv")
-        path_y_test = os.path.join(path_data_preprocessed, "y_test.csv")
         X_test = pd.read_csv(path_X_test)
         y_test = pd.read_csv(path_y_test)
 
@@ -228,7 +232,6 @@ async def get_pred_from_test(identification=Header(None)):
             "input_features": X_test.iloc[[i]].to_dict(orient="records")[0],
             "output_prediction": int(pred[0]),
             "verified_prediction": None,
-            "f1_score_macro_average": f1_score_macro_average,
             "prediction_time": pred_time_end - pred_time_start
             }
         metadata_json = json.dumps(obj=metadata_dictionary)
@@ -325,7 +328,6 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
             "input_features": test.to_dict(orient="records")[0],
             "output_prediction": int(pred[0]),
             "verified_prediction": None,
-            # "f1_score_macro_average": f1_score_macro_average,
             "prediction_time": pred_time_end - pred_time_start
             }
         metadata_json = json.dumps(obj=metadata_dictionary)
@@ -368,8 +370,6 @@ async def get_train(identification=Header(None)):
         if users_db[user]['password'] == psw:
 
             # Chargement des données:
-            path_X_train = os.path.join(path_data_preprocessed, "X_train.csv")
-            path_y_train = os.path.join(path_data_preprocessed, "y_train.csv")
             X_train = pd.read_csv(path_X_train)
             y_train = pd.read_csv(path_y_train)
             y_train = np.ravel(y_train)
@@ -480,7 +480,7 @@ class Prediction(BaseModel):
     """Label de la prédiction"""
 
 
-@api.post('/label', name="Labellisation d'une prédiction enregistrée", tags=['PREDICTIONS'])
+@api.post('/label', name="Labellisation d'une prédiction enregistrée", tags=['UPDATE'])
 async def post_label(prediction: Prediction, identification=Header(None)):
     """Fonction qui labellise une prédiction enregistrée à partir du retour utilisateur
 
@@ -502,14 +502,13 @@ async def post_label(prediction: Prediction, identification=Header(None)):
     if users_db[user]['password'] == psw:
 
         ## Chargement de la base de données de prédictions non labellisées
-        path_db_preds_unlabeled = os.path.join(path_logs, "preds_call.jsonl")
         with open(path_db_preds_unlabeled, "r") as file:
-            db_predictions = [json.loads(line) for line in file]
+            db_preds_unlabeled = [json.loads(line) for line in file]
 
         ## Extraction de l'enregistrement correspondant au request_id reçu
         record_exists = "no"
         record_to_update = {}
-        for record in db_predictions:
+        for record in db_preds_unlabeled:
             if int(record["request_id"]) == prediction.request_id:
                 record_exists = "yes"
                 record_to_update = record
@@ -517,9 +516,8 @@ async def post_label(prediction: Prediction, identification=Header(None)):
                 ## Mise à jour du champ verified_prediction avec la valeur de y_true
                 record_to_update["verified_prediction"] = prediction.y_true
 
-                ## Mise à jour de la base de données de prédictions
+                ## Mise à jour de la base de données de prédictions labellisées
                 metadata_json = json.dumps(obj=record_to_update)
-                path_db_preds_labeled = os.path.join(path_logs, "preds_labeled.jsonl")
                 with open(path_db_preds_labeled, "a") as file:
                     file.write(metadata_json + "\n")
 
@@ -530,3 +528,90 @@ async def post_label(prediction: Prediction, identification=Header(None)):
 
     else:
         raise HTTPException(status_code=401, detail="Identifiants non valables.")
+
+# -------- 9. Mise à jour du F1 score --------
+
+
+@api.get('/update_f1_score', name="Mise à jour du F1 score", tags=['UPDATE'])
+async def update_f1_score(identification=Header(None)):
+    """Fonction qui calcule et enregistre le dernier F1 score du modèle en élargissant X_test et y_test aux nouvelles données labellisées
+
+    Paramètres :
+        identification (str) : identifiants administrateur selon le format nom_d_utilisateur:mot_de_passe
+
+    Lève :
+        HTTPException401 : identifiants non valables
+        HTTPException403 : accès non autorisé
+
+    Retourne :
+        str : confirmation de la mise à jour de l'enregistrement
+    """
+    # Récupération des identifiants
+    user, psw = identification.split(":")
+
+    # Test d'autorisation
+    if users_db[user]['rights'] == 1:
+
+        # Test d'identification
+        if users_db[user]['password'] == psw:
+
+            # Chargement du modèle
+            rdf = joblib.load("../../models/trained_model.joblib")
+
+            # Chargement des données de test
+            X_test = pd.read_csv(path_X_test)
+            y_test = pd.read_csv(path_y_test)
+
+            # Chargement de la base de données de prédictions labellisées
+            with open(path_db_preds_labeled, "r") as file:
+                db_preds_labeled = [json.loads(line) for line in file]
+
+            X_test_new = pd.DataFrame()
+            y_test_new = pd.Series()
+            for record in db_preds_labeled:
+                # Chargement des variables d'entrée dans le DataFrame X_test_new
+                X_record = record["input_features"]
+                X_record = {key: [value] for key, value in X_record.items()}
+                X_record = pd.DataFrame(X_record)
+                X_test_new = pd.concat([X_test_new, X_record])
+
+                # Chargement des variables de sortie dans le DataFrame y_test_new
+                y_record = pd.Series(record["verified_prediction"])
+                if y_test_new.empty is True: ## Pour éviter l'avertissement suivant : « FutureWarning: The behavior of array concatenation with empty entries is deprecated. »
+                    y_test_new = y_record
+                else:
+                    y_test_new = pd.concat([y_test_new, y_record])
+
+            # Consolidation des données pour la prédiction générale
+            X_test = pd.concat([X_test, X_test_new]).reset_index(drop=True)
+            y_test_new = pd.Series(y_test_new, name="grav")
+            y_test = pd.concat([y_test, y_test_new]).reset_index(drop=True)
+
+            # Prédiction générale de y
+            y_pred = rdf.predict(X_test)
+            y_true = y_test
+
+            # Calcul du nouveau F1 score macro average
+            f1_score_macro_average = f1_score(y_true=y_true,
+                                            y_pred=y_pred,
+                                            average="macro")
+
+            # Préparation des métadonnées pour exportation
+            metadata_dictionary = {"request_id": db_preds_labeled[-1]["request_id"],
+                                "f1_score_macro_average": f1_score_macro_average}
+            metadata_json = json.dumps(obj=metadata_dictionary)
+
+            # Exportation des métadonnées
+            path_log_file = os.path.join(path_logs, "f1_scores.jsonl")
+            with open(path_log_file, "a") as file:
+                file.write(metadata_json + "\n")
+
+            return("Le F1 score du modèle a été mis à jour.")
+
+        else:
+            raise HTTPException(status_code=401,
+                                detail="Identifiants non valables.")
+
+    else:
+        raise HTTPException(status_code=403,
+                            detail="Vous n'avez pas les droits d'administrateur.")
