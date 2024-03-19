@@ -1,7 +1,7 @@
 import json
 import unittest
 from fastapi.testclient import TestClient
-from api import api
+from .api import api
 import warnings
 
 # Charger les données de users_db.json
