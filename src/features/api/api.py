@@ -446,18 +446,33 @@ async def update_data(update_data: UpdateData, identification=Header(None)):
                 status_code=403,
                 detail="Vous n'avez pas les droits d'administrateur.")
 
-# ---------- 8. Sollicitation du retour utilisateur (labellisation de la prédiction) ----------------------
+# -------- 8. Labellisation d'une prédiction enregistrée --------
 
 
 class Prediction(BaseModel):
+    """Modèle pour la labellisation d'une prédiction enregistrée"""
+
     request_id: int
+    """Référence de la prédiction"""
+
     y_true: int
+    """Label de la prédiction"""
 
 
-@api.post('/feedback/{Prediction.request_id}', name="Retour utilisateur", tags=['PREDICTIONS'])
-async def post_feedback(prediction: Prediction, identification=Header(None)):
-    """
-    docstring
+@api.post('/label', name="Labellisation d'une prédiction enregistrée", tags=['PREDICTIONS'])
+async def post_label(prediction: Prediction, identification=Header(None)):
+    """Fonction qui labellise une prédiction enregistrée à partir du retour utilisateur
+
+    Paramètres :
+        prediction (class Prediction)
+        identification (str) : identifiants utilisateur selon le format nom_d_utilisateur:mot_de_passe
+
+    Lève :
+        HTTPException401 : identifiants non valables
+        HTTPException404 : enregistrement non existant
+
+    Retourne :
+        str : confirmation de la mise à jour de l'enregistrement
     """
     # Récupération des identifiants
     user, psw = identification.split(":")
@@ -470,12 +485,12 @@ async def post_feedback(prediction: Prediction, identification=Header(None)):
         with open(path_db_predictions, "r") as file:
             db_predictions = [json.loads(line) for line in file]
 
-        ## Isoler l'enregistrement correspondant au request_id reçu
-        record_exists = "No"
+        ## Extraction de l'enregistrement correspondant au request_id reçu
+        record_exists = "no"
         record_to_update = {}
         for record in db_predictions:
             if int(record["request_id"]) == prediction.request_id:
-                record_exists = "Yes"
+                record_exists = "yes"
                 record_to_update = record
 
                 ## Mise à jour du champ verified_prediction avec la valeur de y_true
@@ -487,10 +502,10 @@ async def post_feedback(prediction: Prediction, identification=Header(None)):
                 with open(path_db_predictions, "a") as file:
                     file.write(metadata_json + "\n")
 
-        if record_exists == "Yes":
+        if record_exists == "yes":
             return {"Enregistrement mis à jour. Merci pour votre retour."}
         else:
-            return {"Aucun enregistrement trouvé. Merci de fournir un request_id valable."}
+            raise HTTPException(status_code=404, detail="Aucun enregistrement trouvé. Merci de fournir une référence (request_id) valable.")
 
     else:
-        raise HTTPException(status_code=401, detail="Identifiant ou mot de passe invalide(s)")
+        raise HTTPException(status_code=401, detail="Identifiants non valables.")
