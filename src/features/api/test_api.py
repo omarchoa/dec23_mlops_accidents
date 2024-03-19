@@ -114,6 +114,20 @@ class TestAPI(unittest.TestCase):
         self.assertTrue(response.status_code == 200, "Test label: FAILED")
         print("Test label: PASSED")
 
+    @unittest.skip("Exclu temporairement car dépendant des fichiers non stockés sur le repo distant")
+    def test_update_f1_score(self):
+        """Test unitaire pour l'endpoint /update_f1_score"""
+
+        # Définition des données d'entrée
+        header = {"identification": "admin:4dmin"}
+
+        # Envoi d'une requête GET à l'endpoint avec les données d'entrée
+        response = client.get('/update_f1_score', headers=header)
+
+        # Vérification de la réponse
+        self.assertTrue(response.status_code == 200, "Test update_f1_score: FAILED")
+        print("Test update_f1_score: PASSED")
+
 if __name__ == '__main__':
     # Exécution des tests unitaires
     unittest.main()
