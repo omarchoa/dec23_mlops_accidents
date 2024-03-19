@@ -46,7 +46,7 @@ class TestAPI(unittest.TestCase):
         self.assertTrue(response.status_code == 200, "Test predict_from_test: FAILED")
         print("Test predict_from_test: PASSED")
     
-    unittest.skip("Exclu temporairement en raison d'une erreur")
+    @unittest.skip("Exclu temporairement en raison d'une erreur")
     def test_predict_from_call(self):
         # Envoyer une requête POST à l'endpoint /predict_from_call avec des données d'entrée
         input_data = {
