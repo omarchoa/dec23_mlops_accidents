@@ -27,4 +27,4 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt  # Assuming you have a file with test dependencies
     - name: Run unit tests
-      run: python -m unittest src/features/api/test_workflow_api.py
+      run: python -m unittest src/features/api/test_api.py
