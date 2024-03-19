@@ -485,7 +485,7 @@ async def label_prediction(prediction: Prediction, identification=Header(None)):
     """Fonction qui labellise une prédiction enregistrée à partir du retour utilisateur
 
     Paramètres :
-        prediction (class Prediction)
+        prediction (class Prediction) : référence de la prédiction à labelliser et label correspondant
         identification (str) : identifiants utilisateur selon le format nom_d_utilisateur:mot_de_passe
 
     Lève :
@@ -501,11 +501,11 @@ async def label_prediction(prediction: Prediction, identification=Header(None)):
     # Test d'identification
     if users_db[user]['password'] == psw:
 
-        ## Chargement de la base de données de prédictions non labellisées
+        # Chargement de la base de données de prédictions non labellisées
         with open(path_db_preds_unlabeled, "r") as file:
             db_preds_unlabeled = [json.loads(line) for line in file]
 
-        ## Extraction de l'enregistrement correspondant au request_id reçu
+        # Extraction de l'enregistrement correspondant au request_id reçu
         record_exists = "no"
         record_to_update = {}
         for record in db_preds_unlabeled:
@@ -513,10 +513,10 @@ async def label_prediction(prediction: Prediction, identification=Header(None)):
                 record_exists = "yes"
                 record_to_update = record
 
-                ## Mise à jour du champ verified_prediction avec la valeur de y_true
+                # Mise à jour du champ verified_prediction avec la valeur de y_true
                 record_to_update["verified_prediction"] = prediction.y_true
 
-                ## Mise à jour de la base de données de prédictions labellisées
+                # Mise à jour de la base de données de prédictions labellisées
                 metadata_json = json.dumps(obj=record_to_update)
                 with open(path_db_preds_labeled, "a") as file:
                     file.write(metadata_json + "\n")
@@ -544,7 +544,7 @@ async def update_f1_score(identification=Header(None)):
         HTTPException403 : accès non autorisé
 
     Retourne :
-        str : confirmation de la mise à jour de l'enregistrement
+        str : confirmation de la mise à jour du F1 score
     """
     # Récupération des identifiants
     user, psw = identification.split(":")
