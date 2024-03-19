@@ -593,12 +593,12 @@ async def update_f1_score(identification=Header(None)):
 
             # Calcul du nouveau F1 score macro average
             f1_score_macro_average = f1_score(y_true=y_true,
-                                            y_pred=y_pred,
-                                            average="macro")
+                                              y_pred=y_pred,
+                                              average="macro")
 
             # Préparation des métadonnées pour exportation
             metadata_dictionary = {"request_id": db_preds_labeled[-1]["request_id"],
-                                "f1_score_macro_average": f1_score_macro_average}
+                                   "f1_score_macro_average": f1_score_macro_average}
             metadata_json = json.dumps(obj=metadata_dictionary)
 
             # Exportation des métadonnées
