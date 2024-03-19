@@ -1,0 +1,8 @@
+fastapi
+pytest
+flake8
+unittest
+requests
+numpy
+pandas
+joblib
