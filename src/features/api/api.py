@@ -230,9 +230,7 @@ async def get_pred_from_test(identification=Header(None)):
             "f1_score_macro_average": f1_score_macro_average,
             "prediction_time": pred_time_end - pred_time_start
             }
-        metadata_json = json.dumps(obj=metadata_dictionary,
-                                   indent=4,
-                                   separators=(', ', ': '))
+        metadata_json = json.dumps(obj=metadata_dictionary)
 
         # Exportation des métadonnées
         path_log_file = os.path.join(path_logs, "pred_test.jsonl")
@@ -373,9 +371,7 @@ async def get_train(identification=Header(None)):
                                                 list(rf_classifier.feature_importances_))),
                 "train_time": train_time_end - train_time_start
                 }
-            metadata_json = json.dumps(obj=metadata_dictionary,
-                                       indent=4,
-                                       separators=(', ', ': '))
+            metadata_json = json.dumps(obj=metadata_dictionary)
 
             # Exportation des métadonnées
             path_log_file = os.path.join(path_logs, "train.jsonl")
@@ -433,9 +429,7 @@ async def update_data(update_data: UpdateData, identification=Header(None)):
                 "end_year": update_data.end_year,
                 "execution_time": exec_time_end - exec_time_start
                 }
-            metadata_json = json.dumps(obj=metadata_dictionary,
-                                       indent=4,
-                                       separators=(', ', ': '))
+            metadata_json = json.dumps(obj=metadata_dictionary)
 
             # Exportation des métadonnées
             path_log_file = os.path.join(path_logs, "update_data.jsonl")
