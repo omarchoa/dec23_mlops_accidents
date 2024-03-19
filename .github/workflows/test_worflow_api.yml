@@ -25,6 +25,6 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt  # Assuming you have a file with test dependencies
+        pip install -r test_requirements.txt
     - name: Run unit tests
       run: python -m unittest src/features/api/test_api.py
