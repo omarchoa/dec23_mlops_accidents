@@ -35,7 +35,7 @@ class TestAPI(unittest.TestCase):
         # Vérification que la réponse est OK (code 200)
         self.assertTrue(response.status_code == 200, "Test remove_user: FAILED")
         print("Test remove_user: PASSED")
-    
+
     @unittest.skip("Exclu temporairement en raison d'une erreur")
     def test_predict_from_test(self):
         # Récupérer un utilisateur et son mot de passe à partir du fichier users_db.json
@@ -45,7 +45,7 @@ class TestAPI(unittest.TestCase):
         # Vérification que la réponse est OK (code 200)
         self.assertTrue(response.status_code == 200, "Test predict_from_test: FAILED")
         print("Test predict_from_test: PASSED")
-    
+
     @unittest.skip("Exclu temporairement en raison d'une erreur")
     def test_predict_from_call(self):
         # Envoyer une requête POST à l'endpoint /predict_from_call avec des données d'entrée
@@ -98,6 +98,19 @@ class TestAPI(unittest.TestCase):
 #        # Vérification que la réponse est OK (code 200)
 #        self.assertTrue(response.status_code == 200, "Test update_data: FAILED")
 #        print("Test update_data: PASSED")
+
+    def test_label(self):
+        # Définition des données d'entrée
+        prediction = {"request_id": 9330446053352482, ## TODO request_id provient de pred_test.jsonl pour le moment, à remplacer avec une valeur provenant de pred_call.jsonl une fois ce dernier prêt
+                      "y_true": 0}
+        header = {"identification": "fdo:c0ps"}
+
+        # Envoi d'une requête POST à l'endpoint /label avec les données d'entrée
+        response = client.post('/label', json=prediction, headers=header)
+
+        # Vérification du statut de la requête
+        self.assertTrue(response.status_code == 200, "Test label: FAILED")
+        print("Test label: PASSED")
 
 if __name__ == '__main__':
     # Exécution des tests unitaires
