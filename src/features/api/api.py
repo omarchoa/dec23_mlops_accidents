@@ -480,8 +480,8 @@ class Prediction(BaseModel):
     """Label de la prédiction"""
 
 
-@api.post('/label', name="Labellisation d'une prédiction enregistrée", tags=['UPDATE'])
-async def post_label(prediction: Prediction, identification=Header(None)):
+@api.post('/label_prediction', name="Labellisation d'une prédiction enregistrée", tags=['UPDATE'])
+async def label_prediction(prediction: Prediction, identification=Header(None)):
     """Fonction qui labellise une prédiction enregistrée à partir du retour utilisateur
 
     Paramètres :

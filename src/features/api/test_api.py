@@ -99,8 +99,8 @@ class TestAPI(unittest.TestCase):
 #        self.assertTrue(response.status_code == 200, "Test update_data: FAILED")
 #        print("Test update_data: PASSED")
 
-    def test_label(self):
-        """Test unitaire pour l'endpoint /label"""
+    def test_label_prediction(self):
+        """Test unitaire pour l'endpoint /label_prediction"""
 
         # Définition des données d'entrée
         prediction = {"request_id": 6012919476848551,
@@ -108,11 +108,11 @@ class TestAPI(unittest.TestCase):
         header = {"identification": "fdo:c0ps"}
 
         # Envoi d'une requête POST à l'endpoint avec les données d'entrée
-        response = client.post('/label', json=prediction, headers=header)
+        response = client.post('/label_prediction', json=prediction, headers=header)
 
         # Vérification de la réponse
-        self.assertTrue(response.status_code == 200, "Test label: FAILED")
-        print("Test label: PASSED")
+        self.assertTrue(response.status_code == 200, "Test label_prediction: FAILED")
+        print("Test label_prediction: PASSED")
 
     @unittest.skip("Exclu temporairement car dépendant des fichiers non stockés sur le repo distant")
     def test_update_f1_score(self):
