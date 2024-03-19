@@ -36,9 +36,9 @@ responses = {
 }
 
 # ---------------------------- Chargement base de données users ---------------
-file = open("users_db_bis.json", 'r')
-users_db = json.load(file)
-file.close()
+file_path = os.path.join(os.path.dirname(__file__), "users_db_bis.json")
+with open(file_path, 'r') as file:
+    users_db = json.load(file)
 
 # ---------------------------- API --------------------------------------------
 
