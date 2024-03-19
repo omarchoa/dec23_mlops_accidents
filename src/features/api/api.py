@@ -234,7 +234,7 @@ async def get_pred_from_test(identification=Header(None)):
         metadata_json = json.dumps(obj=metadata_dictionary)
 
         # Exportation des métadonnées
-        path_log_file = os.path.join(path_logs, "pred_test.jsonl")
+        path_log_file = os.path.join(path_logs, "preds_test.jsonl")
         with open(path_log_file, "a") as file:
             file.write(metadata_json + "\n")
 
@@ -312,7 +312,28 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
         test.rename(columns={"inter": "int"}, inplace=True)
 
         # Prédiction :
+        pred_time_start = time.time()
         pred = rdf.predict(test)
+        pred_time_end = time.time()
+
+        # Préparation des métadonnées pour exportation
+        metadata_dictionary = {
+            "request_id": "".join(random.choices(string.digits, k=16)),
+            "time_stamp": str(datetime.datetime.now()),
+            "user_name": user,
+            "response_status_code": 200,
+            "input_features": test.to_dict(orient="records")[0],
+            "output_prediction": int(pred[0]),
+            "verified_prediction": None,
+            # "f1_score_macro_average": f1_score_macro_average,
+            "prediction_time": pred_time_end - pred_time_start
+            }
+        metadata_json = json.dumps(obj=metadata_dictionary)
+
+        # Exportation des métadonnées
+        path_log_file = os.path.join(path_logs, "preds_call.jsonl")
+        with open(path_log_file, "a") as file:
+            file.write(metadata_json + "\n")
 
         # Réponse:
         priority = pred[0]
@@ -480,9 +501,9 @@ async def post_label(prediction: Prediction, identification=Header(None)):
     # Test d'identification
     if users_db[user]['password'] == psw:
 
-        ## Chargement de la base de données de prédictions
-        path_db_predictions = os.path.join(path_logs, "pred_test.jsonl") ### TODO Remplacer "pred_test.jsonl" par "pred_call.jsonl" une fois ce dernier prêt
-        with open(path_db_predictions, "r") as file:
+        ## Chargement de la base de données de prédictions non labellisées
+        path_db_preds_unlabeled = os.path.join(path_logs, "preds_call.jsonl")
+        with open(path_db_preds_unlabeled, "r") as file:
             db_predictions = [json.loads(line) for line in file]
 
         ## Extraction de l'enregistrement correspondant au request_id reçu
@@ -498,8 +519,8 @@ async def post_label(prediction: Prediction, identification=Header(None)):
 
                 ## Mise à jour de la base de données de prédictions
                 metadata_json = json.dumps(obj=record_to_update)
-                path_db_predictions = os.path.join(path_logs, "feedback.jsonl") ### TODO Remplacer "feedback.jsonl" par "pred_call.jsonl" une fois ce dernier prêt, et en écrasant l'enregistrement concerné
-                with open(path_db_predictions, "a") as file:
+                path_db_preds_labeled = os.path.join(path_logs, "preds_labeled.jsonl")
+                with open(path_db_preds_labeled, "a") as file:
                     file.write(metadata_json + "\n")
 
         if record_exists == "yes":
