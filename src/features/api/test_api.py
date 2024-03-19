@@ -4,13 +4,10 @@ from fastapi.testclient import TestClient
 from .api import api
 import warnings
 
-# Récupérer le chemin absolu du répertoire actuel
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Charger les données de users_db.json en utilisant un chemin relatif
-file_path = os.path.join(current_dir, "../../users_db_bis.json")
-with open(file_path, 'r') as file:
-    users_db = json.load(file)
+# Charger les données de users_db.json
+file = open("src/features/api/users_db_bis.json", 'r')
+users_db = json.load(file)
+file.close()
 
 # Création d'un client de test pour notre API
 client = TestClient(api)
