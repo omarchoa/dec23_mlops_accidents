@@ -1,6 +1,5 @@
 fastapi
 pytest
-unittest
 flake8
 httpx
 requests
