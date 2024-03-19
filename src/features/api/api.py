@@ -227,6 +227,7 @@ async def get_pred_from_test(identification=Header(None)):
             "response_status_code": 200,
             "input_features": X_test.iloc[[i]].to_dict(orient="records")[0],
             "output_prediction": int(pred[0]),
+            "verified_prediction": None,
             "f1_score_macro_average": f1_score_macro_average,
             "prediction_time": pred_time_end - pred_time_start
             }
@@ -444,3 +445,52 @@ async def update_data(update_data: UpdateData, identification=Header(None)):
         raise HTTPException(
                 status_code=403,
                 detail="Vous n'avez pas les droits d'administrateur.")
+
+# ---------- 8. Sollicitation du retour utilisateur (labellisation de la prédiction) ----------------------
+
+
+class Prediction(BaseModel):
+    request_id: int
+    y_true: int
+
+
+@api.post('/feedback/{Prediction.request_id}', name="Retour utilisateur", tags=['PREDICTIONS'])
+async def post_feedback(prediction: Prediction, identification=Header(None)):
+    """
+    docstring
+    """
+    # Récupération des identifiants
+    user, psw = identification.split(":")
+
+    # Test d'identification
+    if users_db[user]['password'] == psw:
+
+        ## Chargement de la base de données de prédictions
+        path_db_predictions = os.path.join(path_logs, "pred_test.jsonl") ### TODO Remplacer "pred_test.jsonl" par "pred_call.jsonl" une fois ce dernier prêt
+        with open(path_db_predictions, "r") as file:
+            db_predictions = [json.loads(line) for line in file]
+
+        ## Isoler l'enregistrement correspondant au request_id reçu
+        record_exists = "No"
+        record_to_update = {}
+        for record in db_predictions:
+            if int(record["request_id"]) == prediction.request_id:
+                record_exists = "Yes"
+                record_to_update = record
+
+                ## Mise à jour du champ verified_prediction avec la valeur de y_true
+                record_to_update["verified_prediction"] = prediction.y_true
+
+                ## Mise à jour de la base de données de prédictions
+                metadata_json = json.dumps(obj=record_to_update)
+                path_db_predictions = os.path.join(path_logs, "feedback.jsonl") ### TODO Remplacer "feedback.jsonl" par "pred_call.jsonl" une fois ce dernier prêt, et en écrasant l'enregistrement concerné
+                with open(path_db_predictions, "a") as file:
+                    file.write(metadata_json + "\n")
+
+        if record_exists == "Yes":
+            return {"Enregistrement mis à jour. Merci pour votre retour."}
+        else:
+            return {"Aucun enregistrement trouvé. Merci de fournir un request_id valable."}
+
+    else:
+        raise HTTPException(status_code=401, detail="Identifiant ou mot de passe invalide(s)")
