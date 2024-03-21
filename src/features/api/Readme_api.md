@@ -1,31 +1,23 @@
 
 # 1. Test / : vérification du fonctionnement de l’API:
-
-Sous Linux:
 curl -X 'GET' 'http://127.0.0.1:8000/' -H 'accept: application/json'
-
-Sous Windows:
-curl.exe -X 'GET' 'http://127.0.0.1:8000/' -H 'accept: application/json'
 
 # 2. Test /register: inscription d'un nouvel utilisateur:
 
-Sous Linux:
 curl -X 'POST' \
   'http://127.0.0.1:8000/register' \
   -H 'accept: application/json' \
   -H 'identification: admin:4dmin' \
   -H 'Content-Type: application/json' \
   -d '{
-  "user": "sherlock",
-  "psw": "BakerStr33t",
+  "username": "sherlock",
+  "password": "BakerStr33t",
   "rights": 0
 }'
 
-Sous Windows:
 
 # 3. Test /remove_user: suppression d'un utilisateur existant:
 
-Sous Linux:
 curl -X 'DELETE' \
   'http://127.0.0.1:8000/remove_user' \
   -H 'accept: application/json' \
@@ -37,7 +29,6 @@ curl -X 'DELETE' \
 
 # 4. Test /predict_from_test: prédiction à partir d'un échantillon test
 
-Sous Linux:
 curl -X 'GET' \
   'http://127.0.0.1:8000/predict_from_test' \
   -H 'accept: application/json' \
@@ -46,11 +37,11 @@ curl -X 'GET' \
 # 5. Test /predict_from_call: prédiction à partir du relevé d'un appel
 Par défaut, les données du fichier test_features.json sont utilisées.
 
-Sous Linux:
+
 curl -X 'POST' \
   'http://127.0.0.1:8000/predict_from_call' \
   -H 'accept: application/json' \
-  -H 'identification: policierA:sherif' \
+  -H 'identification: fdo:c0ps' \
   -H 'Content-Type: application/json' \
   -d '{
   "place": 10,
@@ -83,6 +74,42 @@ curl -X 'POST' \
   "nb_vehicules": 1
 }'
 
-# 6. Test /train: A FAIRE
+# 6. Test /train:
 
-# 7. Test /update_data: A FAIRE
+curl -X 'GET' \
+  'http://127.0.0.1:8000/train' \
+  -H 'accept: application/json' \
+  -H 'identification: admin:4dmin'
+
+  # 7. Test /update_data: 
+
+curl -X 'POST' \
+  'http://127.0.0.1:8000/update_data' \
+  -H 'accept: application/json' \
+  -H 'identification: admin:4dmin' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "start_year": 2021,
+  "end_year": 2021
+}'
+
+# 8. Test /label_prediction
+
+curl -X 'POST' \
+  'http://127.0.0.1:8000/label_prediction' \
+  -H 'accept: application/json' \
+  -H 'identification: fdo:c0ps' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "request_id": 6012919476848551,
+  "y_true": 1
+}'
+
+# 9. Test /update_f1_score
+
+curl -X 'GET' \
+  'http://127.0.0.1:8000/update_f1_score' \
+  -H 'accept: application/json' \
+  -H 'identification: admin:4dmin'
+
+
