@@ -1,11 +1,10 @@
-Project Name: SHIELD
-==============================
+# Project Name: SHIELD
+
 (Safety Hazard Identification and Emergency Law Deployment)
 
 This project is a starting Pack for MLOps projects based on the subject "road accident". It's not perfect so feel free to make some modifications on it.
 
-Project Organization
-------------
+## Project Organization
 
     ├── LICENSE
     ├── README.md          <- The top-level README for developers using this project.
@@ -35,8 +34,8 @@ Project Organization
     │   ├── __init__.py    <- Makes src a Python module
     │   │
     │   ├── data           <- Scripts to download or generate data
-    │   │   ├── check_structure.py    
-    │   │   ├── import_raw_data.py 
+    │   │   ├── check_structure.py
+    │   │   ├── import_raw_data.py
     │   │   └── make_dataset.py
     │   │
     │   ├── features       <- Scripts to turn raw data into features for modeling
@@ -51,7 +50,7 @@ Project Organization
     │   │   └── visualize.py
     │   └── config         <- Describe the parameters used in train_model.py and predict_model.py
 
----------
+---
 
 ## Steps to follow on Linux:
 
@@ -61,12 +60,12 @@ Convention : All python scripts must be run from the root specifying the relativ
 
     `python -m venv my_env`
 
-###   Activate it 
+### Activate it
 
     `chmod +x ./my_env/bin/activate
     ./my_env/bin/activate`
 
-###   Install the packages from requirements.txt
+### Install the packages from requirements.txt
 
     `pip install -r requirements.txt`
 
@@ -96,16 +95,18 @@ It should return: "L'api fonctionne."
 
 ### 7- Run the tests:
 
-`python -m ./src/features/api/test_api.py`
+`python ./src/features/api/test_api.py`
 
 ### 8- Manually test the api:
+
 In your navigator, go to http://127.0.0.1:8000/docs
 
 You can test all the endpoints. When needed, you will be asked a username and a password. We implemented two types of users:
-    * Adminstrator Users: try it with `admin:4dmin`. This user's type can run every endpoint.
-    * Standard Users: try it with `fdo:c0ps`. This user's type can only run the following endpoints:  /status (which doesn't requires any identification), /predict_from_call, /predict_from_test, /label
+_ Adminstrator Users: try it with `admin:4dmin`. This user's type can run every endpoint.
+_ Standard Users: try it with `fdo:c0ps`. This user's type can only run the following endpoints: /status (which doesn't requires any identification), /predict_from_call, /predict_from_test, /label
 
 ### 9- Test the api with terminal command:
+
 All commands are written in the file ./src/features/api/Readme_api.md
 
 ## Steps to follow on Windows:
@@ -116,11 +117,11 @@ Convention : All python scripts must be run from the root specifying the relativ
 
     `python -m venv my_env`
 
-###   Activate it 
+### Activate it
 
     `./my_env/Scripts/activate`
 
-###   Install the packages from requirements.txt
+### Install the packages from requirements.txt
 
     `pip install -r .\requirements.txt` ### You will have an error in "setup.py" but this won't interfere with the rest
 
@@ -153,14 +154,15 @@ It should return: "L'api fonctionne."
 `python ./src/features/api/test_api.py`
 
 ### 8- Manually test the api:
+
 In your navigator, go to http://127.0.0.1:8000/docs
 
 You can test all the endpoints. When needed, you will be asked a username and a password. We implemented two types of users:
-    * Adminstrator Users: try it with `admin:4dmin`. This user's type can run every endpoint.
-    * Standard Users: try it with `fdo:c0ps`. This user's type can only run the following endpoints:  /status (which doesn't requires any identification), /predict_from_call, /predict_from_test, /label
+_ Adminstrator Users: try it with `admin:4dmin`. This user's type can run every endpoint.
+_ Standard Users: try it with `fdo:c0ps`. This user's type can only run the following endpoints: /status (which doesn't requires any identification), /predict_from_call, /predict_from_test, /label
 
 ### 9- Test the api with terminal command:
-Commands are not available for Windows for now. You will have to test the endpoints by going to http://127.0.0.1:8000/docs in your navigator (please refer to ### 8- for further informations.)
-------------------------
+
+## Commands are not available for Windows for now. You will have to test the endpoints by going to http://127.0.0.1:8000/docs in your navigator (please refer to ### 8- for further informations.)
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
