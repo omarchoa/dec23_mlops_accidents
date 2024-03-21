@@ -2,8 +2,6 @@
 
 (Safety Hazard Identification and Emergency Law Deployment)
 
-This project is a starting Pack for MLOps projects based on the subject "road accident". It's not perfect so feel free to make some modifications on it.
-
 ## Project Organization
 
     ├── LICENSE
@@ -40,6 +38,8 @@ This project is a starting Pack for MLOps projects based on the subject "road ac
     │   │
     │   ├── features       <- Scripts to turn raw data into features for modeling
     │   │   └── build_features.py
+    │   │   │
+    │   │   └── api        <- Scripts for the API and unit tests and auxiliary files.
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
     │   │   │                 predictions
@@ -109,7 +109,7 @@ _ Standard Users: try it with `fdo:c0ps`. This user's type can only run the foll
 
 All commands are written in the file ./src/features/api/Readme_api.md
 
-## Steps to follow on Windows :
+## Steps to follow on Windows:
 
 Convention : All python scripts must be run from the root specifying the relative file path.
 
