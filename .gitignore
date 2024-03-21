@@ -84,6 +84,7 @@ target/
 /data/external/
 /data/interim/
 /data/processed/
+/data/cleaned/
 
 # Mac OS-specific storage files
 .DS_Store
