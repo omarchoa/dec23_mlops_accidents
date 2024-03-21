@@ -3,10 +3,10 @@ name: Unit Tests
 on:
   push:
     branches:
-      - api
+      - master
   pull_request:
     branches:
-      - api
+      - master
 
 permissions:
   contents: read
