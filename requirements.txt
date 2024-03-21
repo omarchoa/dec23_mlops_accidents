@@ -3,15 +3,18 @@
 
 # external requirements
 click
-Sphinx
-coverage
-awscli>=1.29.0
+# Sphinx
+# coverage
+# awscli>=1.29.0
 flake8
 pandas
-logging
-numpy 
-pathlib 
+# logging
+numpy
+pathlib
 scikit-learn
 imbalanced-learn
 joblib
 httpx
+requests
+uvicorn
+fastapi
