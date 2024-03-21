@@ -1,8 +1,16 @@
 import json
 import unittest
 from fastapi.testclient import TestClient
-from .api import api
 import warnings
+from pathlib import Path
+import sys
+import os
+
+
+# internal
+root_path = Path(os.path.realpath(__file__)).parents[3]
+sys.path.append(os.path.join(root_path, "src", "features", "api"))
+from api import api
 
 # Charger les données de users_db.json
 file = open("src/features/api/users_db_bis.json", 'r')
