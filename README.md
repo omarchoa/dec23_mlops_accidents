@@ -109,7 +109,7 @@ _ Standard Users: try it with `fdo:c0ps`. This user's type can only run the foll
 
 All commands are written in the file ./src/features/api/Readme_api.md
 
-## Steps to follow on Windows:
+## Steps to follow on Windows :
 
 Convention : All python scripts must be run from the root specifying the relative file path.
 
