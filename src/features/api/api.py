@@ -300,7 +300,7 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
         # Chargement du modèle:
         rdf = joblib.load("../../models/trained_model.joblib")
 
-        # Chargement des données test:
+        # Chargement des données saisies
         test = pd.DataFrame.from_dict(dict(data), orient='index').T
         test.rename(columns={"inter": "int"}, inplace=True)
 
