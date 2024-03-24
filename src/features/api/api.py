@@ -206,22 +206,12 @@ async def get_pred_from_test(identification=Header(None)):
 
         # Chargement des données test:
         X_test = pd.read_csv(path_X_test)
-        y_test = pd.read_csv(path_y_test)
 
         # Prédiction d'une donnée aléatoire:
         i = random.choice(X_test.index)
         pred_time_start = time.time()
         pred = rdf.predict(X_test.iloc[[i]])
         pred_time_end = time.time()
-
-        # Prédiction générale de y
-        y_pred = rdf.predict(X_test)
-        y_true = y_test
-
-        # Calcul du F1 score macro average
-        f1_score_macro_average = f1_score(y_true=y_true,
-                                          y_pred=y_pred,
-                                          average="macro")
 
         # Préparation des métadonnées pour exportation
         metadata_dictionary = {
