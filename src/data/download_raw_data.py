@@ -17,49 +17,64 @@ def download_file(input_url, output_file):
 
 
 def download_raw_data(year_list):
-    output_path = "./data/raw"
-    http_url = "https://www.data.gouv.fr/fr/datasets/r/"
+    if 2021 or 2022 in year_list:
+        print("Erreur: 2021 ou 2022 ne doivent pas être dans la liste des années \
+              demandées, sous peine d'effacer les données fournies par \
+              datascientest, ou d'ajouter des données problématiques.\n \
+              Veuillez retirer cette année de votre liste.")
 
-    # download list of ressources from gouv.fr
-    output_file = os.path.join(output_path, "ressources.csv")
-    download_file("https://www.data.gouv.fr/resources.csv", output_file)
+    else:
+        output_path = "../../data/raw"
+        http_url = "https://www.data.gouv.fr/fr/datasets/r/"
 
-    # download data files according to the year list
-    file_list_template = ["carcteristiques", "lieux", "usagers", "vehicules"]
-    data_files_list = [f'{item}-{year}.csv' for item in file_list_template for year in year_list]
-    len_data_files = len(data_files_list)
+        # download list of ressources from gouv.fr
+        output_file = os.path.join(output_path, "ressources.csv")
+        download_file("https://www.data.gouv.fr/resources.csv", output_file)
 
-    with open (output_file, "r", encoding="utf-8") as my_file:
-        contents = my_file.readline()
-        while contents:
-            for filename in data_files_list:
-                if filename in contents:
-                    input_url = http_url + contents.split(";")[9][1:-1]  #9 = ressource id
-                    output_data_file = os.path.join(output_path, filename)
-                    download_file(input_url, output_data_file)
-                    break
+        # download data files according to the year list
+        file_list_template = ["carcteristiques","caracteristiques", "lieux", "usagers", "vehicules"]
+        data_files_list = [f'{item}-{year}.csv' for item in file_list_template for year in year_list]
+        len_data_files = len(data_files_list)
+
+        with open (output_file, "r", encoding="utf-8") as my_file:
             contents = my_file.readline()
+            while contents:
+                for filename in data_files_list:
+                    if filename in contents:
+                        input_url = http_url + contents.split(";")[9][1:-1]  #9 = ressource id
+                        output_data_file = os.path.join(output_path, filename)
+                        download_file(input_url, output_data_file)
+                        break
+                contents = my_file.readline()
 
     # patches
-    for year in year_list:
-        # patch caracteristiques filename
-        src_file = os.path.join(output_path, f"carcteristiques-{year}.csv")
-        dest_file = os.path.join(output_path, f"caracteristiques-{year}.csv")
-        os.rename(src_file, dest_file)
+        for filename in os.listdir(output_path):
+            if "carcteristiques" in filename:
+            # patch caracteristiques filename
+                year = filename[-8:-4]
+                src_file = os.path.join(output_path, filename)
+                dest_file = os.path.join(output_path, f"caracteristiques-{year}.csv")
+                os.rename(src_file, dest_file)
 
-        # patch usagers file : remove 2nd column
-        src = os.path.join(output_path, f"usagers-{year}.csv")
-        dest = os.path.join(output_path, f"_usagers-{year}.csv")
-        shutil.copyfile(src, dest)
-        with open(dest, "r") as source:
-            rdr= csv.reader(source, delimiter=';')
-            with open(src, "w") as result:
-                wtr= csv.writer(result, delimiter=";", quoting=csv.QUOTE_ALL)
-                for r in rdr:
-                    if r:
-                        del r[1]  # 2nd column
-                        wtr.writerow(r)
+# DELETE mais en ciblant davantage:
+#        # patch usagers file : remove 2nd column
+#        src = os.path.join(output_path, f"usagers-{year}.csv")
+#        dest = os.path.join(output_path, f"_usagers-{year}.csv")
+#        shutil.copyfile(src, dest)
+#        with open(dest, "r") as source:
+#            rdr= csv.reader(source, delimiter=';')
+#            with open(src, "w") as result:
+#                wtr= csv.writer(result, delimiter=";", quoting=csv.QUOTE_ALL)
+#                for r in rdr:
+#                    if r:
+#                        del r[1]  # 2nd column
+#                        wtr.writerow(r)
 
+# Pas nécessaire car concerne seulement 2022:
+        # RENAME: La colonne {'Num_Acc'} du dataset caracteristiques de datascientest s'intitule {'Accident_Id'} dans le dataset du gouvernement de 2022 .
+        # DELETE: Le dataset "lieux" en 2022 a un problème de mixed types dans la colonne 6 intitulée 'nbv': a supprimer.
 
 if __name__ == "__main__":
-    download_raw_data([2021, 2022])
+    # Ne pas mettre 2021 pour ne pas effacer les données fournies par datascientest:
+    # Ne pas mettre 2022 car il y a beaucoup plus de travail de data quality que prévu
+    download_raw_data([2019, 2020])
