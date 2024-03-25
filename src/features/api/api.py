@@ -34,7 +34,8 @@ path_y_test = os.path.join(path_data_preprocessed, "y_test.csv")
 path_logs = os.path.join(root_path, "logs")
 path_db_preds_unlabeled = os.path.join(path_logs, "preds_call.jsonl")
 path_db_preds_labeled = os.path.join(path_logs, "preds_labeled.jsonl")
-
+path_trained_model = os.path.join(root_path, "src", "models", "trained_model.joblib")
+path_new_trained_model = os.path.join(root_path, "src", "models", "new_trained_model.joblib")
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
     200: {"description": "OK"},
@@ -202,7 +203,7 @@ async def get_pred_from_test(identification=Header(None)):
     if users_db[user]['password'] == psw:
 
         # Chargement du modèle:
-        rdf = joblib.load("../../models/trained_model.joblib")
+        rdf = joblib.load(path_trained_model)
 
         # Chargement des données test:
         X_test = pd.read_csv(path_X_test)
@@ -298,7 +299,7 @@ async def post_pred_from_call(data: InputData, identification=Header(None)):
     if users_db[user]['password'] == psw:
 
         # Chargement du modèle:
-        rdf = joblib.load("../../models/trained_model.joblib")
+        rdf = joblib.load(path_trained_model)
 
         # Chargement des données saisies
         test = pd.DataFrame.from_dict(dict(data), orient='index').T
@@ -393,8 +394,8 @@ async def get_train(identification=Header(None)):
             # Sauvegarde du modèle:
             # Sauvegarde dans new_trained_model.joblib dans un premier temps
             # TODO: Versioning du modèle
-            model_filename = '../../models/new_trained_model.joblib'
-            joblib.dump(rf_classifier, model_filename)
+            
+            joblib.dump(rf_classifier, path_new_trained_model)
             return {"Modèle ré-entrainé et sauvegardé!"}
 
         else:
@@ -410,8 +411,8 @@ async def get_train(identification=Header(None)):
 
 
 class UpdateData(BaseModel):
-    start_year: int
-    end_year: int
+    start_year: Optional[int] = 2021
+    end_year: Optional[int] = 2021
 
 
 @api.post('/update_data', name='Mise à jour des données accidents', tags=['UPDATE'])
@@ -463,10 +464,10 @@ async def update_data(update_data: UpdateData, identification=Header(None)):
 class Prediction(BaseModel):
     """Modèle pour la labellisation d'une prédiction enregistrée"""
 
-    request_id: int
+    request_id: int = 6012919476848551
     """Référence de la prédiction"""
 
-    y_true: int
+    y_true: int = 1
     """Label de la prédiction"""
 
 
@@ -546,7 +547,7 @@ async def update_f1_score(identification=Header(None)):
         if users_db[user]['password'] == psw:
 
             # Chargement du modèle
-            rdf = joblib.load("../../models/trained_model.joblib")
+            rdf = joblib.load(path_trained_model)
 
             # Chargement des données de test
             X_test = pd.read_csv(path_X_test)
