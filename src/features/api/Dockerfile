@@ -10,7 +10,6 @@ EXPOSE 8000
 
 RUN apt-get update \
 && apt-get install python3-pip -y\
-&& pip3 install requests \
 && pip3 install -r /home/shield/requirements_api.txt  
 
 # Pour une raison que j'ignore, il faut mettre --host=0.0.0.0 
