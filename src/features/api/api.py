@@ -123,7 +123,7 @@ async def post_user(new_user: User, identification=Header(None)):
                 "rights": new_user.rights
             }
             update_users_db = json.dumps(users_db, indent=4)
-            with open(file_path, "w") as outfile:
+            with open(path_users_db, "w") as outfile:
                 outfile.write(update_users_db)
 
             return {"Nouvel utilisateur ajouté!"}
@@ -167,7 +167,7 @@ async def remove_user(old_user: OldUser, identification=Header(None)):
             try:
                 users_db.pop(old_user.user)
                 update_users_db = json.dumps(users_db, indent=4)
-                with open(file_path, "w") as outfile:
+                with open(path_users_db, "w") as outfile:
                     outfile.write(update_users_db)
                 return {"Utilisateur supprimé!"}
 
