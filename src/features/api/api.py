@@ -36,6 +36,7 @@ path_db_preds_unlabeled = os.path.join(path_logs, "preds_call.jsonl")
 path_db_preds_labeled = os.path.join(path_logs, "preds_labeled.jsonl")
 path_trained_model = os.path.join(root_path, "src", "models", "trained_model.joblib")
 path_new_trained_model = os.path.join(root_path, "src", "models", "new_trained_model.joblib")
+path_users_db = os.path.join(root_path, "src", "features", "api", "users_db_bis.json")
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
     200: {"description": "OK"},
@@ -43,8 +44,7 @@ responses = {
 }
 
 # ---------------------------- Chargement base de données users ---------------
-file_path = os.path.join(os.path.dirname(__file__), "users_db_bis.json")
-with open(file_path, 'r') as file:
+with open(path_users_db, 'r') as file:
     users_db = json.load(file)
 
 # ---------------------------- API --------------------------------------------
@@ -123,7 +123,7 @@ async def post_user(new_user: User, identification=Header(None)):
                 "rights": new_user.rights
             }
             update_users_db = json.dumps(users_db, indent=4)
-            with open(file_path, "w") as outfile:
+            with open(path_users_db, "w") as outfile:
                 outfile.write(update_users_db)
 
             return {"Nouvel utilisateur ajouté!"}
@@ -167,7 +167,7 @@ async def remove_user(old_user: OldUser, identification=Header(None)):
             try:
                 users_db.pop(old_user.user)
                 update_users_db = json.dumps(users_db, indent=4)
-                with open(file_path, "w") as outfile:
+                with open(path_users_db, "w") as outfile:
                     outfile.write(update_users_db)
                 return {"Utilisateur supprimé!"}
 
