@@ -2,7 +2,9 @@ import json
 import os
 from pathlib import Path
 
+
 def create_users_db():
+
     users_db = {
         "fdo": {
             "username": "fdo",
@@ -27,11 +29,15 @@ def create_users_db():
     }
 
     root_path = Path(os.path.realpath(__file__)).parents[3]
-    path_users_db = os.path.join(root_path, "src", "features", "api", "users_db_bis.json")
+    path_users_db = os.path.join(root_path, "src",
+                                 "features",
+                                 "api",
+                                 "users_db_bis.json")
 
     users_db_json = json.dumps(users_db, indent=4)
     with open(path_users_db, "w") as outfile:
         outfile.write(users_db_json)
+
 
 if __name__ == '__main__':
     create_users_db()
