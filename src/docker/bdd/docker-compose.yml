@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  bdd:
+    image: dummyfcd/bdd_container:0.0.1
+#    container_name: bdd
+    volumes:
+      - ~/data:/data_inside
+#      environment:
+#      LOG: 1
