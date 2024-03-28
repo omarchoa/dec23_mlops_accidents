@@ -15,7 +15,7 @@ services:
     image: shield_api_image
     container_name: api
     ports:
-      - "8010:8000"
+      - "8000:8000" # pour ne pas avor à modifier nos commandes curl
     volumes:
       - type: volume
         source: shield_volume
