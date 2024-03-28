@@ -4,6 +4,6 @@ services:
     image: dummyfcd/bdd_container:0.0.1
 #    container_name: bdd
     volumes:
-      - ~/data:/data_inside
+      - ~/data:/mounted_data_container_side
 #      environment:
 #      LOG: 1

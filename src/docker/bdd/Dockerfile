@@ -1,3 +1,3 @@
 FROM alpine:latest
-ADD users_db_bis.json /container_data/users_db_bis.json 
-CMD cp /container_data/users_db_bis.json /data_inside
+ADD users_db_bis.json /bdd_container/users_db_bis.json 
+CMD cp /bdd_container/users_db_bis.json /mounted_data_container_side
