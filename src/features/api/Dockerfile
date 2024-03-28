@@ -5,7 +5,7 @@ ADD /src/data/datalib.py /home/shield/src/data/
 ADD /src/features/api/requirements_api.txt /home/shield/src/features/api/
 
 WORKDIR /home/shield/
-
+VOLUME /home/volume/
 EXPOSE 8000
 
 RUN apt-get update \
@@ -16,6 +16,8 @@ RUN apt-get update \
 # sinon ça ne marche pas quand le conteneur tourne et qu'on essaie 
 # d'accéder à l'api. Solution trouvée ici:
 # https://stackoverflow.com/questions/1924434/what-is-the-curl-error-52-empty-reply-from-server
-CMD uvicorn --app-dir src/features/api api:api --reload --host=0.0.0.0 
+
+CMD ["/bin/bash", "-c", "cp ../volume/users_db_bis.json src/features/api/ ; uvicorn --app-dir src/features/api api:api --reload --host=0.0.0.0"]
+
 #--port=8000 après différents test, à ne pas mettre -> pourquoi? mystère...
 
