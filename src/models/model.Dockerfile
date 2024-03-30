@@ -26,8 +26,14 @@ cp src/models/trained_model.joblib  ../volume/models/\
 
 
 
-
-
+# TO KEEP:
+# Here is the previous version of this dockerfile which used alpine as os for a lighter image.
+# Compatibility issues arised for model save between this container and the api one (build from ubuntu:22.04), 
+# due to different versions of libraries used (sklearn).
+# In order to quickly have a full docker-compose working, I decided to build this image according to the api one.
+# It might be interresting to keep the code below to do the opposite: build this image accordingdly, 
+# and try to lighten the api image (which currently weights nearly 1Go) by building it from alpine too.
+# 
 #FROM alpine:latest
 #
 #ADD /src/models/train_model.py /home/shield/src/models/
