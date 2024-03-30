@@ -14,9 +14,13 @@ RUN apt-get update \
 && pip install scikit-learn
 
 CMD ["/bin/bash", "-c", "\
+# Import train data (previously created in step 2) from volume to container:
 cp -r ../volume/data data ; \
+# Train model:
 python3 src/models/train_model.py ; \
+# Create directory inside volume for model save:
 mkdir ../volume/models ; \
+# Copy model save into volume for persistency:
 cp src/models/trained_model.joblib  ../volume/models/\
 "]
 

@@ -12,6 +12,8 @@ RUN apk update \
 && apk add py3-requests
 
 CMD ["/bin/sh", "-c", " \ 
+# Run script and answer 'yes':
 echo 'y' | python3 src/data/import_raw_data.py ; \
+# Copy raw files on volume for persistency:
 cp -r data ../volume \
  "]
