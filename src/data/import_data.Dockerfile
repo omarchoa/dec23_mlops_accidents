@@ -11,4 +11,7 @@ RUN apk update \
 && apk add python3 \
 && apk add py3-requests
 
-CMD ["/bin/sh", "-c", "echo 'y' | python3 src/data/import_raw_data.py ; cp -r data ../volume"]
+CMD ["/bin/sh", "-c", " \ 
+echo 'y' | python3 src/data/import_raw_data.py ; \
+cp -r data ../volume \
+ "]

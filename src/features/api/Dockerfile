@@ -17,7 +17,16 @@ RUN apt-get update \
 # d'accéder à l'api. Solution trouvée ici:
 # https://stackoverflow.com/questions/1924434/what-is-the-curl-error-52-empty-reply-from-server
 
-CMD ["/bin/bash", "-c", "cp ../volume/users_db_bis.json src/features/api/ ; cp src/features/api/api.py ../volume/ ; mkdir src/models/ ; mkdir logs/ ; cp ../volume/models/trained_model.joblib src/models/ ; mkdir -p data/preprocessed/ ; cp -r ../volume/data/preprocessed/ data/ ; uvicorn --app-dir src/features/api api:api --reload --host=0.0.0.0"]
+CMD ["/bin/bash", "-c", "\
+cp ../volume/users_db_bis.json src/features/api/ ; \
+cp src/features/api/api.py ../volume/ ; \
+mkdir src/models/ ; \
+mkdir logs/ ; \
+cp ../volume/models/trained_model.joblib src/models/ ; \
+mkdir -p data/preprocessed/ ; \
+cp -r ../volume/data/preprocessed/ data/ ; \
+uvicorn --app-dir src/features/api api:api --reload --host=0.0.0.0\
+"]
 
 #--port=8000 après différents test, à ne pas mettre -> pourquoi? mystère...
 

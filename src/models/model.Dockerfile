@@ -13,7 +13,15 @@ RUN apt-get update \
 && pip install joblib \
 && pip install scikit-learn
 
-CMD ["/bin/bash", "-c", "cp -r ../volume/data data ; python3 src/models/train_model.py ; mkdir ../volume/models ; cp src/models/trained_model.joblib  ../volume/models/"]
+CMD ["/bin/bash", "-c", "\
+cp -r ../volume/data data ; \
+python3 src/models/train_model.py ; \
+mkdir ../volume/models ; \
+cp src/models/trained_model.joblib  ../volume/models/\
+"]
+
+
+
 
 
 #FROM alpine:latest

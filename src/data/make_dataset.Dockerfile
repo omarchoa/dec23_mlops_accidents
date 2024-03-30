@@ -23,4 +23,9 @@ RUN apk update \
 # CMD ["/bin/sh", "-c", "cp -r ../volume/data data ; echo 'y' | echo 'data/preprocessed/' | echo 'data/raw/' | python3 src/data/make_dataset.py ; cp -r data ../volume"]
 # python3 src/data/make_dataset.py
 # tail -f /dev/null
-CMD ["/bin/sh", "-c", "cp -r ../volume/data data ; mkdir data/preprocessed ; python3 src/data/make_dataset.py 'data/raw/' 'data/preprocessed' ;  cp -r data/preprocessed/ ../volume/data"]
+CMD ["/bin/sh", "-c", " \
+cp -r ../volume/data data ; \
+mkdir data/preprocessed ; \
+python3 src/data/make_dataset.py 'data/raw/' 'data/preprocessed' ;\
+cp -r data/preprocessed/ ../volume/data\
+"]

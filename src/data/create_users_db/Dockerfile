@@ -9,5 +9,9 @@ EXPOSE 8003
 RUN apk update \
 && apk add python3
 
-CMD ["/bin/sh", "-c", "mkdir -p src/features/api ; python3 src/data/create_users_db/create_users_db.py ; cp src/features/api/users_db_bis.json ../volume/"]
+CMD ["/bin/sh", "-c", "\
+mkdir -p src/features/api ; \
+python3 src/data/create_users_db/create_users_db.py ; \
+cp src/features/api/users_db_bis.json ../volume/\
+"]
 
