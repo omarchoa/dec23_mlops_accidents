@@ -25,7 +25,7 @@ docker run --rm --mount type=volume,src=shield_volume,dst=/home/volume shield_ma
 # -------------- Image 3. Create users db ---------------------------------------
 
 # Création de l'image depuis la racine:
-docker image build  -f ./src/data/create_users_db/Dockerfile -t shield_create_users_db_image .
+docker image build  -f ./src/data/create_users_db/create_users_db.Dockerfile -t shield_create_users_db_image .
 
 # Lancement depuis la racine: 
 
@@ -43,7 +43,7 @@ docker run --mount type=volume,src=shield_volume,dst=/home/volume shield_train_m
 
 # --------------- Image 5. API ---------------------------------------------------
 # Création de l'image `api`: 
-docker image build  -f ./src/features/api/Dockerfile -t shield_api_image .
+docker image build  -f ./src/features/api/api.Dockerfile -t shield_api_image .
 
 # Lancement du conteneur à partir de l'image:
 docker run -p 8010:8000 --rm --mount type=volume,src=shield_volume,dst=/home/volume/ shield_api_image
