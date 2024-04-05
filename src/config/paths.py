@@ -27,5 +27,11 @@ MODEL_SAVES = Path(ROOT, "models")
 MODEL_TRAINED = Path(MODEL_SAVES, "trained_model.joblib")
 MODEL_TRAINED_NEW = Path(MODEL_SAVES, "new_trained_model.joblib")
 
+# script paths
+SCRIPTS = Path(ROOT, "src")
+SCRIPTS_MODELS = Path(SCRIPTS, "models")
+SCRIPTS_MODELS_TRAIN = Path(SCRIPTS_MODELS, "train_model.py")
+SCRIPTS_MODELS_PREDICT = Path(SCRIPTS_MODELS, "predict_model.py")
+
 # other paths
 ## USERS = Path(ROOT, "src", "features", "api", "users_db_bis.json")
