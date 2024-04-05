@@ -4,7 +4,7 @@ import os
 
 # root path
 if os.environ.get("CONTAINERIZED") == "yes":
-    ROOT = "."
+    ROOT = "/home/shield"
 else:
     ROOT = [
         p for p in Path(__file__).parents if p.parts[-1] == "dec23_mlops_accidents"
