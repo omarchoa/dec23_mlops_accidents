@@ -28,4 +28,4 @@ MODEL_TRAINED = Path(MODEL_SAVES, "trained_model.joblib")
 MODEL_TRAINED_NEW = Path(MODEL_SAVES, "new_trained_model.joblib")
 
 # other paths
-USERS = Path(ROOT, "src", "features", "api", "users_db_bis.json")
+## USERS = Path(ROOT, "src", "features", "api", "users_db_bis.json")
