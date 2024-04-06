@@ -1,0 +1,40 @@
+services:
+  # a dummy microservice for debugging purposes
+  dummy:
+    image: omarchoa/shield:dummy
+    container_name: dummy
+    networks:
+      - shield
+    volumes:
+      - data:/home/shield/data:ro
+      - models:/home/shield/models:ro
+  # the api gateway microservice - uncomment and adapt once the api gateway is ready
+  ## api_gateway:
+  ##   image: shield:api-gateway
+  ##   container_name: api-gateway
+  # the training microservice
+  training:
+    image: omarchoa/shield:training
+    container_name: training
+    networks:
+      - shield
+    ports:
+      - "8004:8004"
+    volumes:
+      - data:/home/shield/data:ro
+      - models:/home/shield/models
+
+# network declarations
+networks:
+  shield:
+    ## look for this existing network instead of creating a new one
+    external: true
+
+# volume declarations
+volumes:
+  data:
+    ## look for this existing volume instead of creating a new one
+    external: true
+  models:
+    ## look for this existing volume instead of creating a new one
+    external: true
