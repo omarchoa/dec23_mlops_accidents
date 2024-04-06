@@ -14,6 +14,9 @@ y_test = pd.read_csv(paths.Y_TEST)
 y_train = np.ravel(y_train)
 y_test = np.ravel(y_test)
 
+X_train.rename(columns={"int": "inter"}, inplace=True)
+X_test.rename(columns={"int": "inter"}, inplace=True)
+
 rf_classifier = ensemble.RandomForestClassifier(n_jobs=-1)
 
 # --Train the model
