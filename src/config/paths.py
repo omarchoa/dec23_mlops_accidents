@@ -16,6 +16,8 @@ X_TRAIN = Path(DATA_PREPROCESSED, "X_train.csv")
 X_TEST = Path(DATA_PREPROCESSED, "X_test.csv")
 Y_TRAIN = Path(DATA_PREPROCESSED, "y_train.csv")
 Y_TEST = Path(DATA_PREPROCESSED, "y_test.csv")
+DATA_TEST = Path(ROOT, "data", "test")
+TEST_FEATURES = Path(DATA_TEST, "test_features.json")
 
 # log paths
 LOGS = Path(ROOT, "logs")
