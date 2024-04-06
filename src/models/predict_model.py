@@ -11,7 +11,7 @@ loaded_model = joblib.load(paths.MODEL_TRAINED)
 
 def predict_model(features):
     input_df = pd.DataFrame([features])
-    print(input_df)
+    # print(input_df)
     prediction = loaded_model.predict(input_df)
     return prediction
 
