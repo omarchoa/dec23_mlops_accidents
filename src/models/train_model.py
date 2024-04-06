@@ -5,7 +5,7 @@ import numpy as np
 from config import paths
 
 
-print(joblib.__version__)
+# print(joblib.__version__)
 
 X_train = pd.read_csv(paths.X_TRAIN)
 X_test = pd.read_csv(paths.X_TEST)
