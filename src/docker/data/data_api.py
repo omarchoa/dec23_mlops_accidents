@@ -32,7 +32,7 @@ async def is_fonctional():
     """
     to check if the API is running
     """
-    return {"API is running"}
+    return {"DATA API is running"}
 
 
 @api.get('/download')  # TODO should be a post with years
