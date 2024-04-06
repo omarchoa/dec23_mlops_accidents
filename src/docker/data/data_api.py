@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-import json
-import os
+from pydantic import BaseModel
+
 # from pathlib import Path
 # import sys
 
@@ -35,7 +35,12 @@ async def is_fonctional():
     return {"DATA API is running"}
 
 
-@api.get('/download')  # TODO should be a post with years
-async def download_raw_data():
-    containerdata.Data(2021, 2021, '/mounted_data_container_side') # TODO
-    return {"Done"}
+class YearRange(BaseModel):
+    start_year: int
+    end_year: int
+
+
+@api.post('/update_data', tags=['UPDATE'])
+async def update_data(year_range: YearRange):
+    containerdata.Data(year_range.start_year, year_range.end_year, '/mounted_data_container_side')
+    return {"Data updated"}
