@@ -35,4 +35,5 @@ if __name__ == "__main__":
         features = get_feature_values_manually(feature_names)
 
     result = predict_model(features)
-    print(f"prediction : {result[0]}")
+    result_dict = {"prediction": result[0]}
+    print(result_dict)
