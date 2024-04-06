@@ -19,8 +19,10 @@ Y_TEST = Path(DATA_PREPROCESSED, "y_test.csv")
 
 # log paths
 LOGS = Path(ROOT, "logs")
-PREDS_UNLABELED = Path(LOGS, "preds_call.jsonl")
-PREDS_LABELED = Path(LOGS, "preds_labeled.jsonl")
+LOGS_TRAIN = Path(LOGS, "train.jsonl")
+LOGS_PREDS_TEST = Path(LOGS, "preds_test.jsonl")
+LOGS_PREDS_UNLABELED = Path(LOGS, "preds_call.jsonl")
+LOGS_PREDS_LABELED = Path(LOGS, "preds_labeled.jsonl")
 
 # model paths
 MODEL_SAVES = Path(ROOT, "models")
