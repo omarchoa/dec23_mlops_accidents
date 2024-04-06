@@ -22,6 +22,9 @@ docker volume create data
 # populate data volume
 docker cp ./data /var/lib/docker/volumes/data/_data/
 
+# create logs volume
+docker volume create logs
+
 # create models volume
 docker volume create models
 

@@ -24,6 +24,9 @@ docker container run -d --rm --name dummy -v data:/home/shield/data omarchoa/shi
 docker cp ./data dummy:/home/shield
 docker container stop dummy
 
+# create logs volume
+docker volume create logs
+
 # create models volume
 docker volume create models
 
