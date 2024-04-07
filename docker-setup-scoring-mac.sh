@@ -1,4 +1,4 @@
-# script to setup docker environment on mac for standalone execution of prediction microservice
+# script to setup docker environment on mac for standalone execution of scoring microservice
 
 
 # build dummy microservice image
@@ -7,11 +7,11 @@ docker image build -f ./src/docker/dummy/dummy.Dockerfile -t omarchoa/shield:dum
 # push dummy microservice image
 docker image push omarchoa/shield:dummy
 
-# build prediction microservice image
-docker image build -f ./src/docker/prediction/prediction.Dockerfile -t omarchoa/shield:prediction .
+# build scoring microservice image
+docker image build -f ./src/docker/scoring/scoring.Dockerfile -t omarchoa/shield:scoring .
 
-# push prediction microservice image
-docker image push omarchoa/shield:prediction
+# push scoring microservice image
+docker image push omarchoa/shield:scoring
 
 # create shield network
 docker network create shield
@@ -27,8 +27,13 @@ docker container stop dummy
 # create logs volume
 docker volume create logs
 
+# populate logs volume
+docker container run -d --rm --name dummy -v logs:/home/shield/logs omarchoa/shield:dummy
+docker cp ./logs dummy:/home/shield
+docker container stop dummy
+
 # create models volume
 docker volume create models
 
 # launch docker-compose
-docker-compose -f docker-compose-prediction.yml up
+docker-compose -f docker-compose-scoring.yml up
