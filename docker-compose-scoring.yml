@@ -13,14 +13,14 @@ services:
   ## api_gateway:
   ##   image: shield:api-gateway
   ##   container_name: api-gateway
-  # the prediction microservice
-  prediction:
-    image: omarchoa/shield:prediction
-    container_name: prediction
+  # the scoring microservice
+  scoring:
+    image: omarchoa/shield:scoring
+    container_name: scoring
     networks:
       - shield
     ports:
-      - "8005:8005"
+      - "8006:8006"
     volumes:
       - data:/home/shield/data:ro
       - logs:/home/shield/logs
