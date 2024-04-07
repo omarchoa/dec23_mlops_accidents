@@ -1,5 +1,9 @@
 services:
-  # a dummy microservice for debugging purposes
+  # api gateway microservice - uncomment and adapt once api gateway is ready
+  ## api_gateway:
+  ##   image: shield:api-gateway
+  ##   container_name: api-gateway
+  # dummy service for debugging purposes
   dummy:
     image: omarchoa/shield:dummy
     container_name: dummy
@@ -9,11 +13,7 @@ services:
       - data:/home/shield/data:ro
       - logs:/home/shield/logs:ro
       - models:/home/shield/models:ro
-  # the api gateway microservice - uncomment and adapt once the api gateway is ready
-  ## api_gateway:
-  ##   image: shield:api-gateway
-  ##   container_name: api-gateway
-  # the training microservice
+  # training microservice
   training:
     image: omarchoa/shield:training
     container_name: training
@@ -25,6 +25,30 @@ services:
       - data:/home/shield/data:ro
       - logs:/home/shield/logs
       - models:/home/shield/models
+  # prediction microservice
+  prediction:
+    image: omarchoa/shield:prediction
+    container_name: prediction
+    networks:
+      - shield
+    ports:
+      - "8005:8005"
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs
+      - models:/home/shield/models:ro
+  # scoring microservice
+  scoring:
+    image: omarchoa/shield:scoring
+    container_name: scoring
+    networks:
+      - shield
+    ports:
+      - "8006:8006"
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs
+      - models:/home/shield/models:ro
 
 # network declarations
 networks:
