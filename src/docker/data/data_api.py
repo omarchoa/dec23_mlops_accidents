@@ -8,15 +8,6 @@ from pydantic import BaseModel
 # root_path = Path(os.path.realpath(__file__)).parents[3]
 # sys.path.append(os.path.join(root_path, "src", "data"))
 import containerdata  # will be at the same level in the container
-# ---------------------------- HTTP Exceptions --------------------------------
-# responses = {
-#     200: {"description": "OK"},
-#     401: {"description": "Invalid login or password"}
-# }
-
-# ---------------------------- Upload users database --------------------------
-# with open('/mounted_data_container_side/users_db_bis.json', 'r') as file:
-#     users_db = json.load(file)
 
 # ---------------------------- API --------------------------------------------
 
@@ -30,7 +21,7 @@ api = FastAPI(
 @api.get('/status', name="check API", tags=['GET'])
 async def is_fonctional():
     """
-    to check if the API is running
+    check if the API is running
     """
     return {"DATA API is running"}
 
