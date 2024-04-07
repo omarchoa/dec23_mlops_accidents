@@ -11,14 +11,14 @@ import os
 
 
 # Load your saved model
-loaded_model = joblib.load(paths.MODEL_TRAINED)
+model = joblib.load(paths.MODEL_TRAINED)
 
 
 def predict_model(features):
     input_df = pd.DataFrame([features])
     ## print(input_df)
     pred_time_start = time.time()
-    prediction = loaded_model.predict(input_df)
+    prediction = model.predict(input_df)
     pred_time_end = time.time()
     return prediction, input_df, pred_time_start, pred_time_end
 
