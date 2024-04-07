@@ -64,7 +64,7 @@ async def status():
 async def predict_from_test():
     ## define shell command
     command = "python {script} {input}".format(
-        script=paths.SCRIPTS_MODELS_PREDICT, input=paths.TEST_FEATURES
+        script=paths.SCRIPTS_MODELS_PREDICT, input=paths.SAMPLE_FEATURES
     )
 
     ## define environmental variables
