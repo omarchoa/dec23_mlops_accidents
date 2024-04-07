@@ -80,7 +80,7 @@ async def predict_from_test():
         command, shell=True, env=env_dict, capture_output=True, text=True
     )
 
-    ## return result as json response
+    ## return formatted result as json response
     return JSONResponse(content=str(result.stdout).strip())
 
 
@@ -115,5 +115,5 @@ async def predict_from_call(input_data: InputData):
         command, shell=True, env=env_dict, capture_output=True, text=True
     )
 
-    ## return result as json response
+    ## return formatted result as json response
     return JSONResponse(content=str(result.stdout).strip())
