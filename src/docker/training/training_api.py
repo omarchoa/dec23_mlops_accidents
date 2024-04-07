@@ -1,5 +1,6 @@
 # imports
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from config import paths
 import subprocess
 
@@ -18,7 +19,7 @@ api = FastAPI(
 @api.get(path="/status", tags=["STATUS"], name="check microservice status")
 async def status():
     result = "The microservice API is up."
-    return result
+    return JSONResponse(content=result)
 
 
 # endpoint - train
@@ -30,5 +31,5 @@ async def train():
     ## run shell command and save output to result
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
-    ## return formatted result
-    return str(result.stdout).strip()
+    ## return formatted result as json response
+    return JSONResponse(content=str(result.stdout).strip())
