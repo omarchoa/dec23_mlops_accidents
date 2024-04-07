@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  bdd: # users bdd, ...
+    image: dummyfcd/bdd_container:0.0.1
+    volumes:
+      - ~/data:/mounted_data_container_side
+
+  data: # raw, cleaned and preprocessed data
+    image: dummyfcd/data_container:0.0.1
+    container_name: data_container
+    volumes:
+      - ~/data:/mounted_data_container_side
+
+  main: # main api (gateway)
+    image: dummyfcd/main_container:0.0.1
+    volumes:
+      - ~/data:/mounted_data_container_side
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+    # ports:
+    #   - "8000:8000"
+    # networks:
+    #   docker_backend_net:
+    #     ipv4_address: 127.0.0.2
