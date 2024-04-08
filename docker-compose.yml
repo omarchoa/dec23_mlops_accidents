@@ -1,9 +1,15 @@
 services:
-  # api gateway microservice - uncomment and adapt once api gateway is ready
-  ## api_gateway:
-  ##   image: shield:api-gateway
-  ##   container_name: api-gateway
-  # dummy service for debugging purposes
+  # gateway microservice
+  gateway:
+    image: omarchoa/shield:gateway
+    container_name: gateway
+    networks:
+      - shield
+    ports:
+      - "8001:8001"
+    volumes:
+      - users:/home/shield/users:ro ## mount docker volume users to container path /home/shield/users with read-only permissions
+  # dummy microservice (for debugging purposes)
   dummy:
     image: omarchoa/shield:dummy
     container_name: dummy
@@ -53,17 +59,15 @@ services:
 # network declarations
 networks:
   shield:
-    ## look for this existing network instead of creating a new one
-    external: true
+    external: true ## look for this existing network instead of creating a new one
 
 # volume declarations
 volumes:
   data:
-    ## look for this existing volume instead of creating a new one
-    external: true
+    external: true ## look for this existing volume instead of creating a new one
   logs:
-    ## look for this existing volume instead of creating a new one
     external: true
   models:
-    ## look for this existing volume instead of creating a new one
+    external: true
+  users:
     external: true
