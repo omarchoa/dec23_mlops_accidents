@@ -1,0 +1,69 @@
+services:
+  # api gateway microservice - uncomment and adapt once api gateway is ready
+  ## api_gateway:
+  ##   image: shield:api-gateway
+  ##   container_name: api-gateway
+  # dummy service for debugging purposes
+  dummy:
+    image: omarchoa/shield:dummy
+    container_name: dummy
+    networks:
+      - shield
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs:ro
+      - models:/home/shield/models:ro
+  # training microservice
+  training:
+    image: omarchoa/shield:training
+    container_name: training
+    networks:
+      - shield
+    ports:
+      - "8004:8004"
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs
+      - models:/home/shield/models
+  # prediction microservice
+  prediction:
+    image: omarchoa/shield:prediction
+    container_name: prediction
+    networks:
+      - shield
+    ports:
+      - "8005:8005"
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs
+      - models:/home/shield/models:ro
+  # scoring microservice
+  scoring:
+    image: omarchoa/shield:scoring
+    container_name: scoring
+    networks:
+      - shield
+    ports:
+      - "8006:8006"
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs
+      - models:/home/shield/models:ro
+
+# network declarations
+networks:
+  shield:
+    ## look for this existing network instead of creating a new one
+    external: true
+
+# volume declarations
+volumes:
+  data:
+    ## look for this existing volume instead of creating a new one
+    external: true
+  logs:
+    ## look for this existing volume instead of creating a new one
+    external: true
+  models:
+    ## look for this existing volume instead of creating a new one
+    external: true
