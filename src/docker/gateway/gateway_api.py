@@ -188,76 +188,36 @@ async def is_fonctionnal():
 #                 detail="Vous n'avez pas les droits d'administrateur.")
 
 
-# ---------- 4. Prédictions de priorité à partir des données test: ------------
+# >>>>>>>> MICROSERVICE: PREDICTION <<<<<<<<
 
-# @api.get('/predict_from_test',
-#          name="Effectue une prediction à partir d'un échantillon test.",
-#          tags=['PREDICTIONS'],
-#          responses=responses)
-# async def get_pred_from_test(identification=Header(None)):
-#     """Fonction pour effectuer une prédiction à partir d'une donnée
-#         issue de l'échantillon de test.
-#         Identification: entrez votre identifiant et votre mot de passe
-#         au format identifiant:mot_de_passe
-#     """
-#     # Récupération des identifiants et mots de passe:
-#     user, psw = identification.split(":")
 
-#     # Test d'identification:
-#     if users_db[user]['password'] == psw:
+@api.get(path="/predict_from_test", tags=["PREDICTION"], name="predict from test")
+async def predict_from_test(identification=Header(None)):
 
-#         # Chargement du modèle:
-#         rdf = joblib.load(path_trained_model)
+    ## auth challenge check
+    username, password = identification.split(":")
+    if users_db[username]["password"] == password:
 
-#         # Chargement des données test:
-#         X_test = pd.read_csv(path_X_test)
-#         y_test = pd.read_csv(path_y_test)
+        ## microservice call
+        response = requests.get(url="http://prediction:8005/predict_from_test")
 
-#         # Prédiction d'une donnée aléatoire:
-#         i = random.choice(X_test.index)
-#         pred_time_start = time.time()
-#         pred = rdf.predict(X_test.iloc[[i]])
-#         pred_time_end = time.time()
+        ## microservice response
+        if response.status_code == 200: ### 200: success
+            response_clean = str(response.content)[3:-2] ### strip unnecessary characters
+            return JSONResponse(response_clean)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Bad request."
+            )
 
-#         # Prédiction générale de y
-#         y_pred = rdf.predict(X_test)
-#         y_true = y_test
+    ## auth challenge failure
+    else:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials."
+            )
 
-#         # Calcul du F1 score macro average
-#         f1_score_macro_average = f1_score(y_true=y_true,
-#                                           y_pred=y_pred,
-#                                           average="macro")
-
-#         # Préparation des métadonnées pour exportation
-#         metadata_dictionary = {
-#             "request_id": "".join(random.choices(string.digits, k=16)),
-#             "time_stamp": str(datetime.datetime.now()),
-#             "user_name": user,
-#             "response_status_code": 200,
-#             "input_features": X_test.iloc[[i]].to_dict(orient="records")[0],
-#             "output_prediction": int(pred[0]),
-#             "verified_prediction": None,
-#             "prediction_time": pred_time_end - pred_time_start
-#             }
-#         metadata_json = json.dumps(obj=metadata_dictionary)
-
-#         # Exportation des métadonnées
-#         path_log_file = os.path.join(path_logs, "preds_test.jsonl")
-#         with open(path_log_file, "a") as file:
-#             file.write(metadata_json + "\n")
-
-#         # Réponse:
-#         priority = pred[0]
-#         if priority == 1:
-#             return "L'intervention est prioritaire."
-#         else:
-#             return "L'intervention n'est pas prioritaire."
-
-#     else:
-#         raise HTTPException(
-#             status_code=401,
-#             detail="Identifiant ou mot de passe invalide(s)"
-#         )
 
 # ---------- 5. Prédictions de priorité à partir de données saisies: ----------
 
