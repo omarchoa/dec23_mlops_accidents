@@ -360,6 +360,40 @@ async def label_prediction(input_data: InputDataLabelPred, identification=Header
             )
 
 
+@api.get(path="/update_f1_score", tags=["SCORING"], name="update f1 score")
+async def update_f1_score(identification=Header(None)):
+
+    ## auth challenge check
+    username, password = identification.split(":")
+    if users_db[username]["rights"] == 1: ### 1: admin
+        if users_db[username]["password"] == password:
+
+            ## microservice call
+            response = requests.get(url="http://scoring:8006/update_f1_score")
+
+            ## microservice response
+            if response.status_code == 200: ### 200: success
+                response_clean = str(response.content)[3:-2] ### strip unnecessary characters
+                return JSONResponse(response_clean)
+            else:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Bad request."
+                )
+
+    ## auth challenge failure
+        else:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid credentials."
+                )
+    else:
+        raise HTTPException(
+                status_code=403,
+                detail="Administrator privileges required."
+                )
+
+
 # ---------- 7. Mise à jour de la base de données -----------------------------
 @api.get('/data_api_status', name="check data API status", tags=['GET'])
 async def requests_test():
@@ -441,91 +475,3 @@ async def update_data(year_range: YearRange, identification=Header(None)):
 #         raise HTTPException(
 #                 status_code=403,
 #                 detail="Vous n'avez pas les droits d'administrateur.")
-
-
-# -------- 9. Mise à jour du F1 score --------
-
-
-# @api.get('/update_f1_score', name="Mise à jour du F1 score", tags=['UPDATE'])
-# async def update_f1_score(identification=Header(None)):
-#     """Fonction qui calcule et enregistre le dernier F1 score du modèle en élargissant X_test et y_test aux nouvelles données labellisées
-
-#     Paramètres :
-#         identification (str) : identifiants administrateur selon le format nom_d_utilisateur:mot_de_passe
-
-#     Lève :
-#         HTTPException401 : identifiants non valables
-#         HTTPException403 : accès non autorisé
-
-#     Retourne :
-#         str : confirmation de la mise à jour du F1 score
-#     """
-#     # Récupération des identifiants
-#     user, psw = identification.split(":")
-
-#     # Test d'autorisation
-#     if users_db[user]['rights'] == 1:
-
-#         # Test d'identification
-#         if users_db[user]['password'] == psw:
-
-#             # Chargement du modèle
-#             rdf = joblib.load(path_trained_model)
-
-#             # Chargement des données de test
-#             X_test = pd.read_csv(path_X_test)
-#             y_test = pd.read_csv(path_y_test)
-
-#             # Chargement de la base de données de prédictions labellisées
-#             with open(path_db_preds_labeled, "r") as file:
-#                 db_preds_labeled = [json.loads(line) for line in file]
-
-#             X_test_new = pd.DataFrame()
-#             y_test_new = pd.Series()
-#             for record in db_preds_labeled:
-#                 # Chargement des variables d'entrée dans le DataFrame X_test_new
-#                 X_record = record["input_features"]
-#                 X_record = {key: [value] for key, value in X_record.items()}
-#                 X_record = pd.DataFrame(X_record)
-#                 X_test_new = pd.concat([X_test_new, X_record])
-
-#                 # Chargement des variables de sortie dans le DataFrame y_test_new
-#                 y_record = pd.Series(record["verified_prediction"])
-#                 if y_test_new.empty is True: ## Pour éviter l'avertissement suivant : « FutureWarning: The behavior of array concatenation with empty entries is deprecated. »
-#                     y_test_new = y_record
-#                 else:
-#                     y_test_new = pd.concat([y_test_new, y_record])
-
-#             # Consolidation des données pour la prédiction générale
-#             X_test = pd.concat([X_test, X_test_new]).reset_index(drop=True)
-#             y_test_new = pd.Series(y_test_new, name="grav")
-#             y_test = pd.concat([y_test, y_test_new]).reset_index(drop=True)
-
-#             # Prédiction générale de y
-#             y_pred = rdf.predict(X_test)
-#             y_true = y_test
-
-#             # Calcul du nouveau F1 score macro average
-#             f1_score_macro_average = f1_score(y_true=y_true,
-#                                               y_pred=y_pred,
-#                                               average="macro")
-
-#             # Préparation des métadonnées pour exportation
-#             metadata_dictionary = {"request_id": db_preds_labeled[-1]["request_id"],
-#                                    "f1_score_macro_average": f1_score_macro_average}
-#             metadata_json = json.dumps(obj=metadata_dictionary)
-
-#             # Exportation des métadonnées
-#             path_log_file = os.path.join(path_logs, "f1_scores.jsonl")
-#             with open(path_log_file, "a") as file:
-#                 file.write(metadata_json + "\n")
-
-#             return("Le F1 score du modèle a été mis à jour.")
-
-#         else:
-#             raise HTTPException(status_code=401,
-#                                 detail="Identifiants non valables.")
-
-#     else:
-#         raise HTTPException(status_code=403,
-#                             detail="Vous n'avez pas les droits d'administrateur.")
