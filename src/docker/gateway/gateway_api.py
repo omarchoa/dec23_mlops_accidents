@@ -21,6 +21,39 @@ import socket
 # import numpy as np
 # import string
 
+
+# define input data model for endpoint /predict_from_call
+class InputDataPredCall(BaseModel):
+    place: int = 10
+    catu: int = 3
+    sexe: int = 1
+    secu1: float = 0.0
+    year_acc: int = 2021
+    victim_age: int = 60
+    catv: int = 2
+    obsm: int = 1
+    motor: int = 1
+    catr: int = 3
+    circ: int = 2
+    surf: int = 1
+    situ: int = 1
+    vma: int = 50
+    jour: int = 7
+    mois: int = 12
+    lum: int = 5
+    dep: int = 77
+    com: int = 77317
+    agg_: int = 2
+    inter: int = 1
+    atm: int = 0
+    col: int = 6
+    lat: float = 48.60
+    long: float = 2.89
+    hour: int = 17
+    nb_victim: int = 2
+    nb_vehicules: int = 1
+
+
 # internal
 # add path to import datalib which is in src/data
 # 3 folders upper of the current
@@ -86,12 +119,12 @@ api = FastAPI(
 # ---------- 1. Vérification du fonctionnement de l’API: ----------------------
 
 
-@api.get('/status', name="Check whether the gateway is running", tags=['GET'])
+@api.get('/status', name="Check whether the gateway API is running", tags=['GET'])
 async def is_fonctionnal():
     """
-    Check whether the gateway is running
+    Check whether the gateway API is running
     """
-    return {"The gateway is running"}
+    return {"The gateway API is running"}
 
 # ---------- 2. Inscription d'un utilisateur: ---------------------------------
 
@@ -188,134 +221,6 @@ async def is_fonctionnal():
 #                 detail="Vous n'avez pas les droits d'administrateur.")
 
 
-# >>>>>>>> MICROSERVICE: PREDICTION <<<<<<<<
-
-
-@api.get(path="/predict_from_test", tags=["PREDICTION"], name="predict from test")
-async def predict_from_test(identification=Header(None)):
-
-    ## auth challenge check
-    username, password = identification.split(":")
-    if users_db[username]["password"] == password:
-
-        ## microservice call
-        response = requests.get(url="http://prediction:8005/predict_from_test")
-
-        ## microservice response
-        if response.status_code == 200: ### 200: success
-            response_clean = str(response.content)[3:-2] ### strip unnecessary characters
-            return JSONResponse(response_clean)
-        else:
-            raise HTTPException(
-                status_code=400,
-                detail="Bad request."
-            )
-
-    ## auth challenge failure
-    else:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid credentials."
-            )
-
-
-# ---------- 5. Prédictions de priorité à partir de données saisies: ----------
-
-
-# class InputData(BaseModel):
-#     place: Optional[int] = 10
-#     catu: Optional[int] = 3
-#     sexe: Optional[int] = 1
-#     secu1: Optional[float] = 0.0
-#     year_acc: Optional[int] = 2021
-#     victim_age: Optional[int] = 60
-#     catv: Optional[int] = 2
-#     obsm: Optional[int] = 1
-#     motor: Optional[int] = 1
-#     catr: Optional[int] = 3
-#     circ: Optional[int] = 2
-#     surf: Optional[int] = 1
-#     situ: Optional[int] = 1
-#     vma: Optional[int] = 50
-#     jour: Optional[int] = 7
-#     mois: Optional[int] = 12
-#     lum: Optional[int] = 5
-#     dep: Optional[int] = 77
-#     com: Optional[int] = 77317
-#     agg_: Optional[int] = 2
-
-# # variable d'origine 'int' renommée ici en 'inter' (pour 'intersection')
-# # pour éviter les conflits avec le type 'int'.
-#     inter: Optional[int] = 1
-#     atm: Optional[int] = 0
-#     col: Optional[int] = 6
-#     lat: Optional[float] = 48.60
-#     long: Optional[float] = 2.89
-#     hour: Optional[int] = 17
-#     nb_victim: Optional[int] = 2
-#     nb_vehicules: Optional[int] = 1
-
-
-# @api.post('/predict_from_call',
-#           name="Effectue une prediction à partir de saisie opérateur.",
-#           tags=['PREDICTIONS'],
-#           responses=responses)
-# async def post_pred_from_call(data: InputData, identification=Header(None)):
-#     """Fonction pour effectuer une prédiction à partir d'une saisie effectuée
-#        par un agent des FdO.
-#        Identification: entrez votre identifiant et votre mot de passe
-#        au format identifiant:mot_de_passe
-#     """
-#     # Récupération des identifiants et mots de passe:
-#     user, psw = identification.split(":")
-
-#     # Test d'identification:
-#     if users_db[user]['password'] == psw:
-
-#         # Chargement du modèle:
-#         rdf = joblib.load(path_trained_model)
-
-#         # Chargement des données test:
-#         test = pd.DataFrame.from_dict(dict(data), orient='index').T
-#         test.rename(columns={"inter": "int"}, inplace=True)
-
-#         # Prédiction :
-#         pred_time_start = time.time()
-#         pred = rdf.predict(test)
-#         pred_time_end = time.time()
-
-#         # Préparation des métadonnées pour exportation
-#         metadata_dictionary = {
-#             "request_id": "".join(random.choices(string.digits, k=16)),
-#             "time_stamp": str(datetime.datetime.now()),
-#             "user_name": user,
-#             "response_status_code": 200,
-#             "input_features": test.to_dict(orient="records")[0],
-#             "output_prediction": int(pred[0]),
-#             "verified_prediction": None,
-#             "prediction_time": pred_time_end - pred_time_start
-#             }
-#         metadata_json = json.dumps(obj=metadata_dictionary)
-
-#         # Exportation des métadonnées
-#         path_log_file = os.path.join(path_logs, "preds_call.jsonl")
-#         with open(path_log_file, "a") as file:
-#             file.write(metadata_json + "\n")
-
-#         # Réponse:
-#         priority = pred[0]
-#         if priority == 1:
-#             return "L'intervention est prioritaire."
-#         else:
-#             return "L'intervention n'est pas prioritaire."
-
-#     else:
-#         raise HTTPException(
-#             status_code=401,
-#             detail="Identifiant ou mot de passe invalide(s)"
-#         )
-
-
 # >>>>>>>> MICROSERVICE: TRAINING <<<<<<<<
 
 
@@ -351,6 +256,66 @@ async def train(identification=Header(None)):
                 status_code=403,
                 detail="Administrator privileges required."
                 )
+
+
+# >>>>>>>> MICROSERVICE: PREDICTION <<<<<<<<
+
+
+@api.get(path="/predict_from_test", tags=["PREDICTION"], name="predict from test")
+async def predict_from_test(identification=Header(None)):
+
+    ## auth challenge check
+    username, password = identification.split(":")
+    if users_db[username]["password"] == password:
+
+        ## microservice call
+        response = requests.get(url="http://prediction:8005/predict_from_test")
+
+        ## microservice response
+        if response.status_code == 200: ### 200: success
+            response_clean = str(response.content)[3:-2] ### strip unnecessary characters
+            return JSONResponse(response_clean)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Bad request."
+            )
+
+    ## auth challenge failure
+    else:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials."
+            )
+
+
+@api.post(path="/predict_from_call", tags=["PREDICTION"], name="predict from call")
+async def predict_from_call(input_data: InputDataPredCall, identification=Header(None)):
+
+    ## auth challenge check
+    username, password = identification.split(":")
+    if users_db[username]["password"] == password:
+
+        ## microservice call
+        payload = input_data.model_dump()
+        response = requests.post(url="http://prediction:8005/predict_from_call", json=payload)
+
+        ## microservice response
+        if response.status_code == 200: ### 200: success
+            response_clean = str(response.content)[3:-2] ### strip unnecessary characters
+            return JSONResponse(response_clean)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Bad request."
+            )
+
+    ## auth challenge failure
+    else:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials."
+            )
 
 
 # ---------- 7. Mise à jour de la base de données -----------------------------

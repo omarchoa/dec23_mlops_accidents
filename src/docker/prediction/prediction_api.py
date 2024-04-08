@@ -6,6 +6,38 @@ from config import paths
 import subprocess
 
 
+# define input data model for endpoint /predict_from_call
+class InputDataPredCall(BaseModel):
+    place: int
+    catu: int
+    sexe: int
+    secu1: float
+    year_acc: int
+    victim_age: int
+    catv: int
+    obsm: int
+    motor: int
+    catr: int
+    circ: int
+    surf: int
+    situ: int
+    vma: int
+    jour: int
+    mois: int
+    lum: int
+    dep: int
+    com: int
+    agg_: int
+    inter: int
+    atm: int
+    col: int
+    lat: float
+    long: float
+    hour: int
+    nb_victim: int
+    nb_vehicules: int
+
+
 # create fastapi instance
 api = FastAPI(
     title="SHIELD Microservice API - Prediction",
@@ -14,38 +46,6 @@ api = FastAPI(
         {"name": "PROCESSES"},
     ],
 )
-
-
-# define input data model
-class InputData(BaseModel):
-    place: int = 10
-    catu: int = 3
-    sexe: int = 1
-    secu1: float = 0.0
-    year_acc: int = 2021
-    victim_age: int = 60
-    catv: int = 2
-    obsm: int = 1
-    motor: int = 1
-    catr: int = 3
-    circ: int = 2
-    surf: int = 1
-    situ: int = 1
-    vma: int = 50
-    jour: int = 7
-    mois: int = 12
-    lum: int = 5
-    dep: int = 77
-    com: int = 77317
-    agg_: int = 2
-    inter: int = 1
-    atm: int = 0
-    col: int = 6
-    lat: float = 48.60
-    long: float = 2.89
-    hour: int = 17
-    nb_victim: int = 2
-    nb_vehicules: int = 1
 
 
 # endpoint - status
@@ -90,8 +90,8 @@ async def predict_from_test():
     tags=["PROCESSES"],
     name="execute microservice process 2",
 )
-async def predict_from_call(input_data: InputData):
-    ## save input data to json file
+async def predict_from_call(input_data: InputDataPredCall):
+    # save input data to json file
     input_data_json_object = input_data.model_dump_json()
     input_data_json_file = "input_data.json"
     with open(input_data_json_file, "w") as file:
