@@ -39,7 +39,7 @@ import socket
 # path_db_preds_labeled = os.path.join(path_logs, "preds_labeled.jsonl")
 # path_trained_model = os.path.join(root_path, "src", "models", "trained_model.joblib")
 # path_new_trained_model = os.path.join(root_path, "src", "models", "new_trained_model.joblib")
-path_users_db = os.path.join("/mounted_data_container_side", "users_db_bis.json")
+path_users_db = os.path.join("home", "shield", "users", "users_db_bis.json")
 
 # ---------------------------- HTTP Exceptions --------------------------------
 # responses = {
@@ -50,7 +50,7 @@ path_users_db = os.path.join("/mounted_data_container_side", "users_db_bis.json"
 # ---------------------------- Load users database-----------------------------
 # with open(path_users_db, 'r') as file:
 #     users_db = json.load(file)
-with open('/mounted_data_container_side/users_db_bis.json', 'r') as file:
+with open(path_users_db, 'r') as file:
     users_db = json.load(file)
 
 # ---------------------------- API --------------------------------------------
