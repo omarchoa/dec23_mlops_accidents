@@ -3,6 +3,7 @@
 # external
 # import datetime
 from fastapi import FastAPI, Header, HTTPException
+from fastapi.responses import JSONResponse
 # import pandas as pd
 # import joblib
 import json
@@ -355,70 +356,42 @@ async def is_fonctionnal():
 #         )
 
 
-# ---------- 6. Entraîner le modèle avec de nouvelles données: ----------------
+# >>>>>>>> MICROSERVICE: TRAINING <<<<<<<<
 
 
-# @api.get('/train',
-#          name='Entrainement du modèle',
-#          tags=['UPDATE'])
-# async def get_train(identification=Header(None)):
-#     """Fonction pour entrainer le modèle.
-#     """
-# # Récupération des identifiants et mots de passe:
-#     user, psw = identification.split(":")
+@api.get(path="/train", tags=["TRAINING"], name="train model")
+async def train(identification=Header(None)):
 
-#     # Test d'autorisation:
-#     if users_db[user]['rights'] == 1:
+    ## auth challenge check
+    username, password = identification.split(":")
+    if users_db[username]["rights"] == 1: ### 1: admin
+        if users_db[username]["password"] == password:
 
-#         # Test d'identification:
-#         if users_db[user]['password'] == psw:
+            ## microservice call
+            response = requests.get(url="http://training:8004/train")
 
-#             # Chargement des données:
-#             X_train = pd.read_csv(path_X_train)
-#             y_train = pd.read_csv(path_y_train)
-#             y_train = np.ravel(y_train)
+            ## microservice response
+            if response.status_code == 200: ### 200: success
+                response_clean = str(response.content)[3:-2] ### strip unnecessary characters
+                return JSONResponse(response_clean)
+            else:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Bad request."
+                )
 
-#             rf_classifier = ensemble.RandomForestClassifier(n_jobs=-1)
+    ## auth challenge failure
+        else:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid credentials."
+                )
+    else:
+        raise HTTPException(
+                status_code=403,
+                detail="Administrator privileges required."
+                )
 
-#             # Entrainement du modèle:
-#             train_time_start = time.time()
-#             rf_classifier.fit(X_train, y_train)
-#             train_time_end = time.time()
-
-#             # Préparation des métadonnées pour exportation
-#             metadata_dictionary = {
-#                 "request_id": "".join(random.choices(string.digits, k=16)),
-#                 "time_stamp": str(datetime.datetime.now()),
-#                 "user_name": user,
-#                 "response_status_code": 200,
-#                 "estimator_type": str(type(rf_classifier)),
-#                 "estimator_parameters": rf_classifier.get_params(),
-#                 "feature_importances": dict(zip(X_train.columns.to_list(),
-#                                                 list(rf_classifier.feature_importances_))),
-#                 "train_time": train_time_end - train_time_start
-#                 }
-#             metadata_json = json.dumps(obj=metadata_dictionary)
-
-#             # Exportation des métadonnées
-#             path_log_file = os.path.join(path_logs, "train.jsonl")
-#             with open(path_log_file, "a") as file:
-#                 file.write(metadata_json + "\n")
-
-#             # Sauvegarde du modèle:
-#             # Sauvegarde dans new_trained_model.joblib dans un premier temps
-#             # TODO: Versioning du modèle
-            
-#             joblib.dump(rf_classifier, path_new_trained_model)
-#             return {"Modèle ré-entrainé et sauvegardé!"}
-
-#         else:
-#             raise HTTPException(
-#                 status_code=401,
-#                 detail="Identifiant ou mot de passe invalide(s)")
-#     else:
-#         raise HTTPException(
-#                 status_code=403,
-#                 detail="Vous n'avez pas les droits d'administrateur.")
 
 # ---------- 7. Mise à jour de la base de données -----------------------------
 @api.get('/data_api_status', name="check data API status", tags=['GET'])
