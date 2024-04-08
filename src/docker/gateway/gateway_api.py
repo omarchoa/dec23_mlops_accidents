@@ -54,6 +54,12 @@ class InputDataPredCall(BaseModel):
     nb_vehicules: int = 1
 
 
+# define input data model for endpoint /label_prediction
+class InputDataLabelPred(BaseModel):
+    request_id: int = 6012919476848551
+    y_true: int = 1
+
+
 # internal
 # add path to import datalib which is in src/data
 # 3 folders upper of the current
@@ -111,8 +117,7 @@ api = FastAPI(
     version="0.1",
     openapi_tags=[
         {'name': 'USERS', 'description': 'Users management.'},
-        {'name': 'PREDICTIONS', 'description': 'Prediction of the model.'},
-        {'name': 'UPDATE', 'description': 'Update model and data'}
+        {'name': 'UPDATE', 'description': 'Update data'}
     ]
 )
 
@@ -224,7 +229,7 @@ async def is_fonctionnal():
 # >>>>>>>> MICROSERVICE: TRAINING <<<<<<<<
 
 
-@api.get(path="/train", tags=["TRAINING"], name="train model")
+@api.get(path="/train", tags=["TRAINING"], name="train")
 async def train(identification=Header(None)):
 
     ## auth challenge check
@@ -304,6 +309,43 @@ async def predict_from_call(input_data: InputDataPredCall, identification=Header
         if response.status_code == 200: ### 200: success
             response_clean = str(response.content)[3:-2] ### strip unnecessary characters
             return JSONResponse(response_clean)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Bad request."
+            )
+
+    ## auth challenge failure
+    else:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials."
+            )
+
+
+# >>>>>>>> MICROSERVICE: SCORING <<<<<<<<
+
+
+@api.post(path="/label_prediction", tags=["SCORING"], name="label prediction")
+async def label_prediction(input_data: InputDataLabelPred, identification=Header(None)):
+
+    ## auth challenge check
+    username, password = identification.split(":")
+    if users_db[username]["password"] == password:
+
+        ## microservice call
+        payload = input_data.model_dump()
+        response = requests.post(url="http://scoring:8006/label_prediction", json=payload)
+
+        ## microservice response
+        response_clean = str(response.content)[3:-2] ### strip unnecessary characters
+        if "updated" in response_clean:
+            return JSONResponse(response_clean)
+        elif "not found" in response_clean:
+            raise HTTPException(
+                status_code=404,
+                detail=response_clean
+            )
         else:
             raise HTTPException(
                 status_code=400,
@@ -400,67 +442,6 @@ async def update_data(year_range: YearRange, identification=Header(None)):
 #                 status_code=403,
 #                 detail="Vous n'avez pas les droits d'administrateur.")
 
-# -------- 8. Labellisation d'une prédiction enregistrée --------
-
-
-# class Prediction(BaseModel):
-#     """Modèle pour la labellisation d'une prédiction enregistrée"""
-
-#     request_id: int = 6012919476848551
-#     """Référence de la prédiction"""
-
-#     y_true: int = 1
-#     """Label de la prédiction"""
-
-
-# @api.post('/label_prediction', name="Labellisation d'une prédiction enregistrée", tags=['UPDATE'])
-# async def label_prediction(prediction: Prediction, identification=Header(None)):
-#     """Fonction qui labellise une prédiction enregistrée à partir du retour utilisateur
-
-#     Paramètres :
-#         prediction (class Prediction) : référence de la prédiction à labelliser et label correspondant
-#         identification (str) : identifiants utilisateur selon le format nom_d_utilisateur:mot_de_passe
-
-#     Lève :
-#         HTTPException401 : identifiants non valables
-#         HTTPException404 : enregistrement non existant
-
-#     Retourne :
-#         str : confirmation de la mise à jour de l'enregistrement
-#     """
-#     # Récupération des identifiants
-#     user, psw = identification.split(":")
-
-#     # Test d'identification
-#     if users_db[user]['password'] == psw:
-
-#         # Chargement de la base de données de prédictions non labellisées
-#         with open(path_db_preds_unlabeled, "r") as file:
-#             db_preds_unlabeled = [json.loads(line) for line in file]
-
-#         # Extraction de l'enregistrement correspondant au request_id reçu
-#         record_exists = "no"
-#         record_to_update = {}
-#         for record in db_preds_unlabeled:
-#             if int(record["request_id"]) == prediction.request_id:
-#                 record_exists = "yes"
-#                 record_to_update = record
-
-#                 # Mise à jour du champ verified_prediction avec la valeur de y_true
-#                 record_to_update["verified_prediction"] = prediction.y_true
-
-#                 # Mise à jour de la base de données de prédictions labellisées
-#                 metadata_json = json.dumps(obj=record_to_update)
-#                 with open(path_db_preds_labeled, "a") as file:
-#                     file.write(metadata_json + "\n")
-
-#         if record_exists == "yes":
-#             return {"Enregistrement mis à jour. Merci pour votre retour."}
-#         else:
-#             raise HTTPException(status_code=404, detail="Aucun enregistrement trouvé. Merci de fournir une référence (request_id) valable.")
-
-#     else:
-#         raise HTTPException(status_code=401, detail="Identifiants non valables.")
 
 # -------- 9. Mise à jour du F1 score --------
 
