@@ -226,6 +226,89 @@ async def is_fonctionnal():
 #                 detail="Vous n'avez pas les droits d'administrateur.")
 
 
+# ---------- 7. Mise à jour de la base de données -----------------------------
+@api.get('/data_api_status', name="check data API status", tags=['GET'])
+async def requests_test():
+    response = requests.get(url='http://data_container:8000/status')
+    if response.status_code == 200:
+        return {response.text}
+    else:
+        return {"url unknown"}
+
+
+class YearRange(BaseModel):
+    start_year: int  # admin shall use valid year e.g 2021
+    end_year: int    # admin shall use valid year e.g 2021
+
+
+@api.post('/update_data', name='Update accident data', tags=['UPDATE'])
+async def update_data(year_range: YearRange, identification=Header(None)):
+    user, pwd = identification.split(":")
+    if users_db[user]['rights'] == 1:
+        if users_db[user]['password'] == pwd:
+            params = {
+                "start_year": year_range.start_year,
+                "end_year": year_range.end_year
+            }
+            response = requests.post(url='http://data_container:8000/update_data', json=params)
+            if response.status_code == 200:
+                return {"Data updated"}
+            else:
+                return {"Request in error"}
+        else:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid login or password.")
+    else:
+        raise HTTPException(
+                status_code=403,
+                detail="You do not have administrator rights.")
+
+
+# @api.post('/update_data', name='Mise à jour des données accidents', tags=['UPDATE'])
+# async def update_data(update_data: UpdateData, identification=Header(None)):
+#     """Fonction pour mettre à jour les données accidents.
+#     """
+#     # Récupération des identifiants et mots de passe:
+#     user, psw = identification.split(":")
+
+#     # Test d'autorisation:
+#     if users_db[user]['rights'] == 1:
+
+#         # Test d'identification:
+#         if users_db[user]['password'] == psw:
+#             # download, clean and preprocess data => X_train.csv, X_test.csv, y_train.csv, y_test.csv files
+#             exec_time_start = time.time()
+#             data = datalib.Data(update_data.start_year, update_data.end_year, root_path)
+#             exec_time_end = time.time()
+
+#             # Préparation des métadonnées pour exportation
+#             metadata_dictionary = {
+#                 "request_id": "".join(random.choices(string.digits, k=16)),
+#                 "time_stamp": str(datetime.datetime.now()),
+#                 "user_name": user,
+#                 "response_status_code": 200,
+#                 "start_year": update_data.start_year,
+#                 "end_year": update_data.end_year,
+#                 "execution_time": exec_time_end - exec_time_start
+#                 }
+#             metadata_json = json.dumps(obj=metadata_dictionary)
+
+#             # Exportation des métadonnées
+#             path_log_file = os.path.join(path_logs, "update_data.jsonl")
+#             with open(path_log_file, "a") as file:
+#                 file.write(metadata_json + "\n")
+
+#         else:
+#             raise HTTPException(
+#                 status_code=401,
+#                 detail="Identifiant ou mot de passe invalide(s)")
+#     else:
+#         raise HTTPException(
+#                 status_code=403,
+#                 detail="Vous n'avez pas les droits d'administrateur.")
+
+
 # >>>>>>>> MICROSERVICE: TRAINING <<<<<<<<
 
 
@@ -392,86 +475,3 @@ async def update_f1_score(identification=Header(None)):
                 status_code=403,
                 detail="Administrator privileges required."
                 )
-
-
-# ---------- 7. Mise à jour de la base de données -----------------------------
-@api.get('/data_api_status', name="check data API status", tags=['GET'])
-async def requests_test():
-    response = requests.get(url='http://data_container:8000/status')
-    if response.status_code == 200:
-        return {response.text}
-    else:
-        return {"url unknown"}
-
-
-class YearRange(BaseModel):
-    start_year: int  # admin shall use valid year e.g 2021
-    end_year: int    # admin shall use valid year e.g 2021
-
-
-@api.post('/update_data', name='Update accident data', tags=['UPDATE'])
-async def update_data(year_range: YearRange, identification=Header(None)):
-    user, pwd = identification.split(":")
-    if users_db[user]['rights'] == 1:
-        if users_db[user]['password'] == pwd:
-            params = {
-                "start_year": year_range.start_year,
-                "end_year": year_range.end_year
-            }
-            response = requests.post(url='http://data_container:8000/update_data', json=params)
-            if response.status_code == 200:
-                return {"Data updated"}
-            else:
-                return {"Request in error"}
-        else:
-            raise HTTPException(
-                status_code=401,
-                detail="Invalid login or password.")
-    else:
-        raise HTTPException(
-                status_code=403,
-                detail="You do not have administrator rights.")
-
-
-# @api.post('/update_data', name='Mise à jour des données accidents', tags=['UPDATE'])
-# async def update_data(update_data: UpdateData, identification=Header(None)):
-#     """Fonction pour mettre à jour les données accidents.
-#     """
-#     # Récupération des identifiants et mots de passe:
-#     user, psw = identification.split(":")
-
-#     # Test d'autorisation:
-#     if users_db[user]['rights'] == 1:
-
-#         # Test d'identification:
-#         if users_db[user]['password'] == psw:
-#             # download, clean and preprocess data => X_train.csv, X_test.csv, y_train.csv, y_test.csv files
-#             exec_time_start = time.time()
-#             data = datalib.Data(update_data.start_year, update_data.end_year, root_path)
-#             exec_time_end = time.time()
-
-#             # Préparation des métadonnées pour exportation
-#             metadata_dictionary = {
-#                 "request_id": "".join(random.choices(string.digits, k=16)),
-#                 "time_stamp": str(datetime.datetime.now()),
-#                 "user_name": user,
-#                 "response_status_code": 200,
-#                 "start_year": update_data.start_year,
-#                 "end_year": update_data.end_year,
-#                 "execution_time": exec_time_end - exec_time_start
-#                 }
-#             metadata_json = json.dumps(obj=metadata_dictionary)
-
-#             # Exportation des métadonnées
-#             path_log_file = os.path.join(path_logs, "update_data.jsonl")
-#             with open(path_log_file, "a") as file:
-#                 file.write(metadata_json + "\n")
-
-#         else:
-#             raise HTTPException(
-#                 status_code=401,
-#                 detail="Identifiant ou mot de passe invalide(s)")
-#     else:
-#         raise HTTPException(
-#                 status_code=403,
-#                 detail="Vous n'avez pas les droits d'administrateur.")
