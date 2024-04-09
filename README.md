@@ -1,109 +1,209 @@
-# Project Name: SHIELD
+# 🛡️ SHIELD
 
-(Safety Hazard Identification and Emergency Law Deployment)
 
-## Project Organization
+## ℹ️ About
 
-    ├── LICENSE
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── logs               <- Logs from training and predicting
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   ├── check_structure.py
-    │   │   ├── import_raw_data.py
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │   │
-    │   │   └── api        <- Scripts for the API and unit tests and auxiliary files.
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   ├── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │   │   └── visualize.py
-    │   └── config         <- Describe the parameters used in train_model.py and predict_model.py
+**SHIELD** (_Safety Hazard Identification and Emergency Law Deployment_) is an AI-powered Python app that uses machine learning to predict road accident priority levels, helping law enforcement optimize resources and maximize impact.
 
----
 
-## Steps to follow on Linux:
+## 🧑🏻‍💻 Development Team
 
-Convention : All python scripts must be run from the root specifying the relative file path.
+**SHIELD** is developed by:
 
-### 1- Create a virtual environment using Virtualenv.
+- Fabrice **Charraud** ([@FCharraud](https://github.com/FCharraud))
+- Omar **Choa** ([@omarchoa](https://github.com/omarchoa))
+- Michael **Deroche** ([@miklderoche](https://github.com/miklderoche))
+- Alexandre **Winger** ([@alexandrewinger](https://github.com/alexandrewinger))
 
-    `python -m venv my_env`
+**SHIELD** constitutes our final project for the [DataScientest Machine Learning Engineer Program](https://datascientest.com/en/machine-learning-engineer-course).
 
-### Activate it
 
-    `chmod +x ./my_env/bin/activate
-    ./my_env/bin/activate`
+## 🏛️ App Architecture
 
-### Install the packages from requirements.txt
+**SHIELD** is designed following the [microservice architecture pattern](https://microservices.io/patterns/microservices.html), with an [API gateway](https://microservices.io/patterns/apigateway.html) serving as the single entry point for all clients, routing requests to the appropriate microservices.
 
-    `pip install -r requirements.txt`
+**Figure 1** illustrates the global app architecture.
 
-### 2- Execute import_raw_data.py to import the 4 datasets.
+![SHIELD global architecture](/reports/figures/architecture_v2.png)
+<p align="center">
+    <b>Figure 1.</b> The global app architecture.
+</p>
 
-    `python src/data/import_raw_data.py` ### It will ask you to create a new folder, accept it.
+Each microservice runs in its own Docker container. Requests are handled by a dedicated micro-API in the container, and data persistence is implemented using Docker volumes. The entire backend (API gateway and microservices) runs on a single Docker network (`shield`).
 
-### 3- Execute make_dataset.py initializing `./data/raw` as input file path and `./data/preprocessed` as output file path.
+**Figure 2** illustrates this sub-architecture, taking the `training` microservice as an example.
 
-    `python src/data/make_dataset.py`
+![Training microservice sub-architecture](/reports/figures/architecture_v2_training.png)
+<p align="center">
+    <b>Figure 2.</b> The sub-architecture of the <code>training</code> microservice.
+</p>
 
-### 4- Execute train_model.py to instanciate the model in joblib format
 
-    `python src/models/train_model.py`
+## 🗂️ Repository Tree
 
-### 5- Run the api:
+The repository is structured as follows:
 
-    `uvicorn --app-dir ./src/features/api api:api --reload --host=127.0.0.1 --port=8000`
+```text
+├── LICENSE
+├── README.md                           <- The top-level README for developers using this
+│                                          project.
+├── docker-compose.yml                  <- Script to launch the `dummy`, `training`,
+│                                          `prediction`, and `scoring` microservices.
+├── docker-setup-linux.sh               <- Script to initialize the `dummy`, `training`,
+│                                          `prediction`, and `scoring` microservices on Linux.
+├── docker-setup-mac.sh                 <- Script to initialize the `dummy`, `training`,
+│                                          `prediction`, and `scoring` microservices on Mac.
+├── requirements.txt                    <- The requirements file for reproducing the analysis
+│                                          environment, e.g. generated with
+│                                          `pip freeze > requirements.txt`.
+├── test_requirements.txt               <- The requirements file for unit testing.
+│
+│
+├── data/
+│    ├── (in .gitignore) cleaned/       <- Intermediate data that has been transformed.
+│    ├── (in .gitignore) preprocessed/  <- The final, canonical data sets for modeling.
+│    ├── (in .gitignore) raw/           <- The original, immutable data dump.
+│    └── sample/                        <- Sample data for testing and debugging.
+│
+├── logs/                               <- Logs from training and predicting.
+│
+├── models/                             <- Trained and serialized models, model predictions,
+│                                          or model summaries.
+│
+├── notebooks/                          <- Jupyter notebooks. Naming convention is a number
+│                                          (for ordering), the creator's initials, and a short
+│                                          `-` delimited description, e.g.
+│                                          `1.0-jqp-initial-data-exploration`.
+│
+├── references/                         <- Data dictionaries, manuals, and all other
+│                                          explanatory materials.
+│
+├── reports/                            <- Generated analysis as HTML, PDF, LaTeX, etc.
+│    └── figures/                       <- Generated graphics and figures to be used in
+│                                          reporting.
+│
+├── src/                                <- Source code for use in this project.
+│    ├── api/                           <- Scripts for the app prototype (API V1).
+│    │
+│    ├── config/                        <- Configuration package with helper modules.
+│    │
+│    ├── data/                          <- Scripts to download or generate data.
+│    │
+│    ├── docker/                        <- Scripts to build Docker images and run Docker
+│    │    │                                containers.
+│    │    ├── bdd/                      <- Scripts for the `users` microservice.
+│    │    ├── data/                     <- Scripts for the `data` microservice.
+│    │    ├── dummy/                    <- Scripts for the `dummy` microservice (for testing
+│    │    │                                and debugging).
+│    │    ├── main_api/                 <- Scripts for the `gateway` microservice (API V2).
+│    │    ├── prediction/               <- Scripts for the `prediction` microservice.
+│    │    ├── scoring/                  <- Scripts for the `scoring` microservice.
+│    │    ├── training/                 <- Scripts for the `training` microservice.
+│    │    ├── all_in_one.sh             <- Script to initialize the `users`, `data`, and
+│    │    │                                `gateway` microservices.
+│    │    └── docker-compose.yml        <- Script to launch the `users`, `data`, and
+│    │                                     `gateway` microservices.
+│    │
+│    ├── models/                        <- Scripts to train models and then use trained models
+│    │                                     to make
+│    │                                     predictions.
+│    └── scoring/                       <- Scripts for scoring and monitoring.
+```
 
-### 6- Check if the api is running:
 
-In a new terminal, type:
+## 🎬 Getting Started
 
-    `curl -X GET http://127.0.0.1:8000/status`
+To use the app from the repository root:
 
-It should return: "L'api fonctionne."
+### 1. Set up a Python virtual environment
+
+Using Python's `venv` module, with `sword` as the virtual environment name, open a terminal window and run the following commands:
+
+```shell
+python -m venv sword
+chmod +x ./sword/bin/activate
+source ./sword/bin/activate
+```
+
+### 2. Install Docker
+
+[Instructions](https://docs.docker.com/get-docker/) for a wide variety of platforms are available on the official Docker website.
+
+### 3. Set up and launch the app
+
+Run the following command:
+
+_On Linux_
+
+```shell
+sh docker-setup-linux.sh
+```
+
+_On Mac_
+
+```shell
+sh docker-setup-mac.sh
+```
+
+> [!IMPORTANT]
+> `sudo` privileges are required to complete the execution of these scripts.
+
+### 4. Check the status of the microservices
+
+To ping the `training` microservice, open a new terminal window and run the following command:
+
+```shell
+curl -X GET i http://0.0.0.0:8004/status
+```
+
+You should receive the following response:
+
+```text
+"The microservice API is up."
+```
+
+> [!NOTE]
+> The `prediction` and `scoring` microservices listen on ports `8005` and `8006`, respectively.
+
+### 5. Try out the microservice features
+
+For the `training` microservice, the full, interactive list of endpoints is accessible via its API's Swagger UI at [`http://0.0.0.0:8004/docs`](http://0.0.0.0:8004/docs).
+
+> [!IMPORTANT]
+> Certain endpoints require **user authentication**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `fdo:c0ps`.
+>
+> Other endpoints additionally require **administrator authorization**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `admin:4dmin`.
+
+> [!NOTE]
+> The endpoints for the `prediction` and `scoring` microservices are available on ports `8005` and `8006`, respectively.
+
+### 6. Stop the app
+
+To stop the app, return to the terminal window used to launch it in [Step 4](#4-run-the-setup-script-and-start-up-the-app) and press `Ctrl + C`.
+
+### 7. Resume the app
+
+To resume the app, run the following command:
+
+```shell
+docker-compose up
+```
+
+### 8. Shut down the app
+
+To shut down the app and remove all associated containers, run the following command:
+
+```shell
+docker-compose down
+```
+
+
+<!--
+
 
 ### 7- Run the tests:
 
 `python ./src/features/api/test_api.py`
-
-### 8- Manually test the api:
-
-In your navigator, go to http://127.0.0.1:8000/docs
-
-You can test all the endpoints. When needed, you will be asked a username and a password. We implemented two types of users:
-_ Adminstrator Users: try it with `admin:4dmin`. This user's type can run every endpoint.
-_ Standard Users: try it with `fdo:c0ps`. This user's type can only run the following endpoints: /status (which doesn't requires any identification), /predict_from_call, /predict_from_test, /label
 
 ### 9- Test the api with terminal command:
 
@@ -166,3 +266,7 @@ _ Standard Users: try it with `fdo:c0ps`. This user's type can only run the foll
 Commands are not available for Windows for now. You will have to test the endpoints by going to http://127.0.0.1:8000/docs in your navigator (please refer to ### 8- for further informations.)
 
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+
+
+-->
+
