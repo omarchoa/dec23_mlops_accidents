@@ -1,3 +1,6 @@
+name: shield ## project name
+
+
 services:
   # api gateway
   gateway:
