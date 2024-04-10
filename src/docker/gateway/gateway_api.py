@@ -124,12 +124,12 @@ api = FastAPI(
 # ---------- 1. Vérification du fonctionnement de l’API: ----------------------
 
 
-@api.get('/status', name="Check whether the gateway API is running", tags=['GET'])
+@api.get('/status', name="Check whether the API gateway is running", tags=['GET'])
 async def is_fonctionnal():
     """
-    Check whether the gateway API is running
+    Check whether the API gateway is running
     """
-    return {"The gateway API is running"}
+    return {"The API gateway is up."}
 
 # ---------- 2. Inscription d'un utilisateur: ---------------------------------
 
