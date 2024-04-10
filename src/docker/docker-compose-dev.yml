@@ -37,7 +37,8 @@ services:
     networks:
       - shield
     ports:
-      - "8001:8001"
+        - target: 8001
+          published: "8001"
     volumes:
       - type: volume
         source: users
