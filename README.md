@@ -136,7 +136,7 @@ To build the Docker images from the repository Dockerfiles, run the following co
 docker-compose -f ./src/docker/docker-compose-dev.yml up
 ```
 
-To pull the Docker images from Docker Hub, run the following command:
+To pull the Docker images from Docker Hub instead, run the following command:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-prod.yml up
