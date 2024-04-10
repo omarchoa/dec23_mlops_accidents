@@ -2,6 +2,20 @@ name: shield ## project name
 
 
 services:
+  # dummy microservice (dev tool)
+  dummy:
+    pull_policy: build
+    build:
+      context: ../..
+      dockerfile: src/docker/dummy/dummy.Dockerfile
+    image: omarchoa/shield:dummy
+    container_name: dummy
+    networks:
+      - shield
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs:ro
+      - models:/home/shield/models:ro
   # api gateway
   gateway:
     pull_policy: build
@@ -63,20 +77,6 @@ services:
     volumes:
       - data:/home/shield/data:ro
       - logs:/home/shield/logs
-      - models:/home/shield/models:ro
-  # dummy microservice (for debugging purposes)
-  dummy:
-    pull_policy: build
-    build:
-      context: ../..
-      dockerfile: src/docker/dummy/dummy.Dockerfile
-    image: omarchoa/shield:dummy
-    container_name: dummy
-    networks:
-      - shield
-    volumes:
-      - data:/home/shield/data:ro
-      - logs:/home/shield/logs:ro
       - models:/home/shield/models:ro
 
 # network declarations
