@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy the source code files into the container
 COPY . /app
 
-# Add src/ directory to Python path
-ENV PYTHONPATH=/app/src
+# Add src/ directory to Python path within the container
+RUN python -c "import sys; sys.path.append('/app/src')"
 
 # Install necessary dependencies for running unit tests
 RUN pip install -r tests/unit_tests_requirements.txt
