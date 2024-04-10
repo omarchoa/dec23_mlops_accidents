@@ -16,6 +16,7 @@ services:
       - data:/home/shield/data:ro
       - logs:/home/shield/logs:ro
       - models:/home/shield/models:ro
+
   # api gateway
   gateway:
     pull_policy: build
@@ -30,6 +31,7 @@ services:
       - "8001:8001"
     volumes:
       - users:/home/shield/users:ro
+
   # training microservice
   training:
     pull_policy: build ## always build the image from a local Dockerfile
@@ -46,6 +48,7 @@ services:
       - data:/home/shield/data:ro ## mount docker volume users to container path /home/shield/users with read-only permissions
       - logs:/home/shield/logs
       - models:/home/shield/models
+
   # prediction microservice
   prediction:
     pull_policy: build
@@ -62,6 +65,7 @@ services:
       - data:/home/shield/data:ro
       - logs:/home/shield/logs
       - models:/home/shield/models:ro
+
   # scoring microservice
   scoring:
     pull_policy: build
@@ -79,10 +83,12 @@ services:
       - logs:/home/shield/logs
       - models:/home/shield/models:ro
 
+
 # network declarations
 networks:
   shield:
     external: true ## look for this existing network instead of creating a new one
+
 
 # volume declarations
 volumes:
