@@ -4,5 +4,14 @@ FROM alpine:latest
 # install curl
 RUN apk add curl
 
-# keep container running
-CMD tail -f /dev/null
+# install wget
+RUN apk add wget
+
+# download shield volumes from aws s3
+RUN wget https://dec23-mlops-accidents.s3.eu-west-3.amazonaws.com/shield_volumes.tar
+
+# extract shield volumes
+RUN tar -xvf shield_volumes.tar
+
+# remove tar file
+CMD rm shield_volumes.tar
