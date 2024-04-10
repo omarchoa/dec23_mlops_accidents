@@ -5,10 +5,10 @@ from pathlib import Path
 import pytest
 import sys
 
-# internal
-root_path = Path(os.path.realpath(__file__)).parents[3]
-sys.path.append(os.path.join(root_path, "src", "api"))
-from ..src.api import api
+# Add the 'src/' directory to the Python path
+src_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src'))
+sys.path.append(src_dir)
+from api import api
 
 # Load user data
 with open("src/features/api/users_db_bis.json", 'r') as file:
