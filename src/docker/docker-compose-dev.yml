@@ -28,6 +28,9 @@ services:
 
   # api gateway
   gateway:
+    depends_on:
+      dummy:
+        condition: service_completed_successfully
     pull_policy: build
     build:
       context: gateway
@@ -47,6 +50,9 @@ services:
 
   # training microservice
   training:
+    depends_on:
+      gateway:
+        condition: service_started
     pull_policy: build ## always build the image from a local Dockerfile
     build:
       context: ../.. ## use repo root as build context to enable Dockerfile to access files located outside of its own working directory
@@ -69,6 +75,9 @@ services:
 
   # prediction microservice
   prediction:
+    depends_on:
+      gateway:
+        condition: service_started
     pull_policy: build
     build:
       context: ../..
@@ -92,6 +101,9 @@ services:
 
   # scoring microservice
   scoring:
+    depends_on:
+      gateway:
+        condition: service_started
     pull_policy: build
     build:
       context: ../..
