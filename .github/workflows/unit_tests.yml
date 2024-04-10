@@ -20,4 +20,10 @@ jobs:
       run: docker build -t my_unit_tests tests/  # Use the path to the tests/ directory
 
     - name: Run unit tests
-      run: docker run my_unit_tests
+      run: |
+        docker run my_unit_tests
+        UNIT_TEST_EXIT_CODE=$?
+        if [ $UNIT_TEST_EXIT_CODE -ne 0 ]; then
+          echo "Unit tests failed"
+          exit 1
+        fi
