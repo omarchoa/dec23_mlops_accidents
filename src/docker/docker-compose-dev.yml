@@ -13,9 +13,18 @@ services:
     networks:
       - shield
     volumes:
-      - data:/home/shield/data:ro
-      - logs:/home/shield/logs:ro
-      - models:/home/shield/models:ro
+      - type: volume
+        source: data
+        target: /home/shield/data
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
+      - type: volume
+        source: users
+        target: /home/shield/users
 
   # api gateway
   gateway:
@@ -30,7 +39,10 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - users:/home/shield/users:ro
+      - type: volume
+        source: users
+        target: /home/shield/users
+        read_only: true
 
   # training microservice
   training:
@@ -45,9 +57,16 @@ services:
     ports:
       - "8004:8004"
     volumes:
-      - data:/home/shield/data:ro ## mount docker volume users to container path /home/shield/users with read-only permissions
-      - logs:/home/shield/logs
-      - models:/home/shield/models
+      - type: volume
+        source: data
+        target: /home/shield/data
+        read_only: true
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
 
   # prediction microservice
   prediction:
@@ -62,9 +81,17 @@ services:
     ports:
       - "8005:8005"
     volumes:
-      - data:/home/shield/data:ro
-      - logs:/home/shield/logs
-      - models:/home/shield/models:ro
+      - type: volume
+        source: data
+        target: /home/shield/data
+        read_only: true
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
+        read_only: true
 
   # scoring microservice
   scoring:
@@ -79,9 +106,17 @@ services:
     ports:
       - "8006:8006"
     volumes:
-      - data:/home/shield/data:ro
-      - logs:/home/shield/logs
-      - models:/home/shield/models:ro
+      - type: volume
+        source: data
+        target: /home/shield/data
+        read_only: true
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
+        read_only: true
 
 
 # network declarations
