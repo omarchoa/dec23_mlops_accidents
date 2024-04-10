@@ -8,7 +8,7 @@ import sys
 # internal
 root_path = Path(os.path.realpath(__file__)).parents[3]
 sys.path.append(os.path.join(root_path, "src", "api"))
-from api import api
+from src.api import api
 
 # Load user data
 with open("src/features/api/users_db_bis.json", 'r') as file:
