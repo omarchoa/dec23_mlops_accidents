@@ -1,6 +1,7 @@
 services:
-  # gateway microservice
+  # api gateway
   gateway:
+    pull_policy: always ## always pull the image from Docker Hub
     image: omarchoa/shield:gateway
     container_name: gateway
     networks:
@@ -11,6 +12,7 @@ services:
       - users:/home/shield/users:ro ## mount docker volume users to container path /home/shield/users with read-only permissions
   # dummy microservice (for debugging purposes)
   dummy:
+    pull_policy: always
     image: omarchoa/shield:dummy
     container_name: dummy
     networks:
@@ -21,6 +23,7 @@ services:
       - models:/home/shield/models:ro
   # training microservice
   training:
+    pull_policy: always
     image: omarchoa/shield:training
     container_name: training
     networks:
@@ -33,6 +36,7 @@ services:
       - models:/home/shield/models
   # prediction microservice
   prediction:
+    pull_policy: always
     image: omarchoa/shield:prediction
     container_name: prediction
     networks:
@@ -45,6 +49,7 @@ services:
       - models:/home/shield/models:ro
   # scoring microservice
   scoring:
+    pull_policy: always
     image: omarchoa/shield:scoring
     container_name: scoring
     networks:

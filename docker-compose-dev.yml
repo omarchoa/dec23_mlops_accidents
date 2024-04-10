@@ -1,0 +1,93 @@
+services:
+  # api gateway
+  gateway:
+    pull_policy: build ## always build the image from a local Dockerfile
+    build:
+      context: src/docker/gateway
+      dockerfile: gateway.Dockerfile
+    image: omarchoa/shield:gateway
+    container_name: gateway
+    networks:
+      - shield
+    ports:
+      - "8001:8001"
+    volumes:
+      - users:/home/shield/users:ro ## mount docker volume users to container path /home/shield/users with read-only permissions
+  # dummy microservice (for debugging purposes)
+  dummy:
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: src/docker/dummy/dummy.Dockerfile
+    image: omarchoa/shield:dummy
+    container_name: dummy
+    networks:
+      - shield
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs:ro
+      - models:/home/shield/models:ro
+  # training microservice
+  training:
+    pull_policy: build
+    build:
+      context: . ## use docker compose file's working directory (repo root) as build context to enable Dockerfile to access files located outside of its own working directory
+      dockerfile: src/docker/training/training.Dockerfile ## path to Dockerfile
+    image: omarchoa/shield:training
+    container_name: training
+    networks:
+      - shield
+    ports:
+      - "8004:8004"
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs
+      - models:/home/shield/models
+  # prediction microservice
+  prediction:
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: src/docker/prediction/prediction.Dockerfile
+    image: omarchoa/shield:prediction
+    container_name: prediction
+    networks:
+      - shield
+    ports:
+      - "8005:8005"
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs
+      - models:/home/shield/models:ro
+  # scoring microservice
+  scoring:
+    pull_policy: build
+    build:
+      context: .
+      dockerfile: src/docker/scoring/scoring.Dockerfile
+    image: omarchoa/shield:scoring
+    container_name: scoring
+    networks:
+      - shield
+    ports:
+      - "8006:8006"
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs
+      - models:/home/shield/models:ro
+
+# network declarations
+networks:
+  shield:
+    external: true ## look for this existing network instead of creating a new one
+
+# volume declarations
+volumes:
+  data:
+    external: true ## look for this existing volume instead of creating a new one
+  logs:
+    external: true
+  models:
+    external: true
+  users:
+    external: true
