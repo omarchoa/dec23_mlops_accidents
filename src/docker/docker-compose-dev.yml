@@ -93,10 +93,10 @@ networks:
 # volume declarations
 volumes:
   data:
-    external: true ## look for this existing volume instead of creating a new one
+    name: data ## create volume with this specific name
   logs:
-    external: true
+    name: logs
   models:
-    external: true
+    name: models
   users:
-    external: true
+    name: users
