@@ -104,9 +104,7 @@ The repository is structured as follows:
 │    ├── models/                        <- Scripts to train models and then use trained models
 │    │                                     to make predictions.
 │    │
-│    ├── scoring/                       <- Scripts for model performance scoring.
-│    │
-│    └── scripts/                       <- Scripts to set up and launch the app.
+│    └── scoring/                       <- Scripts for model performance scoring.
 │
 └── tests/                              <- Tools and utilities for unit testing.
 ```
@@ -130,24 +128,19 @@ source ./sword/bin/activate
 
 [Instructions](https://docs.docker.com/get-docker/) for a wide variety of platforms are available on the official Docker website.
 
-### 3. Set up and launch the app
+### 3. Launch the app
 
-Run the following command:
-
-_On Linux_
+To build the Docker images from the repository Dockerfiles, run the following command:
 
 ```shell
-sh ./src/scripts/setup_dev_linux.sh
+docker-compose -f ./src/docker/docker-compose-dev.yml up
 ```
 
-_On Mac_
+To pull the Docker images from Docker Hub, run the following command:
 
 ```shell
-sh ./src/scripts/setup_dev_mac.sh
+docker-compose -f ./src/docker/docker-compose-prod.yml up
 ```
-
-> [!IMPORTANT]
-> `sudo` privileges are required to complete the execution of these scripts.
 
 ### 4. Check service status
 
@@ -174,22 +167,24 @@ The full, interactive list of endpoints is accessible via the API gateway's Swag
 
 ### 6. Stop the app
 
-To stop the app, return to the terminal window used to launch it in [Step 4](#4-check-service-status) and press `Ctrl + C`.
+To stop the app, return to the terminal window that you used to launch it in [Step 3](#3-launch-the-app) and press `Ctrl + C`.
 
 ### 7. Resume the app
 
-To resume the app, run the following command:
-
-```shell
-docker-compose -f ./src/docker/docker-compose-dev.yml up
-```
+To resume the app, run the same command that you used in [Step 3](#3-launch-the-app).
 
 ### 8. Shut down the app
 
-To shut down the app and remove all associated containers, run the following command:
+To shut down the app, run the same command that you used in [Step 3](#3-launch-the-app), replacing `up` with `down`:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml down
+```
+
+_or_
+
+```shell
+docker-compose -f ./src/docker/docker-compose-prod.yml down
 ```
 
 
