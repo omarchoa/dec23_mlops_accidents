@@ -54,8 +54,6 @@ services:
     container_name: training
     networks:
       - shield
-    ports:
-      - "8004:8004"
     volumes:
       - type: volume
         source: data
@@ -78,8 +76,6 @@ services:
     container_name: prediction
     networks:
       - shield
-    ports:
-      - "8005:8005"
     volumes:
       - type: volume
         source: data
@@ -103,8 +99,6 @@ services:
     container_name: scoring
     networks:
       - shield
-    ports:
-      - "8006:8006"
     volumes:
       - type: volume
         source: data
