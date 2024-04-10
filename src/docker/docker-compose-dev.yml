@@ -2,6 +2,7 @@ name: shield ## project name
 
 
 services:
+
   # dummy microservice (dev tool)
   dummy:
     pull_policy: build
