@@ -75,9 +75,9 @@ if __name__ == "__main__":
 
     # define response
     if priority == 1:
-        response = "Incident priority level: high."
+        response = "Road accident priority level: high."
     else:
-        response = "Incident priority level: low."
+        response = "Road accident priority level: low."
 
     # print response
     print(response)
