@@ -87,7 +87,7 @@ services:
 # network declarations
 networks:
   shield:
-    external: true ## look for this existing network instead of creating a new one
+    name: shield ## create network with this specific name
 
 
 # volume declarations
