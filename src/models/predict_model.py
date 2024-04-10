@@ -1,3 +1,4 @@
+# imports
 import joblib
 import pandas as pd
 import sys
@@ -10,19 +11,20 @@ import string
 import os
 
 
-# Load your saved model
+# load model
 model = joblib.load(paths.MODEL_TRAINED)
 
 
-def predict_model(features):
+# define prediction function
+def predict(features):
     input_df = pd.DataFrame([features])
-    ## print(input_df)
     pred_time_start = time.time()
     prediction = model.predict(input_df)
     pred_time_end = time.time()
     return prediction, input_df, pred_time_start, pred_time_end
 
 
+# define manual feature input function
 def get_feature_values_manually(feature_names):
     features = {}
     for feature_name in feature_names:
@@ -31,17 +33,24 @@ def get_feature_values_manually(feature_names):
     return features
 
 
+# main function
 if __name__ == "__main__":
+    # if input file is provided, read features from file
     if len(sys.argv) == 2:
         json_file = sys.argv[1]
         with open(json_file, "r") as file:
             features = json.load(file)
+    # else, read features via manual input
     else:
         X_train = pd.read_csv(paths.X_TRAIN)
         feature_names = X_train.columns.tolist()
         features = get_feature_values_manually(feature_names)
 
-    result, input_df, pred_time_start, pred_time_end = predict_model(features)
+    # perform prediction and save outputs
+    result, input_df, pred_time_start, pred_time_end = predict(features)
+
+    # get incident priority level
+    priority = result[0]
 
     # prepare log data for export
     log_dict = {
@@ -50,7 +59,7 @@ if __name__ == "__main__":
         ## "user_name": user,
         "response_status_code": 200,
         "input_features": input_df.to_dict(orient="records")[0],
-        "output_prediction": int(result[0]),
+        "output_prediction": int(priority),
         "verified_prediction": None,
         "prediction_time": pred_time_end - pred_time_start,
     }
@@ -64,5 +73,11 @@ if __name__ == "__main__":
     with open(log_path, "a") as file:
         file.write(log_json + "\n")
 
-    result_dict = {"prediction": log_dict["output_prediction"]}
-    print(result_dict)
+    # define response
+    if priority == 1:
+        response = "Road accident priority level: high."
+    else:
+        response = "Road accident priority level: low."
+
+    # print response
+    print(response)

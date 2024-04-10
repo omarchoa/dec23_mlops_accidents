@@ -1,4 +1,7 @@
 
+<!-- WIP: needs revision to reflect new architecture -->
+
+
 # 1. Test / : vérification du fonctionnement de l’API:
 curl -X 'GET' 'http://127.0.0.1:8000/' -H 'accept: application/json'
 
@@ -81,7 +84,7 @@ curl -X 'GET' \
   -H 'accept: application/json' \
   -H 'identification: admin:4dmin'
 
-  # 7. Test /update_data: 
+  # 7. Test /update_data:
 
 curl -X 'POST' \
   'http://127.0.0.1:8000/update_data' \

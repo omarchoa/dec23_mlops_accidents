@@ -45,24 +45,18 @@ The repository is structured as follows:
 
 ```text
 ├── LICENSE
+│
 ├── README.md                           <- The top-level README for developers using this
 │                                          project.
-├── docker-compose.yml                  <- Script to launch the `dummy`, `training`,
-│                                          `prediction`, and `scoring` microservices.
-├── docker-setup-linux.sh               <- Script to initialize the `dummy`, `training`,
-│                                          `prediction`, and `scoring` microservices on Linux.
-├── docker-setup-mac.sh                 <- Script to initialize the `dummy`, `training`,
-│                                          `prediction`, and `scoring` microservices on Mac.
-├── requirements.txt                    <- The requirements file for reproducing the analysis
-│                                          environment, e.g. generated with
-│                                          `pip freeze > requirements.txt`.
-├── test_requirements.txt               <- The requirements file for unit testing.
-│
 │
 ├── data/
+│    │
 │    ├── (in .gitignore) cleaned/       <- Intermediate data that has been transformed.
+│    │
 │    ├── (in .gitignore) preprocessed/  <- The final, canonical data sets for modeling.
+│    │
 │    ├── (in .gitignore) raw/           <- The original, immutable data dump.
+│    │
 │    └── sample/                        <- Sample data for testing and debugging.
 │
 ├── logs/                               <- Logs from training and predicting.
@@ -79,11 +73,11 @@ The repository is structured as follows:
 │                                          explanatory materials.
 │
 ├── reports/                            <- Generated analysis as HTML, PDF, LaTeX, etc.
+│    │
 │    └── figures/                       <- Generated graphics and figures to be used in
 │                                          reporting.
 │
 ├── src/                                <- Source code for use in this project.
-│    ├── api/                           <- Scripts for the app prototype (API V1).
 │    │
 │    ├── config/                        <- Configuration package with helper modules.
 │    │
@@ -91,23 +85,30 @@ The repository is structured as follows:
 │    │
 │    ├── docker/                        <- Scripts to build Docker images and run Docker
 │    │    │                                containers.
+│    │    │
 │    │    ├── bdd/                      <- Scripts for the `users` microservice.
+│    │    │
 │    │    ├── data/                     <- Scripts for the `data` microservice.
+│    │    │
 │    │    ├── dummy/                    <- Scripts for the `dummy` microservice (for testing
 │    │    │                                and debugging).
-│    │    ├── main_api/                 <- Scripts for the `gateway` microservice (API V2).
+│    │    │
+│    │    ├── gateway/                  <- Scripts for the API gateway.
+│    │    │
 │    │    ├── prediction/               <- Scripts for the `prediction` microservice.
+│    │    │
 │    │    ├── scoring/                  <- Scripts for the `scoring` microservice.
-│    │    ├── training/                 <- Scripts for the `training` microservice.
-│    │    ├── all_in_one.sh             <- Script to initialize the `users`, `data`, and
-│    │    │                                `gateway` microservices.
-│    │    └── docker-compose.yml        <- Script to launch the `users`, `data`, and
-│    │                                     `gateway` microservices.
+│    │    │
+│    │    └── training/                 <- Scripts for the `training` microservice.
 │    │
 │    ├── models/                        <- Scripts to train models and then use trained models
-│    │                                     to make
-│    │                                     predictions.
-│    └── scoring/                       <- Scripts for scoring and monitoring.
+│    │                                     to make predictions.
+│    │
+│    ├── scoring/                       <- Scripts for model performance scoring.
+│    │
+│    └── scripts/                       <- Scripts to set up and launch the app.
+│
+└── tests/                              <- Tools and utilities for unit testing.
 ```
 
 
@@ -136,57 +137,51 @@ Run the following command:
 _On Linux_
 
 ```shell
-sh docker-setup-linux.sh
+sh ./src/scripts/setup_dev_linux.sh
 ```
 
 _On Mac_
 
 ```shell
-sh docker-setup-mac.sh
+sh ./src/scripts/setup_dev_mac.sh
 ```
 
 > [!IMPORTANT]
 > `sudo` privileges are required to complete the execution of these scripts.
 
-### 4. Check the status of the microservices
+### 4. Check service status
 
-To ping the `training` microservice, open a new terminal window and run the following command:
+To ping the API gateway, open a new terminal window and run the following command:
 
 ```shell
-curl -X GET i http://0.0.0.0:8004/status
+curl -X GET i http://0.0.0.0:8001/status
 ```
 
 You should receive the following response:
 
 ```text
-"The microservice API is up."
+"The API gateway is up."
 ```
-
-> [!NOTE]
-> The `prediction` and `scoring` microservices listen on ports `8005` and `8006`, respectively.
 
 ### 5. Try out the microservice features
 
-For the `training` microservice, the full, interactive list of endpoints is accessible via its API's Swagger UI at [`http://0.0.0.0:8004/docs`](http://0.0.0.0:8004/docs).
+The full, interactive list of endpoints is accessible via the API gateway's Swagger UI at [`http://0.0.0.0:8001/docs`](http://0.0.0.0:8001/docs).
 
 > [!IMPORTANT]
 > Certain endpoints require **user authentication**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `fdo:c0ps`.
 >
 > Other endpoints additionally require **administrator authorization**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `admin:4dmin`.
 
-> [!NOTE]
-> The endpoints for the `prediction` and `scoring` microservices are available on ports `8005` and `8006`, respectively.
-
 ### 6. Stop the app
 
-To stop the app, return to the terminal window used to launch it in [Step 4](#4-run-the-setup-script-and-start-up-the-app) and press `Ctrl + C`.
+To stop the app, return to the terminal window used to launch it in [Step 4](#4-check-service-status) and press `Ctrl + C`.
 
 ### 7. Resume the app
 
 To resume the app, run the following command:
 
 ```shell
-docker-compose up
+docker-compose -f ./src/docker/docker-compose-dev.yml up
 ```
 
 ### 8. Shut down the app
@@ -194,7 +189,7 @@ docker-compose up
 To shut down the app and remove all associated containers, run the following command:
 
 ```shell
-docker-compose down
+docker-compose -f ./src/docker/docker-compose-dev.yml down
 ```
 
 

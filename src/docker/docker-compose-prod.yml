@@ -1,20 +1,18 @@
 services:
-  # api gateway microservice - uncomment and adapt once api gateway is ready
-  ## api_gateway:
-  ##   image: shield:api-gateway
-  ##   container_name: api-gateway
-  # dummy service for debugging purposes
-  dummy:
-    image: omarchoa/shield:dummy
-    container_name: dummy
+  # api gateway
+  gateway:
+    pull_policy: always ## always pull the image from Docker Hub
+    image: omarchoa/shield:gateway
+    container_name: gateway
     networks:
       - shield
+    ports:
+      - "8001:8001"
     volumes:
-      - data:/home/shield/data:ro
-      - logs:/home/shield/logs:ro
-      - models:/home/shield/models:ro
+      - users:/home/shield/users:ro
   # training microservice
   training:
+    pull_policy: always
     image: omarchoa/shield:training
     container_name: training
     networks:
@@ -22,11 +20,12 @@ services:
     ports:
       - "8004:8004"
     volumes:
-      - data:/home/shield/data:ro
+      - data:/home/shield/data:ro ## mount docker volume users to container path /home/shield/users with read-only permissions
       - logs:/home/shield/logs
       - models:/home/shield/models
   # prediction microservice
   prediction:
+    pull_policy: always
     image: omarchoa/shield:prediction
     container_name: prediction
     networks:
@@ -39,6 +38,7 @@ services:
       - models:/home/shield/models:ro
   # scoring microservice
   scoring:
+    pull_policy: always
     image: omarchoa/shield:scoring
     container_name: scoring
     networks:
@@ -49,21 +49,30 @@ services:
       - data:/home/shield/data:ro
       - logs:/home/shield/logs
       - models:/home/shield/models:ro
+  # dummy microservice (for debugging purposes)
+  dummy:
+    pull_policy: always
+    image: omarchoa/shield:dummy
+    container_name: dummy
+    networks:
+      - shield
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs:ro
+      - models:/home/shield/models:ro
 
 # network declarations
 networks:
   shield:
-    ## look for this existing network instead of creating a new one
-    external: true
+    external: true ## look for this existing network instead of creating a new one
 
 # volume declarations
 volumes:
   data:
-    ## look for this existing volume instead of creating a new one
-    external: true
+    external: true ## look for this existing volume instead of creating a new one
   logs:
-    ## look for this existing volume instead of creating a new one
     external: true
   models:
-    ## look for this existing volume instead of creating a new one
+    external: true
+  users:
     external: true

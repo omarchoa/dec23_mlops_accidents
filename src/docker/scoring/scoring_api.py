@@ -6,6 +6,12 @@ from config import paths
 import subprocess
 
 
+# define input data model for endpoint /label_prediction
+class InputDataLabelPred(BaseModel):
+    request_id: int
+    y_true: int
+
+
 # create fastapi instance
 api = FastAPI(
     title="SHIELD Microservice API - Scoring",
@@ -14,12 +20,6 @@ api = FastAPI(
         {"name": "PROCESSES"},
     ],
 )
-
-
-# define input data model
-class PredLabel(BaseModel):
-    request_id: int = 6012919476848551
-    y_true: int = 1
 
 
 # endpoint - status
@@ -35,7 +35,7 @@ async def status():
     tags=["PROCESSES"],
     name="execute microservice process 1",
 )
-async def label_prediction(input_data: PredLabel):
+async def label_prediction(input_data: InputDataLabelPred):
     ## save input data to json file
     input_data_json_object = input_data.model_dump_json()
     input_data_json_file = "input_data.json"
