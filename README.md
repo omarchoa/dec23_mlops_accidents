@@ -49,9 +49,9 @@ The repository is structured as follows:
 │                                          project.
 ├── docker-compose.yml                  <- Script to launch the `dummy`, `training`,
 │                                          `prediction`, and `scoring` microservices.
-├── docker-setup-linux.sh               <- Script to initialize the `dummy`, `training`,
+├── setup_linux.sh                      <- Script to initialize the `dummy`, `training`,
 │                                          `prediction`, and `scoring` microservices on Linux.
-├── docker-setup-mac.sh                 <- Script to initialize the `dummy`, `training`,
+├── setup_mac.sh                        <- Script to initialize the `dummy`, `training`,
 │                                          `prediction`, and `scoring` microservices on Mac.
 ├── requirements.txt                    <- The requirements file for reproducing the analysis
 │                                          environment, e.g. generated with
@@ -136,13 +136,13 @@ Run the following command:
 _On Linux_
 
 ```shell
-sh docker-setup-linux.sh
+sh setup_linux.sh
 ```
 
 _On Mac_
 
 ```shell
-sh docker-setup-mac.sh
+sh setup_mac.sh
 ```
 
 > [!IMPORTANT]
