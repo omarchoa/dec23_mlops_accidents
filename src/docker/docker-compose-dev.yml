@@ -1,7 +1,10 @@
 services:
   # api gateway
   gateway:
-    pull_policy: always ## always pull the image from Docker Hub
+    pull_policy: build
+    build:
+      context: gateway
+      dockerfile: gateway.Dockerfile
     image: omarchoa/shield:gateway
     container_name: gateway
     networks:
@@ -9,21 +12,13 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - users:/home/shield/users:ro ## mount docker volume users to container path /home/shield/users with read-only permissions
-  # dummy microservice (for debugging purposes)
-  dummy:
-    pull_policy: always
-    image: omarchoa/shield:dummy
-    container_name: dummy
-    networks:
-      - shield
-    volumes:
-      - data:/home/shield/data:ro
-      - logs:/home/shield/logs:ro
-      - models:/home/shield/models:ro
+      - users:/home/shield/users:ro
   # training microservice
   training:
-    pull_policy: always
+    pull_policy: build ## always build the image from a local Dockerfile
+    build:
+      context: ../.. ## use repo root as build context to enable Dockerfile to access files located outside of its own working directory
+      dockerfile: src/docker/training/training.Dockerfile ## path to Dockerfile
     image: omarchoa/shield:training
     container_name: training
     networks:
@@ -31,12 +26,15 @@ services:
     ports:
       - "8004:8004"
     volumes:
-      - data:/home/shield/data:ro
+      - data:/home/shield/data:ro ## mount docker volume users to container path /home/shield/users with read-only permissions
       - logs:/home/shield/logs
       - models:/home/shield/models
   # prediction microservice
   prediction:
-    pull_policy: always
+    pull_policy: build
+    build:
+      context: ../..
+      dockerfile: src/docker/prediction/prediction.Dockerfile
     image: omarchoa/shield:prediction
     container_name: prediction
     networks:
@@ -49,7 +47,10 @@ services:
       - models:/home/shield/models:ro
   # scoring microservice
   scoring:
-    pull_policy: always
+    pull_policy: build
+    build:
+      context: ../..
+      dockerfile: src/docker/scoring/scoring.Dockerfile
     image: omarchoa/shield:scoring
     container_name: scoring
     networks:
@@ -59,6 +60,20 @@ services:
     volumes:
       - data:/home/shield/data:ro
       - logs:/home/shield/logs
+      - models:/home/shield/models:ro
+  # dummy microservice (for debugging purposes)
+  dummy:
+    pull_policy: build
+    build:
+      context: ../..
+      dockerfile: src/docker/dummy/dummy.Dockerfile
+    image: omarchoa/shield:dummy
+    container_name: dummy
+    networks:
+      - shield
+    volumes:
+      - data:/home/shield/data:ro
+      - logs:/home/shield/logs:ro
       - models:/home/shield/models:ro
 
 # network declarations
