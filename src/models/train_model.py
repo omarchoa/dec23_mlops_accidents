@@ -1,3 +1,4 @@
+# imports
 import pandas as pd
 from sklearn import ensemble
 import joblib
@@ -10,8 +11,7 @@ import string
 import json
 
 
-# print(joblib.__version__)
-
+# load data
 X_train = pd.read_csv(paths.X_TRAIN)
 X_test = pd.read_csv(paths.X_TEST)
 y_train = pd.read_csv(paths.Y_TRAIN)
@@ -19,12 +19,14 @@ y_test = pd.read_csv(paths.Y_TEST)
 y_train = np.ravel(y_train)
 y_test = np.ravel(y_test)
 
+# rename column "int" to "inter" to avoid conflicts with reserved keyword
 X_train.rename(columns={"int": "inter"}, inplace=True)
 X_test.rename(columns={"int": "inter"}, inplace=True)
 
+# define model
 model = ensemble.RandomForestClassifier(n_jobs=-1)
 
-# --Train the model
+# train model
 train_time_start = time.time()
 model.fit(X_train, y_train)
 train_time_end = time.time()
@@ -48,6 +50,6 @@ log_json = json.dumps(obj=log_dict)
 with open(paths.LOGS_TRAIN, "a") as file:
     file.write(log_json + "\n")
 
-# --Save the trained model to a file
+# save model
 joblib.dump(model, paths.MODEL_TRAINED)
 print("Model trained and saved successfully.")
