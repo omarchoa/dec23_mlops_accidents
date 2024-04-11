@@ -66,9 +66,9 @@ if __name__ == "__main__":
     log_json = json.dumps(obj=log_dict)
 
     # export log data to log file
-    if os.environ.get("ENDPOINT") == "/predict_from_test":
+    if os.environ.get("ENDPOINT") == "/test":
         log_path = paths.LOGS_PREDS_TEST
-    elif os.environ.get("ENDPOINT") == "/predict_from_call":
+    elif os.environ.get("ENDPOINT") == "/call":
         log_path = paths.LOGS_PREDS_UNLABELED
     with open(log_path, "a") as file:
         file.write(log_json + "\n")

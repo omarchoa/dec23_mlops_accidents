@@ -6,7 +6,7 @@ from config import paths
 import subprocess
 
 
-# define input data model for endpoint /predict_from_call
+# define input data model for endpoint /call
 class InputDataPredCall(BaseModel):
     place: int
     catu: int
@@ -39,29 +39,25 @@ class InputDataPredCall(BaseModel):
 
 
 # create fastapi instance
-api = FastAPI(
-    title="SHIELD Microservice API - Prediction",
-    openapi_tags=[
-        {"name": "STATUS"},
-        {"name": "PROCESSES"},
-    ],
-)
+api = FastAPI(title="SHIELD Microservice API - Prediction")
 
 
 # endpoint - status
-@api.get(path="/status", tags=["STATUS"], name="check microservice status")
-async def status():
-    result = "The microservice API is up."
-    return result
-
-
-# endpoint - predict from test
 @api.get(
-    path="/predict_from_test",
-    tags=["PROCESSES"],
-    name="execute microservice process 1",
+    path="/status", tags=["STATUS"], name="check prediction microservice API status"
 )
-async def predict_from_test():
+async def status():
+    result = "The prediction microservice API is up."
+    return JSONResponse(content=result)
+
+
+# endpoint - test
+@api.get(
+    path="/test",
+    tags=["PROCESSES"],
+    name="predict from test",
+)
+async def test():
     ## define shell command
     command = "python {script} {input}".format(
         script=paths.SCRIPTS_MODELS_PREDICT, input=paths.SAMPLE_FEATURES
@@ -72,7 +68,7 @@ async def predict_from_test():
     env_dict = {
         "PYTHONPATH": "home/shield/src",
         "CONTAINERIZED": "yes",
-        "ENDPOINT": "/predict_from_test",
+        "ENDPOINT": "/test",
     }
 
     ## run shell command and save output to result
@@ -84,13 +80,13 @@ async def predict_from_test():
     return JSONResponse(content=str(result.stdout).strip())
 
 
-# endpoint - predict from call
+# endpoint - call
 @api.post(
-    path="/predict_from_call",
+    path="/call",
     tags=["PROCESSES"],
-    name="execute microservice process 2",
+    name="predict from call",
 )
-async def predict_from_call(input_data: InputDataPredCall):
+async def call(input_data: InputDataPredCall):
     # save input data to json file
     input_data_json_object = input_data.model_dump_json()
     input_data_json_file = "input_data.json"
@@ -107,7 +103,7 @@ async def predict_from_call(input_data: InputDataPredCall):
     env_dict = {
         "PYTHONPATH": "home/shield/src",
         "CONTAINERIZED": "yes",
-        "ENDPOINT": "/predict_from_call",
+        "ENDPOINT": "/call",
     }
 
     ## run shell command and save output to result
