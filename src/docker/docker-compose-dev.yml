@@ -49,6 +49,27 @@ services:
         target: /home/shield/users
         read_only: true
 
+  # data microservice
+  data:
+    depends_on:
+      gateway:
+        condition: service_started
+    pull_policy: build
+    build:
+      context: data
+      dockerfile: data.Dockerfile
+    image: omarchoa/shield:data
+    container_name: data
+    networks:
+      - shield
+    volumes:
+      - type: volume
+        source: data
+        target: /home/shield/data
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+
   # training microservice
   training:
     depends_on:
