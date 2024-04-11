@@ -13,27 +13,21 @@ class InputDataLabelPred(BaseModel):
 
 
 # create fastapi instance
-api = FastAPI(
-    title="SHIELD Microservice API - Scoring",
-    openapi_tags=[
-        {"name": "STATUS"},
-        {"name": "PROCESSES"},
-    ],
-)
+api = FastAPI(title="SHIELD Microservice API - Scoring")
 
 
 # endpoint - status
-@api.get(path="/status", tags=["STATUS"], name="check microservice status")
+@api.get(path="/status", tags=["STATUS"], name="check scoring microservice API status")
 async def status():
-    result = "The microservice API is up."
-    return JSONResponse(result)
+    result = "The scoring microservice API is up."
+    return JSONResponse(content=result)
 
 
 # endpoint - label prediction
 @api.post(
     path="/label_prediction",
     tags=["PROCESSES"],
-    name="execute microservice process 1",
+    name="label prediction",
 )
 async def label_prediction(input_data: InputDataLabelPred):
     ## save input data to json file
@@ -58,7 +52,7 @@ async def label_prediction(input_data: InputDataLabelPred):
 @api.get(
     path="/update_f1_score",
     tags=["PROCESSES"],
-    name="execute microservice process 2",
+    name="update f1 score",
 )
 async def update_f1_score():
     ## define shell command
