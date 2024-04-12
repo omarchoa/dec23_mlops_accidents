@@ -1,9 +1,11 @@
 # imports
+import subprocess
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+
 from config import paths
-import subprocess
 
 
 # define input data model for endpoint /call

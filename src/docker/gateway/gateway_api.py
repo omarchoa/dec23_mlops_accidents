@@ -1,12 +1,13 @@
 # >>>>>>>> IMPORTS <<<<<<<<
 
 
-from pydantic import BaseModel
-import os
 import json
+import os
+
+import requests
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
-import requests
+from pydantic import BaseModel
 
 
 # >>>>>>>> CLASS DECLARATIONS <<<<<<<<

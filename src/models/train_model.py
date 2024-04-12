@@ -1,14 +1,16 @@
 # imports
-import pandas as pd
-from sklearn import ensemble
-import joblib
-import numpy as np
-from config import paths
-import time
 import datetime
+import json
 import random
 import string
-import json
+import time
+
+import joblib
+import numpy as np
+import pandas as pd
+from sklearn import ensemble
+
+from config import paths
 
 
 # load data

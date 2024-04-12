@@ -1,14 +1,16 @@
 # imports
-import joblib
-import pandas as pd
-import sys
-import json
-from config import paths
-import time
 import datetime
+import json
+import os
 import random
 import string
-import os
+import sys
+import time
+
+import joblib
+import pandas as pd
+
+from config import paths
 
 
 # load model

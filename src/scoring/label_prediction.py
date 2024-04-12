@@ -1,6 +1,7 @@
 # imports
-import sys
 import json
+import sys
+
 from config import paths
 
 

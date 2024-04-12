@@ -1,13 +1,14 @@
 # imports
+import datetime
+import json
+import random
+import string
+import time
+
+import containerdata
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-import time
-import datetime
-import containerdata  ## custom library
-import random
-import string
-import json
 
 
 # define input data model for endpoint /update

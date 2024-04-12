@@ -1,9 +1,11 @@
 # imports
-import joblib
-from config import paths
-import pandas as pd
 import json
+
+import joblib
+import pandas as pd
 from sklearn.metrics import f1_score
+
+from config import paths
 
 
 # load model
