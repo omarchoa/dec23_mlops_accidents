@@ -14,8 +14,8 @@ import requests
 
 ## define input data model for /update_data endpoint in data microservice
 class YearRange(BaseModel):
-    start_year: int = 2021  ### admin shall use valid year, e.g. 2021
-    end_year: int = 2021  ### admin shall use valid year, e.g. 2021
+    start_year: int  ### admin shall use valid year, e.g. 2021
+    end_year: int  ### admin shall use valid year, e.g. 2021
 
 
 ## define input data model for /predict_from_call endpoint in prediction microservice
