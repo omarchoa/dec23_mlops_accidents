@@ -1,14 +1,16 @@
 # imports
-import joblib
-import pandas as pd
-import sys
-import json
-from config import paths
-import time
 import datetime
+import json
+import os
 import random
 import string
-import os
+import sys
+import time
+
+import joblib
+import pandas as pd
+
+from config import paths
 
 
 # load model
@@ -66,9 +68,9 @@ if __name__ == "__main__":
     log_json = json.dumps(obj=log_dict)
 
     # export log data to log file
-    if os.environ.get("ENDPOINT") == "/predict_from_test":
+    if os.environ.get("ENDPOINT") == "/test":
         log_path = paths.LOGS_PREDS_TEST
-    elif os.environ.get("ENDPOINT") == "/predict_from_call":
+    elif os.environ.get("ENDPOINT") == "/call":
         log_path = paths.LOGS_PREDS_UNLABELED
     with open(log_path, "a") as file:
         file.write(log_json + "\n")

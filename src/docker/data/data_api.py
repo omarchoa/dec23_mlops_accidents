@@ -1,37 +1,64 @@
+# imports
+import datetime
+import json
+import random
+import string
+import time
+
+import containerdata
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-# from pathlib import Path
-# import sys
 
-# local library
-# root_path = Path(os.path.realpath(__file__)).parents[3]
-# sys.path.append(os.path.join(root_path, "src", "data"))
-import containerdata  # will be at the same level in the container
-
-# ---------------------------- API --------------------------------------------
-
-api = FastAPI(
-    title="SHIELD",
-    description="API for downloading raw data files",
-    version="0.1",
-)
-
-
-@api.get('/status', name="check API", tags=['GET'])
-async def is_fonctional():
-    """
-    check if the API is running
-    """
-    return {"DATA API is running"}
-
-
+# define input data model for endpoint /update
 class YearRange(BaseModel):
     start_year: int
     end_year: int
 
 
-@api.post('/update_data', tags=['UPDATE'])
-async def update_data(year_range: YearRange):
-    containerdata.Data(year_range.start_year, year_range.end_year, '/mounted_data_container_side')
-    return {"Data updated"}
+# create fastapi instance
+api = FastAPI(title="SHIELD Microservice API - Data")
+
+
+# endpoint - status
+@api.get(path="/status", tags=["STATUS"], name="check data microservice API status")
+async def status():
+    result = "The data microservice API is up."
+    return JSONResponse(content=result)
+
+
+# endpoint - update
+@api.post(path="/update", tags=["PROCESS"], name="update data")
+async def update(year_range: YearRange):
+    ## download + clean + preprocess data within year range & save to data volume
+    exec_time_start = time.time()
+    containerdata.Data(
+        start_year=year_range.start_year,
+        end_year=year_range.end_year,
+        data_path="home/shield/data",
+    )
+    exec_time_end = time.time()
+
+    ## prepare log data for export
+    log_dict = {
+        "request_id": "".join(random.choices(string.digits, k=16)),
+        "time_stamp": str(datetime.datetime.now()),
+        ### "user_name": user,
+        "response_status_code": 200,
+        "start_year": year_range.start_year,
+        "end_year": year_range.end_year,
+        "execution_time": exec_time_end - exec_time_start,
+    }
+    log_json = json.dumps(obj=log_dict)
+
+    ## export log data to log file
+    log_path = "home/shield/logs/update_data.jsonl"
+    with open(log_path, "a") as file:
+        file.write(log_json + "\n")
+
+    ## define result
+    result = "Data updated."
+
+    ## return result as json response
+    return JSONResponse(content=result)

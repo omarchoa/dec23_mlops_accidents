@@ -147,7 +147,7 @@ docker-compose -f ./src/docker/docker-compose-prod.yml up
 To ping the API gateway, open a new terminal window and run the following command:
 
 ```shell
-curl -X GET i http://0.0.0.0:8001/status
+curl -X GET i http://0.0.0.0:8001/gateway/status/
 ```
 
 You should receive the following response:
