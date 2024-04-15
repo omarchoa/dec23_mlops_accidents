@@ -3,10 +3,10 @@ name: Unit Tests
 on:
   push:
     branches:
-      - main  # Remplacez "main" par le nom de votre branche principale si nécessaire
+      - master
   pull_request:
     branches:
-      - main  # Remplacez "main" par le nom de votre branche principale si nécessaire
+      - master
 
 jobs:
   test:
