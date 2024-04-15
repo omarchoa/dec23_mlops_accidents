@@ -144,6 +144,17 @@ services:
         target: /home/shield/models
         read_only: true
 
+  # testing microservice
+  testing:
+    pull_policy: build
+    build:
+      context: ../..
+      dockerfile: src/docker/testing/testing.Dockerfile
+    image: omarchoa/shield:testing
+    container_name: testing
+    networks:
+      - shield
+
 
 # network declarations
 networks:
