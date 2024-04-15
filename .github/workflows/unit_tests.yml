@@ -3,27 +3,26 @@ name: Unit Tests
 on:
   push:
     branches:
-      - main
+      - main  # Remplacez "main" par le nom de votre branche principale si nécessaire
   pull_request:
     branches:
-      - main
+      - main  # Remplacez "main" par le nom de votre branche principale si nécessaire
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest  # Vous pouvez choisir un autre système d'exploitation si nécessaire
+
+    services:
+      docker:
+        image: docker:latest
+        options: --privileged
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Build Docker image for unit tests
-      run: docker build -t my_unit_tests tests/  # Use the path to the tests/ directory
+    - name: Build Docker images
+      run: docker-compose -f docker-compose-dev.yml build
 
     - name: Run unit tests
-      run: |
-        docker run my_unit_tests
-        UNIT_TEST_EXIT_CODE=$?
-        if [ $UNIT_TEST_EXIT_CODE -ne 0 ]; then
-          echo "Unit tests failed"
-          exit 1
-        fi
+      run: docker-compose -f docker-compose-dev.yml run --rm bdd pytest tests/  # Assurez-vous que le chemin vers vos tests est correct
