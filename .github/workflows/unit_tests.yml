@@ -21,20 +21,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Build Docker images
-      run: docker-compose -f src/docker/docker-compose-dev.yml build
+    - name: Build Docker images & run Docker containers in background
+      run: docker-compose -f src/docker/docker-compose-dev.yml up --detach
 
-    # - name: Run unit tests for dummy microservice
-    #   run: docker-compose -f docker-compose-dev.yml run --rm dummy pytest tests/  # Assurez-vous que le chemin vers vos tests est correct
-
-    # - name: Run unit tests for data microservice
-    #   run: docker-compose -f docker-compose-dev.yml run --rm data pytest tests/
-
-    # - name: Run unit tests for training microservice
-    #   run: docker-compose -f docker-compose-dev.yml run --rm training pytest tests/
-
-    # - name: Run unit tests for prediction microservice
-    #   run: docker-compose -f docker-compose-dev.yml run --rm prediction pytest tests/
-
-    # - name: Run unit tests for scoring microservice
-    #   run: docker-compose -f docker-compose-dev.yml run --rm scoring pytest tests/
+    - name: Run unit tests
+      run: docker-compose -f src/docker/docker-compose-dev.yml run --rm testing pytest /home/shield/testing/testing.py
