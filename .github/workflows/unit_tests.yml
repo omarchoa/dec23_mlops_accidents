@@ -3,10 +3,10 @@ name: Unit Tests
 on:
   push:
     branches:
-      - master
+      - ci/unit-testing
   pull_request:
     branches:
-      - master
+      - ci/unit-testing
 
 jobs:
   test:
