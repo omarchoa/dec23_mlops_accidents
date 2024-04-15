@@ -1,6 +1,3 @@
-name: shield ## project name
-
-
 services:
 
   # dummy microservice (dev tool)
