@@ -24,5 +24,17 @@ jobs:
     - name: Build Docker images
       run: docker-compose -f docker-compose-dev.yml build
 
-    - name: Run unit tests
-      run: docker-compose -f docker-compose-dev.yml run --rm bdd pytest tests/  # Assurez-vous que le chemin vers vos tests est correct
+    - name: Run unit tests for dummy microservice
+      run: docker-compose -f docker-compose-dev.yml run --rm dummy pytest tests/  # Assurez-vous que le chemin vers vos tests est correct
+
+    - name: Run unit tests for data microservice
+      run: docker-compose -f docker-compose-dev.yml run --rm data pytest tests/
+
+    - name: Run unit tests for training microservice
+      run: docker-compose -f docker-compose-dev.yml run --rm training pytest tests/
+
+    - name: Run unit tests for prediction microservice
+      run: docker-compose -f docker-compose-dev.yml run --rm prediction pytest tests/
+
+    - name: Run unit tests for scoring microservice
+      run: docker-compose -f docker-compose-dev.yml run --rm scoring pytest tests/
