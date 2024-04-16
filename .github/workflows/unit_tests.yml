@@ -25,4 +25,4 @@ jobs:
       run: docker-compose -f src/docker/docker-compose-dev.yml up --detach
 
     - name: Run unit tests
-      run: docker-compose -f src/docker/docker-compose-dev.yml run --rm testing pytest -v /home/shield/testing/testing.py | tee /dev/tty
+      run: docker-compose -f src/docker/docker-compose-dev.yml run --rm testing pytest -v /home/shield/testing/testing.py | grep -E '^Test|^===|^============================='
