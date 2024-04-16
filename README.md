@@ -157,15 +157,15 @@ The full, interactive list of endpoints is accessible via the API gateway's Swag
 
 ### 5. Stop the app
 
-To stop the app, return to the terminal window that you used to launch it in [Step 3](#3-launch-the-app) and press `Ctrl + C`.
+To stop the app, return to the terminal window that you used to launch it in [Step 2](#2-launch-the-app) and press `Ctrl + C`.
 
 ### 6. Resume the app
 
-To resume the app, run the same command that you used in [Step 3](#3-launch-the-app).
+To resume the app, run the same command that you used in [Step 2](#2-launch-the-app).
 
 ### 7. Shut down the app
 
-To shut down the app, run the same command that you used in [Step 3](#3-launch-the-app), replacing `up` with `down`:
+To shut down the app, run the same command that you used in [Step 2](#3-launch-the-app), replacing `up` with `down`:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml down
@@ -181,45 +181,11 @@ docker-compose -f ./src/docker/docker-compose-prod.yml down
 <!--
 
 
-### 7- Run the tests:
-
-`python ./src/features/api/test_api.py`
-
-### 9- Test the api with terminal command:
-
-All commands are written in the file ./src/features/api/Readme_api.md
-
-## Steps to follow on Windows:
-
-Convention : All python scripts must be run from the root specifying the relative file path.
-
-### 1- Create a virtual environment using Virtualenv.
-
-    `python -m venv my_env`
-
-### Activate it
-
-    `./my_env/Scripts/activate`
-
-### Install the packages from requirements.txt
-
-    `pip install -r .\requirements.txt` ### You will have an error in "setup.py" but this won't interfere with the rest
-
-### 2- Execute import_raw_data.py to import the 4 datasets.
-
-    `python .\src\data\import_raw_data.py` ### It will ask you to create a new folder, accept it.
-
-### 3- Execute make_dataset.py initializing `./data/raw` as input file path and `./data/preprocessed` as output file path.
-
-    `python .\src\data\make_dataset.py`
 
 ### 4- Execute train_model.py to instanciate the model in joblib format
 
     `python .\src\models\train_model.py`
 
-### 5- Run the api:
-
-    `uvicorn --app-dir ./src/features/api api:api --reload --host=127.0.0.1 --port=8000`
 
 ### 6- Check if the api is running:
 
