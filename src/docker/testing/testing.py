@@ -20,7 +20,7 @@ def test_data_status():
         try:
             response = requests.get(url)
             response.raise_for_status()  # Raise an exception if the status code is not 200
-            print(f"Test {url}: PASSED")
+            print(f"Test {url}: PASSED with status code {response.status_code}")
         except requests.RequestException as e:
             print(f"Test {url}: FAILED - {e}")
 
