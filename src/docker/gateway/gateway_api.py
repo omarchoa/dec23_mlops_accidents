@@ -189,16 +189,16 @@ async def gateway_status():
 #                 detail="Vous n'avez pas les droits d'administrateur.")
 
 
-# >>>>>>>> MICROSERVICES - DATA <<<<<<<<
+# >>>>>>>> MICROSERVICES - DATA-DOWNLOAD-PREP <<<<<<<<
 
 
 @api.get(
-    path="/data/status",
-    tags=["MICROSERVICES - Data"],
-    name="check data microservice API status",
+    path="/data-download-prep/status",
+    tags=["MICROSERVICES - Data-Download-Prep"],
+    name="check data-download-prep microservice API status",
 )
-async def data_status():
-    response = requests.get(url="http://data:8003/status")
+async def data_download_prep_status():
+    response = requests.get(url="http://data-download-prep:8003/status")
     if response.status_code == 200:  ### 200: success
         response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
         return JSONResponse(content=response_clean)
@@ -206,8 +206,12 @@ async def data_status():
         raise HTTPException(status_code=400, detail="Bad request.")
 
 
-@api.post(path="/data/update", tags=["MICROSERVICES - Data"], name="update data")
-async def data_update(year_range: YearRange, identification=Header(None)):
+@api.post(
+    path="/data-download-prep/run",
+    tags=["MICROSERVICES - Data-Download-Prep"],
+    name="download and prepare data",
+)
+async def data_download_prep_run(year_range: YearRange, identification=Header(None)):
 
     ## auth challenge check
     username, password = identification.split(":")
@@ -219,7 +223,9 @@ async def data_update(year_range: YearRange, identification=Header(None)):
                 "start_year": year_range.start_year,
                 "end_year": year_range.end_year,
             }
-            response = requests.post(url="http://data:8003/update", json=params)
+            response = requests.post(
+                url="http://data-download-prep:8003/run", json=params
+            )
 
             ## microservice response
             if response.status_code == 200:  ### 200: success
