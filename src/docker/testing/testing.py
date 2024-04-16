@@ -18,14 +18,14 @@ def test_endpoints():
     endpoints = {
         "GET": [
             "gateway/status",
-            "data/status",
+            "data-download-prep/status",
             "training/status",
             "prediction/status",
             "scoring/status",
             "scoring/label_prediction"
         ],
         "POST": [
-            {"url": "data/update", "data": {"key": "value"}, "headers": {"Content-Type": "application/json"}},
+            {"url": "data-download-prep/run", "data": {"key": "value"}, "headers": {"Content-Type": "application/json"}},
             {"url": "training/train", "data": {"key": "value"}, "headers": {"Content-Type": "application/json"}},
             {"url": "prediction/test", "data": {"key": "value"}, "headers": {"Content-Type": "application/json"}},
             {"url": "prediction/call", "data": {"key": "value"}, "headers": {"Content-Type": "application/json"}},
