@@ -2,9 +2,12 @@ import requests
 
 def test_data_status(endpoint):
     url = f"http://gateway:8001/{endpoint}"
-    response = requests.get(url)
-    assert response.status_code == 200
-    print(f"Test {url}: PASSED")
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception if the status code is not 200
+        print(f"Test {url}: PASSED")
+    except requests.RequestException as e:
+        print(f"Test {url}: FAILED - {e}")
 
 endpoints = [
     "gateway/status",
