@@ -12,8 +12,8 @@ services:
       - shield
     volumes:
       - type: volume
-        source: data
-        target: /home/shield/data
+        source: data-download-prep
+        target: /home/shield/data-download-prep
       - type: volume
         source: logs
         target: /home/shield/logs
@@ -46,23 +46,23 @@ services:
         target: /home/shield/users
         read_only: true
 
-  # data microservice
-  data:
+  # data-download-prep microservice
+  data-download-prep:
     depends_on:
       gateway:
         condition: service_started
     pull_policy: build
     build:
-      context: data
-      dockerfile: data.Dockerfile
-    image: omarchoa/shield:data
-    container_name: data
+      context: data-download-prep
+      dockerfile: Dockerfile
+    image: omarchoa/shield:data-download-prep
+    container_name: data-download-prep
     networks:
       - shield
     volumes:
       - type: volume
-        source: data
-        target: /home/shield/data
+        source: data-download-prep
+        target: /home/shield/data-download-prep
       - type: volume
         source: logs
         target: /home/shield/logs
@@ -82,8 +82,8 @@ services:
       - shield
     volumes:
       - type: volume
-        source: data
-        target: /home/shield/data
+        source: data-download-prep
+        target: /home/shield/data-download-prep
         read_only: true
       - type: volume
         source: logs
@@ -107,8 +107,8 @@ services:
       - shield
     volumes:
       - type: volume
-        source: data
-        target: /home/shield/data
+        source: data-download-prep
+        target: /home/shield/data-download-prep
         read_only: true
       - type: volume
         source: logs
@@ -133,8 +133,8 @@ services:
       - shield
     volumes:
       - type: volume
-        source: data
-        target: /home/shield/data
+        source: data-download-prep
+        target: /home/shield/data-download-prep
         read_only: true
       - type: volume
         source: logs
@@ -164,8 +164,8 @@ networks:
 
 # volume declarations
 volumes:
-  data:
-    name: data ## create volume with this specific name
+  data-download-prep:
+    name: data-download-prep ## create volume with this specific name
   logs:
     name: logs
   models:
