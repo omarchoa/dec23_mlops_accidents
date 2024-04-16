@@ -25,4 +25,5 @@ jobs:
       run: docker-compose -f src/docker/docker-compose-dev.yml up --detach
 
     - name: Run unit tests
-      run: docker-compose -f src/docker/docker-compose-dev.yml run --rm testing pytest -v -rfsx /home/shield/testing/testing.py
+      run: docker-compose -f src/docker/docker-compose-dev.yml run --rm testing pytest -v -rfsx -o console_output_style=classic /home/shield/testing/testing.py
+
