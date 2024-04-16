@@ -114,21 +114,11 @@ The repository is structured as follows:
 
 To use the app from the repository root:
 
-### 1. Set up a Python virtual environment
-
-Using Python's `venv` module, with `sword` as the virtual environment name, open a terminal window and run the following commands:
-
-```shell
-python -m venv sword
-chmod +x ./sword/bin/activate
-source ./sword/bin/activate
-```
-
-### 2. Install Docker
+### 1. Install Docker
 
 [Instructions](https://docs.docker.com/get-docker/) for a wide variety of platforms are available on the official Docker website.
 
-### 3. Launch the app
+### 2. Launch the app
 
 To build the Docker images from the repository Dockerfiles, run the following command:
 
@@ -142,7 +132,7 @@ To pull the Docker images from Docker Hub instead, run the following command:
 docker-compose -f ./src/docker/docker-compose-prod.yml up
 ```
 
-### 4. Check service status
+### 3. Check service status
 
 To ping the API gateway, open a new terminal window and run the following command:
 
@@ -156,7 +146,7 @@ You should receive the following response:
 "The API gateway is up."
 ```
 
-### 5. Try out the microservice features
+### 4. Try out the microservice features
 
 The full, interactive list of endpoints is accessible via the API gateway's Swagger UI at [`http://0.0.0.0:8001/docs`](http://0.0.0.0:8001/docs).
 
@@ -165,15 +155,15 @@ The full, interactive list of endpoints is accessible via the API gateway's Swag
 >
 > Other endpoints additionally require **administrator authorization**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `admin:4dmin`.
 
-### 6. Stop the app
+### 5. Stop the app
 
 To stop the app, return to the terminal window that you used to launch it in [Step 3](#3-launch-the-app) and press `Ctrl + C`.
 
-### 7. Resume the app
+### 6. Resume the app
 
 To resume the app, run the same command that you used in [Step 3](#3-launch-the-app).
 
-### 8. Shut down the app
+### 7. Shut down the app
 
 To shut down the app, run the same command that you used in [Step 3](#3-launch-the-app), replacing `up` with `down`:
 
