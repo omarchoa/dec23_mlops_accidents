@@ -37,11 +37,11 @@ def test_endpoints():
         for endpoint in urls:
             if method == "GET":
                 url = f"http://gateway:8001/{endpoint}"
-                test_endpoint(method, url)
+                perform_test(method, url)
             elif method == "POST":
                 url = f"http://gateway:8001/{endpoint['url']}"
                 data = endpoint.get('data', {})
                 headers = endpoint.get('headers', {})
-                test_endpoint(method, url, data=data, headers=headers)
+                perform_test(method, url, data=data, headers=headers)
 
 test_endpoints()
