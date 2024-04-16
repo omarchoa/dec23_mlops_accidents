@@ -1,3 +1,4 @@
+import sys
 import requests
 
 def test_data_status():
@@ -20,8 +21,8 @@ def test_data_status():
         try:
             response = requests.get(url)
             response.raise_for_status()  # Raise an exception if the status code is not 200
-            print(f"Test {url}: PASSED with status code {response.status_code}")
+            sys.stdout.write(f"Test {url}: PASSED with status code {response.status_code}\n")
         except requests.RequestException as e:
-            print(f"Test {url}: FAILED - {e}")
+            sys.stdout.write(f"Test {url}: FAILED - {e}\n")
 
 test_data_status()
