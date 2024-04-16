@@ -2,7 +2,7 @@ import sys
 import json
 import requests
 
-def test_endpoint(method, url, data=None, headers=None):
+def perform_test(method, url, data=None, headers=None):
     try:
         if method == "GET":
             response = requests.get(url)
