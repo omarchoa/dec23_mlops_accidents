@@ -39,6 +39,9 @@ services:
       - ./database/:/docker-entrypoint-initdb.d/
     ports:
       - "3306:3306"
+    networks:
+      - shield
+
     # healthcheck:
     #   test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
     #   interval: 10s
@@ -57,8 +60,8 @@ services:
     image: dummyfcd/users_container:0.0.1
     container_name: users_container
     ports:
-      - target: 8008
-        published: 8008
+      - target: 8002
+        published: 8002
         protocol: tcp
         mode: host
     networks:
@@ -66,20 +69,22 @@ services:
 
   # api gateway
   gateway:
-    # depends_on:
+    depends_on:
     #   dummy:
     #     condition: service_completed_successfully
+      users:
+        condition: service_started
     pull_policy: build
     build:
       context: gateway
       dockerfile: gateway.Dockerfile
     image: omarchoa/gateway:0.0.1
     container_name: gateway
-    networks:
-      - shield
     ports:
         - target: 8001
-          published: "8001"
+          published: 8001
+    networks:
+      - shield
     volumes:
       - type: volume
         source: users

@@ -1,4 +1,3 @@
-# standard library
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
 import json
@@ -6,19 +5,21 @@ import os
 from pydantic import BaseModel
 import requests
 
+users_db = {}
 
-def get_user_db():
-    response = requests.get(url='http://users_container:8008/users_db')
+def get_users_db():
+    response = requests.get(url='http://users_container:8002/users_db')
     return eval(response.content.decode('utf-8'))
 
 
 def verify_admin_rights(identification):
+    global users_db
     try:
         user, pwd = identification.split(":")
     except:
-        raise HTTPException(status_code=401, detail="Field doesn't match the following pattern: user:password")
+        raise HTTPException(status_code=401, detail="Identification doesn't match the following pattern: user:password")
 
-    users_db = get_user_db()
+    users_db = get_users_db()
 
     if user in users_db and users_db[user]['admin']:
         if users_db[user]['pwd'] == pwd:
@@ -73,50 +74,25 @@ class InputDataLabelPred(BaseModel):
     y_true: int = 1
 
 
-# >>>>>>>> USER DATABASE <<<<<<<<
-## delete once connection to mariadb database in users microservice is implemented
-
-
-## path_users_db = os.path.join("src", "docker", "bdd", "users_db_bis.json")  ### for local debugging
-# path_users_db = os.path.join(
-#     "home", "shield", "users", "users_db_bis.json"
-### for container deployment
-# with open(path_users_db, "r") as file:
-#     users_db = json.load(file)
-
-
 # >>>>>>>> ERROR MANAGEMENT <<<<<<<<
-## revise
-
-
-# responses = {
-#     200: {"description": "OK"},
-#     401: {"description": "Identifiant ou mot de passe invalide(s)"}
-# }
-
-
-# >>>>>>>> API GATEWAY DECLARATION <<<<<<<<
+responses = {
+    200: {"description": "OK"},
+    401: {"description": "Identifiant ou mot de passe invalide(s)"}
+}
 
 
 api = FastAPI(title="🛡️ SHIELD API Gateway")
 
 
-# >>>>>>>> API GATEWAY STATUS CHECK <<<<<<<<
-
-
 @api.get(path="/gateway/status", tags=["API Gateway"], name="check API gateway status")
 async def gateway_status():
-    response = "The API gateway is up."
-    return JSONResponse(response)
+    """check API gateway status"""
+    return "The API gateway is up."
 
 
-# ---------- Inscription d'un utilisateur: ---------------------------------
-
-
-# class User(BaseModel):
-#     username: str
-#     password: str
-#     rights: Optional[int] = 0  # Droits par défaut: utilisateur fdo
+@api.get('/users_db', name="Get all database users", tags=['GET'])
+async def check():
+    return get_users_db()
 
 
 # @api.post('/register',
@@ -157,7 +133,34 @@ async def gateway_status():
 #         raise HTTPException(
 #                 status_code=403,
 #                 detail="Vous n'avez pas les droits d'administrateur.")
+class User(BaseModel):
+    username: str
+    password: str
+    rights: int  # Default rights (e.g: fdo), for admin rights != 0
 
+
+@api.post('/register', name="Add a user in the database", tags=['USERS'])
+async def post_user(new_user: User, identification=Header(None)):
+
+    """Add a user in the database
+    Administrator rights are required to add a new user.
+    Identification field shall be fill as following: identifier:password.
+    """
+    verify_admin_rights(identification)
+    param = {
+        "username": new_user.username,
+        "password": new_user.password,
+        "rights": new_user.rights
+    }
+
+    response = requests.post(
+        url='http://users_container:8002/register',
+        json=param
+    )
+    if response.status_code == 200:
+        return type(response)
+    else:
+        return str(response.status_code)
 
 # ---------- Suppresion d'un utilisateur: ----------------------------------
 
