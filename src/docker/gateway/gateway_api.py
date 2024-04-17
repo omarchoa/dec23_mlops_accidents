@@ -1,16 +1,32 @@
-# >>>>>>>> IMPORTS <<<<<<<<
-
-
-import json
-import os
-
-import requests
+# standard library
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
+import json
+import os
 from pydantic import BaseModel
+import requests
 
 
-# >>>>>>>> CLASS DECLARATIONS <<<<<<<<
+def get_user_db():
+    response = requests.get(url='http://users_container:8008/users_db')
+    return eval(response.content.decode('utf-8'))
+
+
+def verify_admin_rights(identification):
+    try:
+        user, pwd = identification.split(":")
+    except:
+        raise HTTPException(status_code=401, detail="Field doesn't match the following pattern: user:password")
+
+    users_db = get_user_db()
+
+    if user in users_db and users_db[user]['admin']:
+        if users_db[user]['pwd'] == pwd:
+            return
+        else:
+            raise HTTPException(status_code=401, detail="Invalid password")
+    else:
+        raise HTTPException(status_code=403, detail="Administrator rights are required")
 
 
 ## define input data model for /update_data endpoint in data microservice
@@ -62,11 +78,11 @@ class InputDataLabelPred(BaseModel):
 
 
 ## path_users_db = os.path.join("src", "docker", "bdd", "users_db_bis.json")  ### for local debugging
-path_users_db = os.path.join(
-    "home", "shield", "users", "users_db_bis.json"
-)  ### for container deployment
-with open(path_users_db, "r") as file:
-    users_db = json.load(file)
+# path_users_db = os.path.join(
+#     "home", "shield", "users", "users_db_bis.json"
+### for container deployment
+# with open(path_users_db, "r") as file:
+#     users_db = json.load(file)
 
 
 # >>>>>>>> ERROR MANAGEMENT <<<<<<<<

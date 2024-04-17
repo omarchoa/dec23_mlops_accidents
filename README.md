@@ -120,7 +120,7 @@ To use the app from the repository root:
 
 ### 2. Launch the app
 
-To build the Docker images from the repository Dockerfiles, run the following command:
+To build the Docker images from the head of the repository, run the following command:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml up

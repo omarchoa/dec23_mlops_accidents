@@ -1,14 +1,15 @@
-# imports
+# standard library
 import datetime
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 import json
+from pydantic import BaseModel
 import random
 import string
 import time
 
+# shield project library
 import containerdata
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
 
 
 # define input data model for endpoint /update
@@ -36,11 +37,11 @@ async def update(year_range: YearRange):
     containerdata.Data(
         start_year=year_range.start_year,
         end_year=year_range.end_year,
-        data_path="home/shield/data",
+        data_path="/home/shield/data",
     )
     exec_time_end = time.time()
 
-    ## prepare log data for export
+    # ## prepare log data for export
     log_dict = {
         "request_id": "".join(random.choices(string.digits, k=16)),
         "time_stamp": str(datetime.datetime.now()),
@@ -53,7 +54,7 @@ async def update(year_range: YearRange):
     log_json = json.dumps(obj=log_dict)
 
     ## export log data to log file
-    log_path = "home/shield/logs/update_data.jsonl"
+    log_path = "/home/shield/logs/update_data.json"
     with open(log_path, "a") as file:
         file.write(log_json + "\n")
 
@@ -62,3 +63,4 @@ async def update(year_range: YearRange):
 
     ## return result as json response
     return JSONResponse(content=result)
+

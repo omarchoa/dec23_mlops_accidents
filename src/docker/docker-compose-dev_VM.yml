@@ -1,0 +1,203 @@
+version: "3.9"
+services:
+
+  # dummy microservice (dev tool)
+  # dummy:
+  #   pull_policy: build
+  #   build:
+  #     context: ../..
+  #     dockerfile: src/docker/dummy/dummy.Dockerfile
+  #   image: omarchoa/shield:dummy
+  #   container_name: dummy
+  #   networks:
+  #     - shield
+  #   volumes:
+  #     - type: volume
+  #       source: data
+  #       target: /home/shield/data
+  #     - type: volume
+  #       source: logs
+  #       target: /home/shield/logs
+  #     - type: volume
+  #       source: models
+  #       target: /home/shield/models
+  #     - type: volume
+  #       source: users
+  #       target: /home/shield/users
+
+  db:
+    # image: mariadb:10.11.5  # raise an issue with timers
+    image: mariadb:10.8.2
+    container_name: mariadb_container
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=shield_project_db
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
+    volumes:
+      - ~/mariadb_data:/var/lib/mysql
+      - ./database/:/docker-entrypoint-initdb.d/
+    ports:
+      - "3306:3306"
+    # healthcheck:
+    #   test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 3
+
+  users: # users api
+    depends_on:
+      db:
+        # condition: service_healthy  # require db healthcheck 
+        condition: service_started
+    pull_policy: build
+    build:
+      context: users
+      dockerfile: Dockerfile
+    image: dummyfcd/users_container:0.0.1
+    container_name: users_container
+    ports:
+      - target: 8008
+        published: 8008
+        protocol: tcp
+        mode: host
+    networks:
+      - shield
+
+  # api gateway
+  gateway:
+    # depends_on:
+    #   dummy:
+    #     condition: service_completed_successfully
+    pull_policy: build
+    build:
+      context: gateway
+      dockerfile: gateway.Dockerfile
+    image: omarchoa/gateway:0.0.1
+    container_name: gateway
+    networks:
+      - shield
+    ports:
+        - target: 8001
+          published: "8001"
+    volumes:
+      - type: volume
+        source: users
+        target: /home/shield/users
+        read_only: true
+
+  # data microservice
+  data:
+    # depends_on:
+    #   gateway:
+    #     condition: service_started
+    pull_policy: build
+    build:
+      context: data
+      dockerfile: Dockerfile
+    image: dummyfcd/data:0.0.1
+    container_name: data
+    networks:
+      - shield
+    volumes:
+      - type: volume
+        source: data
+        target: /home/shield/data
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+
+  # training microservice
+  # training:
+  #   depends_on:
+  #     gateway:
+  #       condition: service_started
+  #   pull_policy: build ## always build the image from a local Dockerfile
+  #   build:
+  #     context: ../.. ## use repo root as build context to enable Dockerfile to access files located outside of its own working directory
+  #     dockerfile: src/docker/training/training.Dockerfile ## path to Dockerfile
+  #   image: omarchoa/shield:training
+  #   container_name: training
+  #   networks:
+  #     - shield
+  #   volumes:
+  #     - type: volume
+  #       source: data
+  #       target: /home/shield/data
+  #       read_only: true
+  #     - type: volume
+  #       source: logs
+  #       target: /home/shield/logs
+  #     - type: volume
+  #       source: models
+  #       target: /home/shield/models
+
+  # prediction microservice
+  # prediction:
+  #   depends_on:
+  #     gateway:
+  #       condition: service_started
+  #   pull_policy: build
+  #   build:
+  #     context: ../..
+  #     dockerfile: src/docker/prediction/prediction.Dockerfile
+  #   image: omarchoa/shield:prediction
+  #   container_name: prediction
+  #   networks:
+  #     - shield
+  #   volumes:
+  #     - type: volume
+  #       source: data
+  #       target: /home/shield/data
+  #       read_only: true
+  #     - type: volume
+  #       source: logs
+  #       target: /home/shield/logs
+  #     - type: volume
+  #       source: models
+  #       target: /home/shield/models
+  #       read_only: true
+
+  # scoring microservice
+  # scoring:
+  #   depends_on:
+  #     gateway:
+  #       condition: service_started
+  #   pull_policy: build
+  #   build:
+  #     context: ../..
+  #     dockerfile: src/docker/scoring/scoring.Dockerfile
+  #   image: omarchoa/shield:scoring
+  #   container_name: scoring
+  #   networks:
+  #     - shield
+  #   volumes:
+  #     - type: volume
+  #       source: data
+  #       target: /home/shield/data
+  #       read_only: true
+  #     - type: volume
+  #       source: logs
+  #       target: /home/shield/logs
+  #     - type: volume
+  #       source: models
+  #       target: /home/shield/models
+  #       read_only: true
+
+
+# network declarations
+networks:
+  shield:
+    name: shield ## create network with this specific name
+
+
+# volume declarations
+volumes:
+  data:
+    name: data ## create volume with this specific name
+  logs:
+    name: logs
+  # models:
+  #   name: models
+  users:
+    name: users
