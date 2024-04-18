@@ -21,6 +21,28 @@ services:
         source: users
         target: /home/shield/users
 
+  # database microservice
+  database:
+    image: mariadb:10.8.2
+    container_name: database
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=shield_project_db
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
+    volumes:
+      - type: bind
+        source: ~/mariadb_data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./database
+        target: /docker-entrypoint-initdb.d
+    ports:
+        - target: 3306
+          published: "3306"
+    networks:
+      - shield
+
   # api gateway
   gateway:
     depends_on:
