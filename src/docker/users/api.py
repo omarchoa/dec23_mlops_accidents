@@ -64,8 +64,12 @@ async def register(new_user: NewUser):
     return JSONResponse(content=result)
 
 
-@api.delete('/remove_user', name="Remove an existing user from the database", tags=['USERS'])
-async def remove_user(old_user: OldUser):
+@api.delete(
+    path="/remove",
+    tags=["PROCESSES"],
+    name="remove user"
+)
+async def remove(old_user: OldUser):
     """Remove an existing user from the database
     Administrator rights are required to remove a user.
     Identification field shall be fill as following: identifier:password.
@@ -75,4 +79,5 @@ async def remove_user(old_user: OldUser):
     with mariadb_engine.connect() as connection:
         connection.execute(text(f'DELETE FROM users_table WHERE login = "{old_user.user}";'))
         connection.execute(text('COMMIT;'))
-    return "User removed"
+    result = "User removed."
+    return JSONResponse(content=result)
