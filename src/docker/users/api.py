@@ -39,8 +39,12 @@ async def status():
     return JSONResponse(content=result)
 
 
-@api.get('/users_db', name="Get all database users", tags=['GET'])
-async def check():
+@api.get(
+    path="/all",
+    tags=["PROCESSES"],
+    name="get all users",
+)
+async def all():
     return get_users_db()
 
 
