@@ -4,7 +4,7 @@ from sqlalchemy import text
 from sqlalchemy.engine import create_engine
 
 
-class User(BaseModel):
+class NewUser(BaseModel):
     username: str
     password: str
     rights: int  # Default rights (e.g: fdo), for admin rights != 0
@@ -42,7 +42,7 @@ async def check():
 
 
 @api.post('/register', name="Add a user in the database", tags=['USERS'], responses=responses)
-async def post_user(new_user: User):
+async def post_user(new_user: NewUser):
 # async def post_user(username=username, password=password, rights=rights):
 #async def post_user(new_user: User, identification=Header(None)):
     """Add a user in the database"""
