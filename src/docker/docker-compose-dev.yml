@@ -20,9 +20,6 @@ services:
       - type: volume
         source: models
         target: /home/shield/models
-      - type: volume
-        source: users
-        target: /home/shield/users
 
   # database microservice
   database:
@@ -62,11 +59,6 @@ services:
     ports:
         - target: 8001
           published: "8001"
-    volumes:
-      - type: volume
-        source: users
-        target: /home/shield/users
-        read_only: true
 
   # users microservice
   users:
@@ -197,5 +189,3 @@ volumes:
     name: logs
   models:
     name: models
-  users:
-    name: users
