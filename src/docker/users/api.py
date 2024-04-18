@@ -42,7 +42,6 @@ async def post_user(new_user: NewUser):
 # async def post_user(username=username, password=password, rights=rights):
 #async def post_user(new_user: User, identification=Header(None)):
     """Add a user in the database"""
-    # verify_admin_rights(identification)
 
     mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)  # echo is for debug mode
     with mariadb_engine.connect() as connection:
@@ -58,7 +57,7 @@ async def remove_user(old_user: OldUser):
     Administrator rights are required to remove a user.
     Identification field shall be fill as following: identifier:password.
     """
-    # verify_admin_rights(identification)
+
     mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)  # echo is for debug mode
     with mariadb_engine.connect() as connection:
         connection.execute(text(f'DELETE FROM users_table WHERE login = "{old_user.user}";'))
