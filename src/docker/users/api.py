@@ -50,14 +50,11 @@ async def all():
 
 @api.post('/register', name="Add a user in the database", tags=['USERS'])
 async def post_user(new_user: NewUser):
-# async def post_user(username=username, password=password, rights=rights):
-#async def post_user(new_user: User, identification=Header(None)):
     """Add a user in the database"""
 
     mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)  # echo is for debug mode
     with mariadb_engine.connect() as connection:
         connection.execute(text(f'INSERT INTO users_table VALUES ("{new_user.username}", "{new_user.password}", "{new_user.rights}");'))
-        # connection.execute(text(f'INSERT INTO users_table VALUES ("{username}", "{password}", "{rights}");'))
         connection.execute(text('COMMIT;'))
     return "User added"
 
