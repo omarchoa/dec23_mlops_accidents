@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI
 from pydantic import BaseModel
 from sqlalchemy import text
 from sqlalchemy.engine import create_engine
