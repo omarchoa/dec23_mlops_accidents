@@ -2,28 +2,28 @@ version: "3.9"
 services:
 
   # dummy microservice (dev tool)
-  # dummy:
-  #   pull_policy: build
-  #   build:
-  #     context: ../..
-  #     dockerfile: src/docker/dummy/dummy.Dockerfile
-  #   image: omarchoa/shield:dummy
-  #   container_name: dummy
-  #   networks:
-  #     - shield
-  #   volumes:
-  #     - type: volume
-  #       source: data
-  #       target: /home/shield/data
-  #     - type: volume
-  #       source: logs
-  #       target: /home/shield/logs
-  #     - type: volume
-  #       source: models
-  #       target: /home/shield/models
-  #     - type: volume
-  #       source: users
-  #       target: /home/shield/users
+  dummy:
+    pull_policy: build
+    build:
+      context: ../..
+      dockerfile: src/docker/dummy/dummy.Dockerfile
+    image: omarchoa/shield:dummy
+    container_name: dummy
+    networks:
+      - shield
+    volumes:
+      - type: volume
+        source: data
+        target: /home/shield/data
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
+      - type: volume
+        source: users
+        target: /home/shield/users
 
   db:
     # image: mariadb:10.11.5  # raise an issue with timers
@@ -101,7 +101,7 @@ services:
       context: data
       dockerfile: Dockerfile
     image: dummyfcd/data:0.0.1
-    container_name: data
+    container_name: data_container
     networks:
       - shield
     volumes:
@@ -113,88 +113,86 @@ services:
         target: /home/shield/logs
 
   # training microservice
-  # training:
-  #   depends_on:
-  #     gateway:
-  #       condition: service_started
-  #   pull_policy: build ## always build the image from a local Dockerfile
-  #   build:
-  #     context: ../.. ## use repo root as build context to enable Dockerfile to access files located outside of its own working directory
-  #     dockerfile: src/docker/training/training.Dockerfile ## path to Dockerfile
-  #   image: omarchoa/shield:training
-  #   container_name: training
-  #   networks:
-  #     - shield
-  #   volumes:
-  #     - type: volume
-  #       source: data
-  #       target: /home/shield/data
-  #       read_only: true
-  #     - type: volume
-  #       source: logs
-  #       target: /home/shield/logs
-  #     - type: volume
-  #       source: models
-  #       target: /home/shield/models
+  training:
+    depends_on:
+      gateway:
+        condition: service_started
+    pull_policy: build ## always build the image from a local Dockerfile
+    build:
+      context: ../.. ## use repo root as build context to enable Dockerfile to access files located outside of its own working directory
+      dockerfile: src/docker/training/training.Dockerfile ## path to Dockerfile
+    image: omarchoa/shield:training
+    container_name: training
+    networks:
+      - shield
+    volumes:
+      - type: volume
+        source: data
+        target: /home/shield/data
+        read_only: true
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
 
   # prediction microservice
-  # prediction:
-  #   depends_on:
-  #     gateway:
-  #       condition: service_started
-  #   pull_policy: build
-  #   build:
-  #     context: ../..
-  #     dockerfile: src/docker/prediction/prediction.Dockerfile
-  #   image: omarchoa/shield:prediction
-  #   container_name: prediction
-  #   networks:
-  #     - shield
-  #   volumes:
-  #     - type: volume
-  #       source: data
-  #       target: /home/shield/data
-  #       read_only: true
-  #     - type: volume
-  #       source: logs
-  #       target: /home/shield/logs
-  #     - type: volume
-  #       source: models
-  #       target: /home/shield/models
-  #       read_only: true
+  prediction:
+    depends_on:
+      gateway:
+        condition: service_started
+    pull_policy: build
+    build:
+      context: ../..
+      dockerfile: src/docker/prediction/prediction.Dockerfile
+    image: omarchoa/shield:prediction
+    container_name: prediction
+    networks:
+      - shield
+    volumes:
+      - type: volume
+        source: data
+        target: /home/shield/data
+        read_only: true
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
+        read_only: true
 
   # scoring microservice
-  # scoring:
-  #   depends_on:
-  #     gateway:
-  #       condition: service_started
-  #   pull_policy: build
-  #   build:
-  #     context: ../..
-  #     dockerfile: src/docker/scoring/scoring.Dockerfile
-  #   image: omarchoa/shield:scoring
-  #   container_name: scoring
-  #   networks:
-  #     - shield
-  #   volumes:
-  #     - type: volume
-  #       source: data
-  #       target: /home/shield/data
-  #       read_only: true
-  #     - type: volume
-  #       source: logs
-  #       target: /home/shield/logs
-  #     - type: volume
-  #       source: models
-  #       target: /home/shield/models
-  #       read_only: true
-
+  scoring:
+    depends_on:
+      gateway:
+        condition: service_started
+    pull_policy: build
+    build:
+      context: ../..
+      dockerfile: src/docker/scoring/scoring.Dockerfile
+    image: omarchoa/shield:scoring
+    container_name: scoring
+    networks:
+      - shield
+    volumes:
+      - type: volume
+        source: data
+        target: /home/shield/data
+        read_only: true
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
+        read_only: true
 
 # network declarations
 networks:
   shield:
     name: shield ## create network with this specific name
-
 
 # volume declarations
 volumes:
@@ -202,7 +200,7 @@ volumes:
     name: data ## create volume with this specific name
   logs:
     name: logs
-  # models:
-  #   name: models
+  models:
+    name: models
   users:
     name: users

@@ -4,7 +4,7 @@ from sqlalchemy import text
 from sqlalchemy.engine import create_engine
 
 
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:password@mariadb_container:3306/shield_project_db'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://user:password@mariadb_container:3306/shield_project_db'
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
     200: {"description": "Valid return"},
@@ -23,7 +23,7 @@ def get_users_db():
 
 @api.get('/status', name="Check whether the main API is running", tags=['GET'])
 async def is_fonctionnal():
-    return "The users API is running"
+    return "The users API is up."
 
 
 @api.get('/users_db', name="Get all database users", tags=['GET'])
@@ -35,23 +35,6 @@ class User(BaseModel):
     username: str
     password: str
     rights: int  # Default rights (e.g: fdo), for admin rights != 0
-
-
-# def verify_admin_rights(identification):
-#     try:
-#         user, pwd = identification.split(":")
-#     except:
-#         raise HTTPException(status_code=401, detail="Field doesn't match the following pattern: user:password")
-
-#     users_db = get_users_db()
-
-#     if user in users_db and users_db[user]['admin']:
-#         if users_db[user]['pwd'] == pwd:
-#             return
-#         else:
-#             raise HTTPException(status_code=401, detail="Invalid password")
-#     else:
-#         raise HTTPException(status_code=403, detail="Administrator rights are required")
 
 
 @api.post('/register', name="Add a user in the database", tags=['USERS'], responses=responses)
