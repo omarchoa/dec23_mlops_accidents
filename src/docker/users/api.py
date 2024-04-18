@@ -15,11 +15,7 @@ class OldUser(BaseModel):
 
 
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://user:password@mariadb_container:3306/shield_project_db'
-# ---------------------------- HTTP Exceptions --------------------------------
-responses = {
-    200: {"description": "Valid return"},
-    401: {"description": "Invalid password"}
-}
+
 
 api = FastAPI()
 
@@ -41,7 +37,7 @@ async def check():
     return get_users_db()
 
 
-@api.post('/register', name="Add a user in the database", tags=['USERS'], responses=responses)
+@api.post('/register', name="Add a user in the database", tags=['USERS'])
 async def post_user(new_user: NewUser):
 # async def post_user(username=username, password=password, rights=rights):
 #async def post_user(new_user: User, identification=Header(None)):
@@ -56,7 +52,7 @@ async def post_user(new_user: NewUser):
     return "User added"
 
 
-@api.delete('/remove_user', name="Remove an existing user from the database", tags=['USERS'], responses=responses)
+@api.delete('/remove_user', name="Remove an existing user from the database", tags=['USERS'])
 async def remove_user(old_user: OldUser):
     """Remove an existing user from the database
     Administrator rights are required to remove a user.
