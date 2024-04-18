@@ -11,7 +11,4 @@ RUN apk add wget
 RUN wget https://dec23-mlops-accidents.s3.eu-west-3.amazonaws.com/shield_volumes.tar
 
 # extract shield volumes
-RUN tar -xvf shield_volumes.tar
-
-# remove tar file
-CMD rm shield_volumes.tar
+CMD tar -xvf shield_volumes.tar
