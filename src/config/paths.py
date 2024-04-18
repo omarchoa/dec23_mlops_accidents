@@ -11,12 +11,12 @@ else:
     ][0]
 
 # data paths
-DATA_PREPROCESSED = Path(ROOT, "data", "preprocessed")
+DATA_PREPROCESSED = Path(ROOT, "data-download-prep", "preprocessed")
 X_TRAIN = Path(DATA_PREPROCESSED, "X_train.csv")
 X_TEST = Path(DATA_PREPROCESSED, "X_test.csv")
 Y_TRAIN = Path(DATA_PREPROCESSED, "y_train.csv")
 Y_TEST = Path(DATA_PREPROCESSED, "y_test.csv")
-DATA_SAMPLE = Path(ROOT, "data", "sample")
+DATA_SAMPLE = Path(ROOT, "data-download-prep", "sample")
 SAMPLE_FEATURES = Path(DATA_SAMPLE, "sample_features.json")
 
 # log paths
