@@ -40,6 +40,19 @@ services:
         target: /home/shield/users
         read_only: true
 
+  # users microservice
+  users:
+    depends_on:
+      database:
+        condition: service_started
+      gateway:
+        condition: service_started
+    pull_policy: always
+    image: omarchoa/shield:users
+    container_name: users
+    networks:
+      - shield
+
   # data-download-prep microservice
   data-download-prep:
     depends_on:
