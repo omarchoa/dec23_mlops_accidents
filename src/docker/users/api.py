@@ -4,6 +4,16 @@ from sqlalchemy import text
 from sqlalchemy.engine import create_engine
 
 
+class User(BaseModel):
+    username: str
+    password: str
+    rights: int  # Default rights (e.g: fdo), for admin rights != 0
+
+
+class OldUser(BaseModel):
+    user: str
+
+
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://user:password@mariadb_container:3306/shield_project_db'
 # ---------------------------- HTTP Exceptions --------------------------------
 responses = {
@@ -31,12 +41,6 @@ async def check():
     return get_users_db()
 
 
-class User(BaseModel):
-    username: str
-    password: str
-    rights: int  # Default rights (e.g: fdo), for admin rights != 0
-
-
 @api.post('/register', name="Add a user in the database", tags=['USERS'], responses=responses)
 async def post_user(new_user: User):
 # async def post_user(username=username, password=password, rights=rights):
@@ -50,10 +54,6 @@ async def post_user(new_user: User):
         # connection.execute(text(f'INSERT INTO users_table VALUES ("{username}", "{password}", "{rights}");'))
         connection.execute(text('COMMIT;'))
     return "User added"
-
-
-class OldUser(BaseModel):
-    user: str
 
 
 @api.delete('/remove_user', name="Remove an existing user from the database", tags=['USERS'], responses=responses)
