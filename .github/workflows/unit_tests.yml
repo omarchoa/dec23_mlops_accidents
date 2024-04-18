@@ -21,5 +21,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Create ~/mariadb_data
+      run: mkdir ~/mariadb_data
+
     - name: Build Docker images & run Docker containers in background
       run: docker-compose -f src/docker/docker-compose-dev.yml up --detach
