@@ -33,7 +33,7 @@ def get_users_db():
 
 # define database uri
 SQLALCHEMY_DATABASE_URI = (
-    "mysql+pymysql://user:password@mariadb_container:3306/shield_project_db"
+    "mysql+pymysql://user:password@database:3306/shield_project_db"
 )
 
 
@@ -61,7 +61,7 @@ async def all():
 # endpoint - register
 @api.post(path="/register", tags=["PROCESSES"], name="register user")
 async def register(new_user: NewUser):
-    """Add a user to the database"""
+    """Add a user to the database."""
 
     mariadb_engine = create_engine(
         SQLALCHEMY_DATABASE_URI, echo=False
@@ -80,7 +80,7 @@ async def register(new_user: NewUser):
 # endpoint - remove
 @api.delete(path="/remove", tags=["PROCESSES"], name="remove user")
 async def remove(old_user: OldUser):
-    """Remove a user from the database"""
+    """Remove a user from the database."""
 
     mariadb_engine = create_engine(
         SQLALCHEMY_DATABASE_URI, echo=False
