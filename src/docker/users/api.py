@@ -56,7 +56,7 @@ class OldUser(BaseModel):
     user: str
 
 
-@api.delete('/remove_user', name="Remove an existing user from the database", tags=['USERS'], responses=responses)
+@api.delete('/remove', name="Remove an existing user from the database", tags=['USERS'], responses=responses)
 async def remove_user(old_user: OldUser):
     """Remove an existing user from the database
     Administrator rights are required to remove a user.

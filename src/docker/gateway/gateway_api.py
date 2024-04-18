@@ -141,15 +141,15 @@ class OldUser(BaseModel):
     user: str
 
 
-@api.delete('/users/remove_user', name="Suppression d'un utilisateur existant.", tags=['USERS'])
+@api.delete('/users/remove', name="Suppression d'un utilisateur existant.", tags=['USERS'])
 async def remove_user(old_user: OldUser, identification=Header(None)):
     """Remove a user from the database
     Administrator rights are required to add a new user.
     Identification field shall be fill as following: identifier:password.
     """
     verify_rights(identification, 1)  # 1 for admin
-    response = requests.post(
-        url='http://users_container:8002/register',
+    response = requests.delete(
+        url='http://users_container:8002/remove',
         json={"user": old_user.user}
     )
     return return_request(response)
@@ -232,40 +232,40 @@ async def prediction_call(input_data: InputDataPredCall, identification=Header(N
 
 
 # >>>>>>>> MICROSERVICES - SCORING <<<<<<<<
-# @api.get(path="/scoring/status", tags=["MICROSERVICES - Scoring"], name="check scoring microservice API status")
-# async def scoring_status():
-#     response = requests.get(url="http://scoring:8006/status")
-#     return return_request(response)
+@api.get(path="/scoring/status", tags=["MICROSERVICES - Scoring"], name="check scoring microservice API status")
+async def scoring_status():
+    response = requests.get(url="http://scoring:8006/status")
+    return return_request(response)
 
 
-# @api.post(path="/scoring/label_prediction", tags=["MICROSERVICES - Scoring"], name="label prediction")
-# async def scoring_label_prediction(input_data: InputDataLabelPred, identification=Header(None)):
+@api.post(path="/scoring/label_prediction", tags=["MICROSERVICES - Scoring"], name="label prediction")
+async def scoring_label_prediction(input_data: InputDataLabelPred, identification=Header(None)):
 
-#     verify_rights(identification, 0)  # 0 for user
+    verify_rights(identification, 0)  # 0 for user
 
-#     ## microservice call
-#     payload = input_data.model_dump()
-#     response = requests.post(
-#         url="http://scoring:8006/label_prediction", json=payload
-#     )
+    ## microservice call
+    payload = input_data.model_dump()
+    response = requests.post(
+        url="http://scoring:8006/label_prediction", json=payload
+    )
 
-#     ## microservice response
-#     response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
-#     if "updated" in response_clean:
-#         return JSONResponse(content=response_clean)
-#     elif "not found" in response_clean:
-#         raise HTTPException(status_code=404, detail=response_clean)
-#     else:
-#         raise HTTPException(status_code=400, detail="Bad request.")
+    ## microservice response
+    response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
+    if "updated" in response_clean:
+        return JSONResponse(content=response_clean)
+    elif "not found" in response_clean:
+        raise HTTPException(status_code=404, detail=response_clean)
+    else:
+        raise HTTPException(status_code=400, detail="Bad request.")
 
 
-# @api.get(path="/scoring/update_f1_score", tags=["MICROSERVICES - Scoring"], name="update f1 score")
-# async def scoring_update_f1_score(identification=Header(None)):
+@api.get(path="/scoring/update_f1_score", tags=["MICROSERVICES - Scoring"], name="update f1 score")
+async def scoring_update_f1_score(identification=Header(None)):
 
-#     verify_rights(identification, 1)  # 1 for admin
+    verify_rights(identification, 1)  # 1 for admin
 
-#     ## microservice call
-#     response = requests.get(url="http://scoring:8006/update_f1_score")
+    ## microservice call
+    response = requests.get(url="http://scoring:8006/update_f1_score")
 
-#     ## microservice response
-#     return return_request(response)
+    ## microservice response
+    return return_request(response)
