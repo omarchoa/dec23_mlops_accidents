@@ -14,17 +14,18 @@ class OldUser(BaseModel):
     user: str
 
 
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://user:password@mariadb_container:3306/shield_project_db'
-
-
-api = FastAPI()
-
 def get_users_db():
     mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)  # echo is for debug mode
     with mariadb_engine.connect() as connection:
         results = connection.execute(text('SELECT * FROM users_table;'))
         users_db = {login: {"pwd": pwd, "admin":admin} for login, pwd, admin in results}
     return users_db
+
+
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://user:password@mariadb_container:3306/shield_project_db'
+
+
+api = FastAPI()
 
 
 @api.get('/status', name="Check whether the main API is running", tags=['GET'])
