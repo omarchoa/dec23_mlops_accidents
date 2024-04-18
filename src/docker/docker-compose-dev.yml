@@ -20,9 +20,28 @@ services:
       - type: volume
         source: models
         target: /home/shield/models
-      - type: volume
-        source: users
-        target: /home/shield/users
+
+  # database microservice
+  database:
+    image: mariadb:10.8.2
+    container_name: database
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=shield_project_db
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
+    volumes:
+      - type: bind
+        source: ~/mariadb_data
+        target: /var/lib/mysql
+      - type: bind
+        source: ./database
+        target: /docker-entrypoint-initdb.d
+    ports:
+        - target: 3306
+          published: "3306"
+    networks:
+      - shield
 
   # api gateway
   gateway:
@@ -40,11 +59,22 @@ services:
     ports:
         - target: 8001
           published: "8001"
-    volumes:
-      - type: volume
-        source: users
-        target: /home/shield/users
-        read_only: true
+
+  # users microservice
+  users:
+    depends_on:
+      database:
+        condition: service_started
+      gateway:
+        condition: service_started
+    pull_policy: build
+    build:
+      context: users
+      dockerfile: Dockerfile
+    image: omarchoa/shield:users
+    container_name: users
+    networks:
+      - shield
 
   # data-download-prep microservice
   data-download-prep:
@@ -159,5 +189,3 @@ volumes:
     name: logs
   models:
     name: models
-  users:
-    name: users

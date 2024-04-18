@@ -1,72 +1,114 @@
 # >>>>>>>> IMPORTS <<<<<<<<
 
 
-import json
-import os
-
 import requests
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 # >>>>>>>> CLASS DECLARATIONS <<<<<<<<
 
 
-## define input data model for /update_data endpoint in data microservice
+## define input data model for endpoint /users/register
+class NewUser(BaseModel):
+    username: str
+    password: str
+    rights: int
+
+
+## define input data model for endpoint /users/remove
+class OldUser(BaseModel):
+    user: str
+
+
+## define input data model for endpoint /data-download-prep/run
 class YearRange(BaseModel):
     start_year: int  ### admin shall use valid year, e.g. 2021
     end_year: int  ### admin shall use valid year, e.g. 2021
 
 
-## define input data model for /predict_from_call endpoint in prediction microservice
+## define input data model for endpoint /prediction/call
 class InputDataPredCall(BaseModel):
-    place: int = 10
-    catu: int = 3
-    sexe: int = 1
-    secu1: float = 0.0
-    year_acc: int = 2021
-    victim_age: int = 60
-    catv: int = 2
-    obsm: int = 1
-    motor: int = 1
-    catr: int = 3
-    circ: int = 2
-    surf: int = 1
-    situ: int = 1
-    vma: int = 50
-    jour: int = 7
-    mois: int = 12
-    lum: int = 5
-    dep: int = 77
-    com: int = 77317
-    agg_: int = 2
-    inter: int = 1
-    atm: int = 0
-    col: int = 6
-    lat: float = 48.60
-    long: float = 2.89
-    hour: int = 17
-    nb_victim: int = 2
-    nb_vehicules: int = 1
+    model_config = ConfigDict(revalidate_instances="always")
+    place: int
+    catu: int
+    sexe: int
+    secu1: float
+    year_acc: int
+    victim_age: int
+    catv: int
+    obsm: int
+    motor: int
+    catr: int
+    circ: int
+    surf: int
+    situ: int
+    vma: int
+    jour: int
+    mois: int
+    lum: int
+    dep: int
+    com: int
+    agg_: int
+    inter: int
+    atm: int
+    col: int
+    lat: float
+    long: float
+    hour: int
+    nb_victim: int
+    nb_vehicules: int
 
 
-## define input data model for /label_prediction endpoint in scoring microservice
+## define input data model for endpoint /scoring/label_prediction
 class InputDataLabelPred(BaseModel):
-    request_id: int = 6012919476848551
-    y_true: int = 1
+    model_config = ConfigDict(revalidate_instances="always")
+    request_id: int
+    y_true: int
 
 
-# >>>>>>>> USER DATABASE <<<<<<<<
-## delete once connection to mariadb database in users microservice is implemented
+# >>>>>>>> FUNCTION DECLARATIONS <<<<<<<<
 
 
-## path_users_db = os.path.join("src", "docker", "bdd", "users_db_bis.json")  ### for local debugging
-path_users_db = os.path.join(
-    "home", "shield", "users", "users_db_bis.json"
-)  ### for container deployment
-with open(path_users_db, "r") as file:
-    users_db = json.load(file)
+def return_request(response):
+    if response.status_code == 200:
+        return eval(response.content.decode("utf-8"))
+    else:
+        raise HTTPException(status_code=400, detail="Bad request.")
+
+
+def get_all_users():
+    response = requests.get(url="http://users:8002/all")
+    return return_request(response)
+
+
+def verify_rights(identification, rights):
+    """
+    rights: 0 for user, 1 for administrator
+    """
+
+    user_type = {0: "User", 1: "Administrator"}
+
+    try:
+        user, pwd = identification.split(":")
+    except:
+        raise HTTPException(
+            status_code=401,
+            detail="Identification doesn't match the following pattern: username:password",
+        )
+
+    users_db = get_all_users()
+
+    if user in users_db and users_db[user]["admin"] == rights:
+        if users_db[user]["pwd"] == pwd:
+            return user
+        else:
+            raise HTTPException(status_code=401, detail="Invalid password.")
+    else:
+        raise HTTPException(
+            status_code=403, detail=f"{user_type[rights]} rights required."
+        )
 
 
 # >>>>>>>> ERROR MANAGEMENT <<<<<<<<
@@ -91,102 +133,54 @@ api = FastAPI(title="🛡️ SHIELD API Gateway")
 @api.get(path="/gateway/status", tags=["API Gateway"], name="check API gateway status")
 async def gateway_status():
     response = "The API gateway is up."
-    return JSONResponse(response)
+    return JSONResponse(content=response)
 
 
-# ---------- Inscription d'un utilisateur: ---------------------------------
+# >>>>>>>> MICROSERVICES - USERS <<<<<<<<
 
 
-# class User(BaseModel):
-#     username: str
-#     password: str
-#     rights: Optional[int] = 0  # Droits par défaut: utilisateur fdo
+@api.get(
+    path="/users/status",
+    tags=["MICROSERVICES - Users"],
+    name="check users microservice API status",
+)
+async def users_status():
+    response = requests.get(url="http://users:8002/status")
+    return return_request(response)
 
 
-# @api.post('/register',
-#           name="Ajout d'un nouvel utilisateur",
-#           tags=['USERS'], responses=responses)
-# async def post_user(new_user: User, identification=Header(None)):
-#     """Fonction pour ajouter un nouvel utilisateur.
-#        Il faut être administrateur pour pouvoir ajouter un nouvel utilisateur.
-#        Identification: entrez votre identifiant et votre mot de passe
-#        au format identifiant:mot_de_passe
-#     """
-#     # Récupération des identifiants et mots de passe:
-#     user, psw = identification.split(":")
-
-#     # Test d'autorisation:
-#     if users_db[user]['rights'] == 1:
-
-#         # Test d'identification:
-#         if users_db[user]['password'] == psw:
-
-#             # Enregistrement du nouvel utilisateur:
-#             users_db[new_user.username] = {
-#                 "username": new_user.username,
-#                 "password": new_user.password,
-#                 "rights": new_user.rights
-#             }
-#             update_users_db = json.dumps(users_db, indent=4)
-#             with open(path_users_db, "w") as outfile:
-#                 outfile.write(update_users_db)
-
-#             return {"Nouvel utilisateur ajouté!"}
-
-#         else:
-#             raise HTTPException(
-#                 status_code=401,
-#                 detail="Identifiant ou mot de passe invalide(s)")
-#     else:
-#         raise HTTPException(
-#                 status_code=403,
-#                 detail="Vous n'avez pas les droits d'administrateur.")
+# @api.get(path="/users/all", tags=["MICROSERVICES - Users"], name="get all users")
+# async def users_all():
+#     return get_all_users()
 
 
-# ---------- Suppresion d'un utilisateur: ----------------------------------
+@api.post(path="/users/register", tags=["MICROSERVICES - Users"], name="register user")
+async def users_register(new_user: NewUser, identification=Header(None)):
+    """Add a user to the database.
+    Administrator rights required.
+    Identification field should be filled in as follows: username:password.
+    """
+
+    verify_rights(identification, 1)  # 1 for admin
+    payload = new_user.model_dump()
+    response = requests.post(
+        url="http://users:8002/register",
+        json=payload,
+    )
+    return return_request(response)
 
 
-# class OldUser(BaseModel):
-#     user: str
+@api.delete(path="/users/remove", tags=["MICROSERVICES - Users"], name="remove user")
+async def users_remove(old_user: OldUser, identification=Header(None)):
+    """Remove a user from the database.
+    Administrator rights required.
+    Identification field should be filled in as follows: username:password.
+    """
 
-
-# @api.delete('/remove_user',
-#             name="Suppression d'un utilisateur existant.",
-#             tags=['USERS'], responses=responses)
-# async def remove_user(old_user: OldUser, identification=Header(None)):
-#     """Fonction pour supprimer un nouvel utilisateur.
-#        Il faut être administrateur pour pouvoir supprimer un nouvel utilisateur.
-#        Identification: entrez votre identifiant et votre mot de passe
-#        au format identifiant:mot_de_passe
-#     """
-#     # Récupération des identifiants et mots de passe:
-#     user, psw = identification.split(":")
-
-#     # Test d'autorisation:
-#     if users_db[user]['rights'] == 1:
-
-#         # Test d'identification:
-#         if users_db[user]['password'] == psw:
-
-#             # Suppression de l'ancien utilisateur:
-#             try:
-#                 users_db.pop(old_user.user)
-#                 update_users_db = json.dumps(users_db, indent=4)
-#                 with open(path_users_db, "w") as outfile:
-#                     outfile.write(update_users_db)
-#                 return {"Utilisateur supprimé!"}
-
-#             except KeyError:
-#                 return "L'utilisateur spécifié n'existe pas."
-
-#         else:
-#             raise HTTPException(
-#                 status_code=401,
-#                 detail="Identifiant ou mot de passe invalide(s)")
-#     else:
-#         raise HTTPException(
-#                 status_code=403,
-#                 detail="Vous n'avez pas les droits d'administrateur.")
+    verify_rights(identification, 1)  # 1 for admin
+    payload = old_user.model_dump()
+    response = requests.delete(url="http://users:8002/remove", json=payload)
+    return return_request(response)
 
 
 # >>>>>>>> MICROSERVICES - DATA-DOWNLOAD-PREP <<<<<<<<
@@ -199,11 +193,7 @@ async def gateway_status():
 )
 async def data_download_prep_status():
     response = requests.get(url="http://data-download-prep:8003/status")
-    if response.status_code == 200:  ### 200: success
-        response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
-        return JSONResponse(content=response_clean)
-    else:
-        raise HTTPException(status_code=400, detail="Bad request.")
+    return return_request(response)
 
 
 @api.post(
@@ -212,37 +202,13 @@ async def data_download_prep_status():
     name="download and prepare data",
 )
 async def data_download_prep_run(year_range: YearRange, identification=Header(None)):
-
-    ## auth challenge check
-    username, password = identification.split(":")
-    if users_db[username]["rights"] == 1:  ### 1: admin
-        if users_db[username]["password"] == password:
-
-            ## microservice call
-            params = {
-                "start_year": year_range.start_year,
-                "end_year": year_range.end_year,
-            }
-            response = requests.post(
-                url="http://data-download-prep:8003/run", json=params
-            )
-
-            ## microservice response
-            if response.status_code == 200:  ### 200: success
-                response_clean = str(response.content)[
-                    3:-2
-                ]  ### strip unnecessary characters
-                return JSONResponse(content=response_clean)
-            else:
-                raise HTTPException(status_code=400, detail="Bad request.")
-
-        ## auth challenge failure
-        else:
-            raise HTTPException(status_code=401, detail="Invalid credentials.")
-    else:
-        raise HTTPException(
-            status_code=403, detail="Administrator privileges required."
-        )
+    verify_rights(identification, 1)  # 1 for admin
+    payload = year_range.model_dump()
+    response = requests.post(
+        url="http://data-download-prep:8003/run",
+        json=payload,
+    )
+    return return_request(response)
 
 
 # >>>>>>>> MICROSERVICES - TRAINING <<<<<<<<
@@ -255,40 +221,14 @@ async def data_download_prep_run(year_range: YearRange, identification=Header(No
 )
 async def training_status():
     response = requests.get(url="http://training:8004/status")
-    if response.status_code == 200:  ### 200: success
-        response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
-        return JSONResponse(content=response_clean)
-    else:
-        raise HTTPException(status_code=400, detail="Bad request.")
+    return return_request(response)
 
 
 @api.get(path="/training/train", tags=["MICROSERVICES - Training"], name="train model")
 async def training_train(identification=Header(None)):
-
-    ## auth challenge check
-    username, password = identification.split(":")
-    if users_db[username]["rights"] == 1:  ### 1: admin
-        if users_db[username]["password"] == password:
-
-            ## microservice call
-            response = requests.get(url="http://training:8004/train")
-
-            ## microservice response
-            if response.status_code == 200:  ### 200: success
-                response_clean = str(response.content)[
-                    3:-2
-                ]  ### strip unnecessary characters
-                return JSONResponse(content=response_clean)
-            else:
-                raise HTTPException(status_code=400, detail="Bad request.")
-
-        ## auth challenge failure
-        else:
-            raise HTTPException(status_code=401, detail="Invalid credentials.")
-    else:
-        raise HTTPException(
-            status_code=403, detail="Administrator privileges required."
-        )
+    verify_rights(identification, 1)  # 1 for admin
+    response = requests.get(url="http://training:8004/train")
+    return return_request(response)
 
 
 # >>>>>>>> MICROSERVICES - PREDICTION <<<<<<<<
@@ -301,11 +241,7 @@ async def training_train(identification=Header(None)):
 )
 async def prediction_status():
     response = requests.get(url="http://prediction:8005/status")
-    if response.status_code == 200:  ### 200: success
-        response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
-        return JSONResponse(content=response_clean)
-    else:
-        raise HTTPException(status_code=400, detail="Bad request.")
+    return return_request(response)
 
 
 @api.get(
@@ -314,26 +250,11 @@ async def prediction_status():
     name="predict from test",
 )
 async def prediction_test(identification=Header(None)):
-
-    ## auth challenge check
-    username, password = identification.split(":")
-    if users_db[username]["password"] == password:
-
-        ## microservice call
-        response = requests.get(url="http://prediction:8005/test")
-
-        ## microservice response
-        if response.status_code == 200:  ### 200: success
-            response_clean = str(response.content)[
-                3:-2
-            ]  ### strip unnecessary characters
-            return JSONResponse(content=response_clean)
-        else:
-            raise HTTPException(status_code=400, detail="Bad request.")
-
-    ## auth challenge failure
-    else:
-        raise HTTPException(status_code=401, detail="Invalid credentials.")
+    verify_rights(
+        identification, 0
+    )  ## endpoint needs to be accessible to both users & admins
+    response = requests.get(url="http://prediction:8005/test")
+    return return_request(response)
 
 
 @api.post(
@@ -342,27 +263,12 @@ async def prediction_test(identification=Header(None)):
     name="predict from call",
 )
 async def prediction_call(input_data: InputDataPredCall, identification=Header(None)):
-
-    ## auth challenge check
-    username, password = identification.split(":")
-    if users_db[username]["password"] == password:
-
-        ## microservice call
-        payload = input_data.model_dump()
-        response = requests.post(url="http://prediction:8005/call", json=payload)
-
-        ## microservice response
-        if response.status_code == 200:  ### 200: success
-            response_clean = str(response.content)[
-                3:-2
-            ]  ### strip unnecessary characters
-            return JSONResponse(content=response_clean)
-        else:
-            raise HTTPException(status_code=400, detail="Bad request.")
-
-    ## auth challenge failure
-    else:
-        raise HTTPException(status_code=401, detail="Invalid credentials.")
+    verify_rights(
+        identification, 0
+    )  ## endpoint needs to be accessible to both users & admins
+    payload = input_data.model_dump()
+    response = requests.post(url="http://prediction:8005/call", json=payload)
+    return return_request(response)
 
 
 # >>>>>>>> MICROSERVICES - SCORING <<<<<<<<
@@ -375,11 +281,7 @@ async def prediction_call(input_data: InputDataPredCall, identification=Header(N
 )
 async def scoring_status():
     response = requests.get(url="http://scoring:8006/status")
-    if response.status_code == 200:  ### 200: success
-        response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
-        return JSONResponse(content=response_clean)
-    else:
-        raise HTTPException(status_code=400, detail="Bad request.")
+    return return_request(response)
 
 
 @api.post(
@@ -390,29 +292,18 @@ async def scoring_status():
 async def scoring_label_prediction(
     input_data: InputDataLabelPred, identification=Header(None)
 ):
-
-    ## auth challenge check
-    username, password = identification.split(":")
-    if users_db[username]["password"] == password:
-
-        ## microservice call
-        payload = input_data.model_dump()
-        response = requests.post(
-            url="http://scoring:8006/label_prediction", json=payload
-        )
-
-        ## microservice response
-        response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
-        if "updated" in response_clean:
-            return JSONResponse(content=response_clean)
-        elif "not found" in response_clean:
-            raise HTTPException(status_code=404, detail=response_clean)
-        else:
-            raise HTTPException(status_code=400, detail="Bad request.")
-
-    ## auth challenge failure
+    verify_rights(
+        identification, 0
+    )  ## endpoint needs to be accessible to both users & admins
+    payload = input_data.model_dump()
+    response = requests.post(url="http://scoring:8006/label_prediction", json=payload)
+    response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
+    if "updated" in response_clean:
+        return JSONResponse(content=response_clean)
+    elif "not found" in response_clean:
+        raise HTTPException(status_code=404, detail=response_clean)
     else:
-        raise HTTPException(status_code=401, detail="Invalid credentials.")
+        raise HTTPException(status_code=400, detail="Bad request.")
 
 
 @api.get(
@@ -421,28 +312,6 @@ async def scoring_label_prediction(
     name="update f1 score",
 )
 async def scoring_update_f1_score(identification=Header(None)):
-
-    ## auth challenge check
-    username, password = identification.split(":")
-    if users_db[username]["rights"] == 1:  ### 1: admin
-        if users_db[username]["password"] == password:
-
-            ## microservice call
-            response = requests.get(url="http://scoring:8006/update_f1_score")
-
-            ## microservice response
-            if response.status_code == 200:  ### 200: success
-                response_clean = str(response.content)[
-                    3:-2
-                ]  ### strip unnecessary characters
-                return JSONResponse(content=response_clean)
-            else:
-                raise HTTPException(status_code=400, detail="Bad request.")
-
-        ## auth challenge failure
-        else:
-            raise HTTPException(status_code=401, detail="Invalid credentials.")
-    else:
-        raise HTTPException(
-            status_code=403, detail="Administrator privileges required."
-        )
+    verify_rights(identification, 1)  # 1 for admin
+    response = requests.get(url="http://scoring:8006/update_f1_score")
+    return return_request(response)

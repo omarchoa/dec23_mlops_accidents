@@ -8,10 +8,7 @@ RUN apk add curl
 RUN apk add wget
 
 # download shield volumes from aws s3
-RUN wget https://dec23-mlops-accidents.s3.eu-west-3.amazonaws.com/shield_volumes.tar
+RUN wget https://dec23-mlops-accidents.s3.eu-west-3.amazonaws.com/shield_volumes_new.tar
 
 # extract shield volumes
-RUN tar -xvf shield_volumes.tar
-
-# remove tar file
-CMD rm shield_volumes.tar
+CMD tar xvf shield_volumes_new.tar
