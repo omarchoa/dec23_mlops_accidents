@@ -1,3 +1,4 @@
+# imports
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -5,16 +6,19 @@ from sqlalchemy import text
 from sqlalchemy.engine import create_engine
 
 
+# define input data model for endpoint /register
 class NewUser(BaseModel):
     username: str
     password: str
-    rights: int  # Default rights (e.g: fdo), for admin rights != 0
+    rights: int
 
 
+# define input data model for endpoint /remove
 class OldUser(BaseModel):
     user: str
 
 
+# define function to get all users from database
 def get_users_db():
     mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)  # echo is for debug mode
     with mariadb_engine.connect() as connection:
@@ -23,12 +27,15 @@ def get_users_db():
     return users_db
 
 
+# define database uri
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://user:password@mariadb_container:3306/shield_project_db'
 
 
-api = FastAPI()
+# create fastapi instance
+api = FastAPI(title="SHIELD Microservice API - Users")
 
 
+# endpoint - status
 @api.get(
     path="/status",
     tags=["STATUS"],
@@ -39,6 +46,7 @@ async def status():
     return JSONResponse(content=result)
 
 
+# endpoint - all
 @api.get(
     path="/all",
     tags=["PROCESSES"],
@@ -48,13 +56,14 @@ async def all():
     return get_users_db()
 
 
+# endpoint - register
 @api.post(
     path="/register",
     tags=["PROCESSES"],
     name="register user"
 )
 async def register(new_user: NewUser):
-    """Add a user in the database"""
+    """Add a user to the database"""
 
     mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)  # echo is for debug mode
     with mariadb_engine.connect() as connection:
@@ -64,16 +73,14 @@ async def register(new_user: NewUser):
     return JSONResponse(content=result)
 
 
+# endpoint - remove
 @api.delete(
     path="/remove",
     tags=["PROCESSES"],
     name="remove user"
 )
 async def remove(old_user: OldUser):
-    """Remove an existing user from the database
-    Administrator rights are required to remove a user.
-    Identification field shall be fill as following: identifier:password.
-    """
+    """Remove a user from the database"""
 
     mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI, echo=False)  # echo is for debug mode
     with mariadb_engine.connect() as connection:
