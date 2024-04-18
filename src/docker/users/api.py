@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy import text
 from sqlalchemy.engine import create_engine
@@ -28,9 +29,14 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://user:password@mariadb_container:3306/
 api = FastAPI()
 
 
-@api.get('/status', name="Check whether the main API is running", tags=['GET'])
-async def is_fonctionnal():
-    return "The users API is up."
+@api.get(
+    path="/status",
+    tags=["STATUS"],
+    name="check users microservice API status"
+)
+async def status():
+    result = "The users microservice API is up."
+    return JSONResponse(content=result)
 
 
 @api.get('/users_db', name="Get all database users", tags=['GET'])
