@@ -85,10 +85,13 @@ def get_all_users():
 
 def verify_rights(identification, rights):
     """
-    rights: 0 for user, 1 for administrator
+    rights: 
+    - 0 for user, robot and administrator,
+    - 1 for robot and administrator
+    - 2 for administrator
     """
 
-    user_type = {0: "User", 1: "Administrator"}
+    user_type = {0: "User", 1: "Robot", 2: "Administrator"}
 
     try:
         user, pwd = identification.split(":")
@@ -100,7 +103,7 @@ def verify_rights(identification, rights):
 
     users_db = get_all_users()
 
-    if user in users_db and users_db[user]["admin"] == rights:
+    if user in users_db and users_db[user]["admin"] >= rights:
         if users_db[user]["pwd"] == pwd:
             return user
         else:
@@ -161,7 +164,7 @@ async def users_register(new_user: NewUser, identification=Header(None)):
     Identification field should be filled in as follows: username:password.
     """
 
-    verify_rights(identification, 1)  # 1 for admin
+    verify_rights(identification, 2)  # 2 for administrator only
     payload = new_user.model_dump()
     response = requests.post(
         url="http://users:8002/register",
@@ -177,7 +180,7 @@ async def users_remove(old_user: OldUser, identification=Header(None)):
     Identification field should be filled in as follows: username:password.
     """
 
-    verify_rights(identification, 1)  # 1 for admin
+    verify_rights(identification, 2)  # 2 for administrator only
     payload = old_user.model_dump()
     response = requests.delete(url="http://users:8002/remove", json=payload)
     return return_request(response)
@@ -202,7 +205,7 @@ async def data_download_prep_status():
     name="download and prepare data",
 )
 async def data_download_prep_run(year_range: YearRange, identification=Header(None)):
-    verify_rights(identification, 1)  # 1 for admin
+    verify_rights(identification, 1)  # 1 for robot and administrator
     payload = year_range.model_dump()
     response = requests.post(
         url="http://data-download-prep:8003/run",
@@ -226,7 +229,7 @@ async def training_status():
 
 @api.get(path="/training/train", tags=["MICROSERVICES - Training"], name="train model")
 async def training_train(identification=Header(None)):
-    verify_rights(identification, 1)  # 1 for admin
+    verify_rights(identification, 1)  # 1 for robot and administrator
     response = requests.get(url="http://training:8004/train")
     return return_request(response)
 
@@ -250,9 +253,7 @@ async def prediction_status():
     name="predict from test",
 )
 async def prediction_test(identification=Header(None)):
-    verify_rights(
-        identification, 0
-    )  ## endpoint needs to be accessible to both users & admins
+    verify_rights(identification, 0)  # at least user rights
     response = requests.get(url="http://prediction:8005/test")
     return return_request(response)
 
@@ -263,9 +264,7 @@ async def prediction_test(identification=Header(None)):
     name="predict from call",
 )
 async def prediction_call(input_data: InputDataPredCall, identification=Header(None)):
-    verify_rights(
-        identification, 0
-    )  ## endpoint needs to be accessible to both users & admins
+    verify_rights(identification, 0)  # at least user rights
     payload = input_data.model_dump()
     response = requests.post(url="http://prediction:8005/call", json=payload)
     return return_request(response)
@@ -292,9 +291,7 @@ async def scoring_status():
 async def scoring_label_prediction(
     input_data: InputDataLabelPred, identification=Header(None)
 ):
-    verify_rights(
-        identification, 0
-    )  ## endpoint needs to be accessible to both users & admins
+    verify_rights(identification, 0)  # at least user rights
     payload = input_data.model_dump()
     response = requests.post(url="http://scoring:8006/label_prediction", json=payload)
     response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
@@ -312,6 +309,6 @@ async def scoring_label_prediction(
     name="update f1 score",
 )
 async def scoring_update_f1_score(identification=Header(None)):
-    verify_rights(identification, 1)  # 1 for admin
+    verify_rights(identification, 1)  # 1 for robot and administrator
     response = requests.get(url="http://scoring:8006/update_f1_score")
     return return_request(response)

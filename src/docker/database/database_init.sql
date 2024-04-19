@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS users_table (
 
 INSERT INTO users_table (login, password, admin)
 VALUES
-('admin', '4dmin', '1'),
+('admin', '4dmin', '2'),
+('robot', 'Autom@t', '1'),
 ('fdo', 'c0ps', '0'),
 ('policierA', 'sherif', '0'),
 ('policierB', 'colombo', '0');
