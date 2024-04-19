@@ -3,7 +3,7 @@ services:
   # dummy microservice (dev tool)
   dummy:
     pull_policy: always ## always pull the image from Docker Hub
-    image: omarchoa/shield:dummy
+    image: fabricecharraud/shield:dummy
     container_name: dummy
     networks:
       - shield
@@ -45,9 +45,9 @@ services:
   gateway:
     depends_on:
       dummy:
-        condition: service_completed_successfully
+        condition: service_started
     pull_policy: always
-    image: omarchoa/shield:gateway
+    image: fabricecharraud/shield:gateway
     container_name: gateway
     networks:
       - shield
@@ -63,7 +63,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: omarchoa/shield:users
+    image: fabricecharraud/shield:users
     container_name: users
     networks:
       - shield
@@ -74,7 +74,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: omarchoa/shield:data-download-prep
+    image: fabricecharraud/shield:data-download-prep
     container_name: data-download-prep
     networks:
       - shield
@@ -92,7 +92,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: omarchoa/shield:training
+    image: fabricecharraud/shield:training
     container_name: training
     networks:
       - shield
@@ -114,7 +114,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: omarchoa/shield:prediction
+    image: fabricecharraud/shield:prediction
     container_name: prediction
     networks:
       - shield
@@ -137,7 +137,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: omarchoa/shield:scoring
+    image: fabricecharraud/shield:scoring
     container_name: scoring
     networks:
       - shield

@@ -6,7 +6,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/dummy/dummy.Dockerfile
-    image: omarchoa/shield:dummy
+    image: fabricecharraud/shield:dummy
     container_name: dummy
     networks:
       - shield
@@ -47,12 +47,12 @@ services:
   gateway:
     depends_on:
       dummy:
-        condition: service_completed_successfully
+        condition: service_started
     pull_policy: build
     build:
       context: gateway
       dockerfile: gateway.Dockerfile
-    image: omarchoa/shield:gateway
+    image: fabricecharraud/shield:gateway
     container_name: gateway
     networks:
       - shield
@@ -71,7 +71,7 @@ services:
     build:
       context: users
       dockerfile: Dockerfile
-    image: omarchoa/shield:users
+    image: fabricecharraud/shield:users
     container_name: users
     networks:
       - shield
@@ -85,7 +85,7 @@ services:
     build:
       context: data-download-prep
       dockerfile: Dockerfile
-    image: omarchoa/shield:data-download-prep
+    image: fabricecharraud/shield:data-download-prep
     container_name: data-download-prep
     networks:
       - shield
@@ -106,7 +106,7 @@ services:
     build:
       context: ../.. ## use repo root as build context to enable Dockerfile to access files located outside of its own working directory
       dockerfile: src/docker/training/training.Dockerfile ## path to Dockerfile
-    image: omarchoa/shield:training
+    image: fabricecharraud/shield:training
     container_name: training
     networks:
       - shield
@@ -131,7 +131,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/prediction/prediction.Dockerfile
-    image: omarchoa/shield:prediction
+    image: fabricecharraud/shield:prediction
     container_name: prediction
     networks:
       - shield
@@ -157,7 +157,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/scoring/scoring.Dockerfile
-    image: omarchoa/shield:scoring
+    image: fabricecharraud/shield:scoring
     container_name: scoring
     networks:
       - shield
