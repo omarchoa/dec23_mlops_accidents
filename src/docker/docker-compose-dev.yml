@@ -6,7 +6,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/dummy/dummy.Dockerfile
-    image: fabricecharraud/shield:dummy
+    image: ${DOCKER_REGISTRY}:dummy
     container_name: dummy
     networks:
       - shield
@@ -52,7 +52,7 @@ services:
     build:
       context: gateway
       dockerfile: gateway.Dockerfile
-    image: fabricecharraud/shield:gateway
+    image: ${DOCKER_REGISTRY}:gateway
     container_name: gateway
     networks:
       - shield
@@ -71,7 +71,7 @@ services:
     build:
       context: users
       dockerfile: Dockerfile
-    image: fabricecharraud/shield:users
+    image: ${DOCKER_REGISTRY}:users
     container_name: users
     networks:
       - shield
@@ -85,7 +85,7 @@ services:
     build:
       context: data-download-prep
       dockerfile: Dockerfile
-    image: fabricecharraud/shield:data-download-prep
+    image: ${DOCKER_REGISTRY}:data-download-prep
     container_name: data-download-prep
     networks:
       - shield
@@ -106,7 +106,7 @@ services:
     build:
       context: ../.. ## use repo root as build context to enable Dockerfile to access files located outside of its own working directory
       dockerfile: src/docker/training/training.Dockerfile ## path to Dockerfile
-    image: fabricecharraud/shield:training
+    image: ${DOCKER_REGISTRY}:training
     container_name: training
     networks:
       - shield
@@ -131,7 +131,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/prediction/prediction.Dockerfile
-    image: fabricecharraud/shield:prediction
+    image: ${DOCKER_REGISTRY}:prediction
     container_name: prediction
     networks:
       - shield
@@ -157,7 +157,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/scoring/scoring.Dockerfile
-    image: fabricecharraud/shield:scoring
+    image: ${DOCKER_REGISTRY}:scoring
     container_name: scoring
     networks:
       - shield
