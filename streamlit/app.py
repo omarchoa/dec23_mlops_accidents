@@ -5,12 +5,12 @@ def main():
 
     # Menu in the sidebar
     st.sidebar.title('Menu')
-    selected_page = st.sidebar.radio('Go to', ['Home', 'Features'], format_func=lambda x: f'<a href="#{x.lower()}">{x}</a>')
+    selected_page = st.sidebar.radio('Go to', ['[Home](#home)', '[Features](#features)'], format_func=lambda x: f'{x}', index=0, unsafe_allow_html=True)
 
     # Display the corresponding page based on the selection
-    if selected_page == 'Home':
+    if selected_page == '[Home](#home)':
         show_homepage()
-    elif selected_page == 'Features':
+    elif selected_page == '[Features](#features)':
         show_features()
 
 def show_homepage():
