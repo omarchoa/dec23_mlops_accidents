@@ -5,7 +5,7 @@ def main():
 
     # Collecte des caractéristiques
     st.sidebar.title('Caractéristiques de l\'accident')
-    feature1 = st.sidebar.text_input('Caractéristique 1')
+    feature1 = st.sidebar.text_input('Caractéristique 12')
     feature2 = st.sidebar.text_input('Caractéristique 2')
     # etc pour les autres caractéristiques
 
