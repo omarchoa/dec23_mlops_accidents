@@ -5,8 +5,7 @@ def main():
 
     # Menu in the sidebar
     st.sidebar.title('Menu')
-    st.sidebar.markdown("[Home]", unsafe_allow_html=True)
-    st.sidebar.markdown("[Features]", unsafe_allow_html=True)
+    st.sidebar.markdown("", unsafe_allow_html=True)
 
     # Display the corresponding page based on the selection
     if st.sidebar.button("Home"):
