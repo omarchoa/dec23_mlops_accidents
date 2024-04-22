@@ -10,6 +10,7 @@ def main():
 
     # Afficher la page correspondante en fonction de la sélection
     selected_page = st.sidebar.button("Home")
+    selected_page = st.sidebar.button("Features")
 
     if selected_page:
         show_homepage()
