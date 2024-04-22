@@ -5,7 +5,7 @@ def main():
 
     # Menu in the sidebar
     st.sidebar.title('Menu')
-    selected_page = st.sidebar.radio('Select a page', ['Home', 'Features'])
+    selected_page = st.sidebar.selectbox('Select a page', ['Home', 'Features'])
 
     # Display the corresponding page based on the selection
     if selected_page == 'Home':
