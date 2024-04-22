@@ -9,8 +9,11 @@ def main():
     st.sidebar.markdown("[Features](#features)", unsafe_allow_html=True)
 
     # Afficher la page correspondante en fonction de la sélection
-    selected_page = st.sidebar.button("Home")
-
+    if selected_page == 'Home':
+        show_homepage()
+    elif selected_page == 'Features':
+        show_features()
+        
     if selected_page:
         show_homepage()
 
