@@ -24,7 +24,7 @@
 
 **Figure 1** illustrates the global app architecture.
 
-![SHIELD global architecture](/reports/figures/architecture_v2.png)
+![SHIELD global architecture](/reports/figures/architecture_global.png)
 <p align="center">
     <b>Figure 1.</b> The global app architecture.
 </p>
@@ -33,7 +33,7 @@ Each microservice runs in its own Docker container. Requests are handled by a de
 
 **Figure 2** illustrates this sub-architecture, taking the `training` microservice as an example.
 
-![Training microservice sub-architecture](/reports/figures/architecture_v2_training.png)
+![Training microservice sub-architecture](/reports/figures/architecture_sub_training.png)
 <p align="center">
     <b>Figure 2.</b> The sub-architecture of the <code>training</code> microservice.
 </p>
