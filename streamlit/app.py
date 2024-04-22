@@ -12,8 +12,10 @@ def main():
     selected_page = st.sidebar.button("Home")
     selected_page = st.sidebar.button("Features")
 
-    if selected_page:
+    if selected_home:
         show_homepage()
+    elif selected_features:
+        show_features()
 
 def show_homepage():
     st.write('Welcome to SHIELD. This application allows you to predict road accident priority levels.')
