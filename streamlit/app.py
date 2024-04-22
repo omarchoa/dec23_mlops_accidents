@@ -5,10 +5,13 @@ def main():
 
     # Menu in the sidebar
     st.sidebar.title('Menu')
-    
-    if selected_page == 'Home':
+    st.sidebar.markdown("[Home]", unsafe_allow_html=True)
+    st.sidebar.markdown("[Features]", unsafe_allow_html=True)
+
+    # Display the corresponding page based on the selection
+    if st.sidebar.button("Home"):
         show_homepage()
-    elif selected_page == 'Features':
+    elif st.sidebar.button("Features"):
         show_features()
 
 def show_homepage():
