@@ -4,13 +4,16 @@ def main():
     st.title('SHIELD: Prediction of Road Accident Priority Levels')
 
     # Menu in the sidebar
+    st.sidebar.title('Menu')
     st.sidebar.markdown("[Home](#home)", unsafe_allow_html=True)
     st.sidebar.markdown("[Features](#features)", unsafe_allow_html=True)
 
     # Display the corresponding page based on the selection
-    if st.sidebar.button("Home"):
+    selected_page = st.sidebar.selectbox('Select a page', ['Home', 'Features'])
+
+    if selected_page == 'Home':
         show_homepage()
-    elif st.sidebar.button("Features"):
+    elif selected_page == 'Features':
         show_features()
 
 def show_homepage():
