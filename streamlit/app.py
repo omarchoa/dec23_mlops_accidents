@@ -5,8 +5,11 @@ def main():
 
     # Menu in the sidebar
     st.sidebar.title('Menu')
-    st.sidebar.markdown("[Home](#home)", unsafe_allow_html=True)
-    st.sidebar.markdown("[Features](#features)", unsafe_allow_html=True)
+    
+    if selected_page == 'Home':
+        show_homepage()
+    elif selected_page == 'Features':
+        show_features()
 
 def show_homepage():
     st.write('Welcome to SHIELD. This application allows you to predict road accident priority levels.')
