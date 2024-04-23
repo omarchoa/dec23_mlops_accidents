@@ -33,7 +33,13 @@ def show_features():
 
     # Display current date
     st.write("Accident Date:")
-    st.write("")
+    st.markdown("""
+        <style>
+            p {
+                padding: 0;
+            }
+        </style>
+    """, unsafe_allow_html=True)
     today = st.date_input("", value=None, min_value=None, max_value=None, key=None)
 
     # Features
