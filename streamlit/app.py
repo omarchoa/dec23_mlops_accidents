@@ -30,7 +30,11 @@ def show_homepage():
     
 def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
-    
+
+    # Display current date
+    st.write("Today's date:")
+    today = st.date_input("", value=None, min_value=None, max_value=None, key=None)
+
     # Features
     jour = st.slider("Jour", min_value=1, max_value=31, step=1)
     mois = st.slider("Mois", min_value=1, max_value=12, step=1)
