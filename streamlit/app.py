@@ -14,10 +14,13 @@ def main():
         </style>
     """, unsafe_allow_html=True)
     
+    # Track the selected page
+    selected_page = st.sidebar.radio("Navigation", ["Home", "Features"], index=0)
+
     # Display the corresponding page based on the selection
-    if st.sidebar.button("Home"):
+    if selected_page == "Home":
         show_homepage()
-    if st.sidebar.button("Features"):
+    elif selected_page == "Features":
         show_features()
 
 def show_homepage():
