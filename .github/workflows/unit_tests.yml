@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - ci/unit-testing-combined
   pull_request:
     branches:
       - master
@@ -29,3 +30,6 @@ jobs:
 
     - name: Build Docker images & run Docker containers in background
       run: docker-compose -f src/docker/docker-compose-dev.yml up --detach
+
+    - name: Run unit tests
+      run: docker exec testing pytest -v /home/shield/testing/testing.py
