@@ -66,3 +66,11 @@ def test_data_download_prep_run():
     assert response.status_code == 200
     message = "Test /data-download-prep/run: PASSED"
     print(message)
+
+
+def test_training_status():
+    # time.sleep(5)
+    response = requests.get(url="http://gateway:8001/training/status")
+    assert response.status_code == 200
+    message = "Test /training/status: PASSED"
+    print(message)
