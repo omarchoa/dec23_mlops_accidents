@@ -13,9 +13,6 @@ def main():
             }
         </style>
     """, unsafe_allow_html=True)
-
-    # Display the default homepage
-    show_homepage()
     
     # Display the corresponding page based on the selection
     if st.sidebar.button("Home"):
