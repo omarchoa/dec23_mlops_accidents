@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - ci/unit-testing-combined
   pull_request:
     branches:
       - master
