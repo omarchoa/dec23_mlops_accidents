@@ -18,7 +18,7 @@ def show_homepage():
     with col2:
         # Centrer l'image en ajustant la largeur de la colonne
         image_width = 150  # Largeur de l'image
-        col_width = 300    # Largeur de la colonne
+        col_width = 600    # Largeur de la colonne
         st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=image_width)
         # Calculer la marge pour centrer l'image
         margin = (col_width - image_width) / 2
