@@ -10,6 +10,14 @@ def test_gateway_status():
     print(message)
 
 
+def test_users_status():
+    time.sleep(10)
+    response = requests.get("http://gateway:8001/users/status")
+    assert response.status_code == 200
+    message = "Test /gateway/status: PASSED"
+    print(message)
+
+
 def test_data_download_prep_status():
     time.sleep(10)
     response = requests.get("http://gateway:8001/data-download-prep/status")
