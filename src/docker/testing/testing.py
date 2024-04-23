@@ -74,3 +74,13 @@ def test_training_status():
     assert response.status_code == 200
     message = "Test /training/status: PASSED"
     print(message)
+
+
+def test_training_train():
+    # time.sleep(5)
+    response = requests.get(
+        url="http://gateway:8001/training/train", headers=header_admin
+    )
+    assert response.status_code == 200
+    message = "Test /training/train: PASSED"
+    print(message)
