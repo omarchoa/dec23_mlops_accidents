@@ -166,3 +166,14 @@ def test_scoring_label_prediction():
     assert response.status_code == 200
     message = "Test /scoring/label_prediction: PASSED"
     print(message)
+
+
+def test_scoring_update_f1_score():
+    # time.sleep(5)
+    response = requests.get(
+        url="http://gateway:8001/scoring/update_f1_score",
+        headers=header_admin,
+    )
+    assert response.status_code == 200
+    message = "Test /scoring/update_f1_score: PASSED"
+    print(message)
