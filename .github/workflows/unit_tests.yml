@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Unit testing
 
 on:
   push:
@@ -12,20 +12,18 @@ env:
   DOCKER_REGISTRY: fabricecharraud/shield
 
 jobs:
-  test:
-    runs-on: ubuntu-latest  # Vous pouvez choisir un autre système d'exploitation si nécessaire
-
-    services:
-      docker:
-        image: docker:latest
-        options: --privileged
+  Pipeline:
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - name: Check out repository
+      uses: actions/checkout@v4
 
-    - name: Create ~/mariadb_data
+    - name: Create `mariadb_data` directory for `database` microservice
       run: mkdir ~/mariadb_data
 
-    - name: Build Docker images & run Docker containers in background
+    - name: Build Docker images and run Docker containers in background
       run: docker-compose -f src/docker/docker-compose-dev.yml up --detach
+
+    - name: Run unit tests
+      run: docker exec testing pytest -v /home/shield/testing/testing.py
