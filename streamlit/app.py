@@ -1,6 +1,4 @@
 import streamlit as st
-import numpy as np
-import matplotlib.pyplot as plt
 
 def main():  
     
@@ -73,20 +71,7 @@ def show_features():
         pass
 
 def show_graph():
-    # Mock data for demonstration purposes
-    iterations = np.arange(1, 11)
-    f1_scores = np.random.uniform(0.5, 1.0, size=10)
 
-    # Plotting the graph
-    plt.figure(figsize=(10, 6))
-    plt.plot(iterations, f1_scores, marker='o', linestyle='-')
-    plt.title('Evolution of F1-score')
-    plt.xlabel('Iterations')
-    plt.ylabel('F1-score')
-    plt.grid(True)
-    
-    # Displaying the graph
-    st.pyplot(plt)
 
 if __name__ == '__main__':
     main()
