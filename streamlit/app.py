@@ -73,13 +73,11 @@ def show_features():
 def show_graph():
     st.markdown("<h1 id='graph' style='text-align: center;'>Prediction Graph</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:left;'>Show a graph where each new prediction adds a point to a curve illustrating the performance improvement over time.</p>", unsafe_allow_html=True)
-    st.line_chart([0, 1, 2, 3, 4, 5])
-
     # Generate x values
-    x_values = [i / 10 for i in range(-100, 101)]
+    x_values = list(range(1, 21))
 
-    # Calculate y values using a nonlinear function
-    y_values = [x ** 2 for x in x_values]
+    # Calculate y values as progressively increasing numbers
+    y_values = [i * 5 for i in x_values]
 
     # Display the curve using Streamlit's line_chart
     st.line_chart({"x": x_values, "y": y_values})
