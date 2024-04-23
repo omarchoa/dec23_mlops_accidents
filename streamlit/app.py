@@ -5,12 +5,19 @@ def main():
     selected_home = st.sidebar.button("Home")
     selected_features = st.sidebar.button("Features")
 
-    # Display the default homepage
-    if not (selected_features or selected_home):
-        show_homepage()
+    # Determine which page to display based on the selected button
     if selected_home:
+        st.session_state.selected_page = "Home"
+    elif selected_features:
+        st.session_state.selected_page = "Features"
+
+    # Display the corresponding page
+    if "selected_page" not in st.session_state:
+        st.session_state.selected_page = "Home"  # Default to Home page
+
+    if st.session_state.selected_page == "Home":
         show_homepage()
-    if selected_features:
+    elif st.session_state.selected_page == "Features":
         show_features()
 
 def show_homepage():
