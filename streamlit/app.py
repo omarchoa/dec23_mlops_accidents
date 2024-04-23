@@ -71,7 +71,7 @@ def show_features():
         pass
 
 def show_graph():
-
+    st.markdown("<h1 id='graph' style='text-align: center;'>Graph</h1>", unsafe_allow_html=True)
 
 if __name__ == '__main__':
     main()
