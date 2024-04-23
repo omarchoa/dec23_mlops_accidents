@@ -39,6 +39,7 @@ def show_features():
     nb_victim = st.slider("Number of Victims", min_value=0, max_value=100, step=1)
     nb_vehicules = st.slider("Number of Vehicles", min_value=0, max_value=100, step=1)
     catu = st.slider("Catu", min_value=0, max_value=10, step=1)
+    st.write("Sex :")
     sex = st.radio("", ["Male", "Female"])    
     sex = st.selectbox("Sexe", options=["Male", "Female"], help="Select gender")
     secu1 = st.slider("Secu1", min_value=0.0, max_value=10.0, step=0.1)
