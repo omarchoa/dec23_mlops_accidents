@@ -1,7 +1,7 @@
 import streamlit as st
 
 def main():   
-   # Centrer la page principale
+    # Center the main page
     st.markdown("""
         <style>
             .centered {
@@ -13,6 +13,9 @@ def main():
             }
         </style>
     """, unsafe_allow_html=True)
+
+    # Display the default homepage
+    show_homepage()
     
     selected_home = st.sidebar.button("Home")
     selected_features = st.sidebar.button("Features")
