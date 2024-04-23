@@ -149,7 +149,7 @@ _Example:_ [`fabricecharraud/shield`](https://hub.docker.com/r/fabricecharraud/s
 
 #### 4. Add the Docker Hub repository's name to your execution environment
 
-Create an environmental variable named `DOCKER_REGISTRY` and assign to it the name of the Docker Hub repository that you created in [Step 3](#3-create-a-docker-hub-repository-to-host-your-version-of-the-app).
+In a terminal window, create an environmental variable named `DOCKER_REGISTRY` and assign to it the name of the Docker Hub repository that you created in [Step 3](#3-create-a-docker-hub-repository-to-host-your-version-of-the-app).
 
 _Example:_
 
