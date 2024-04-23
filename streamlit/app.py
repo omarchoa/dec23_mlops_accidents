@@ -34,7 +34,7 @@ def show_features():
     # Features
     place = st.slider("Place", min_value=0, max_value=100, step=1)
     catu = st.slider("Catu", min_value=0, max_value=10, step=1)
-    sexe = st.button("Sexe", min_value=0, max_value=1, step=1)
+    sexe = st.button("Sexe", options=["Male", "Female"])
     secu1 = st.slider("Secu1", min_value=0.0, max_value=10.0, step=0.1)
     year_acc = st.slider("Year Acc", min_value=2000, max_value=2025, step=1)
     victim_age = st.slider("Victim Age", min_value=0, max_value=100, step=1)
@@ -61,5 +61,10 @@ def show_features():
     nb_victim = st.slider("Number of Victims", min_value=0, max_value=100, step=1)
     nb_vehicules = st.slider("Number of Vehicles", min_value=0, max_value=100, step=1)
 
+    st.write("")  # Add vertical space to create a new line
+    if st.button("Validate"):
+        # Perform processing here
+        pass
+        
 if __name__ == '__main__':
     main()
