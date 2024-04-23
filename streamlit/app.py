@@ -42,8 +42,8 @@ def show_features():
 
     # Display "Sexe" as clickable words
     st.write("Sexe:")
-    male_clicked = st.markdown("[Male]", unsafe_allow_html=True)
-    female_clicked = st.markdown("[Female]", unsafe_allow_html=True)
+    male_clicked = st.markdown("Male()", unsafe_allow_html=True)
+    female_clicked = st.markdown("Female()", unsafe_allow_html=True)
     
     sexe = st.selectbox("Sexe", options=["Male", "Female"], help="Select gender")
     sexe = st.selectbox("Sexe", options=["Male", "Female"])
