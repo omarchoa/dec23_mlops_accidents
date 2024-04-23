@@ -77,7 +77,7 @@ def show_graph():
     x_values = list(range(1, 21))
 
     # Calculate y values as progressively increasing numbers
-    y_values = [i * 5 for i in x_values]
+    y_values = [i**2 for i in x_values]
 
     # Display the curve using Streamlit's line_chart
     st.line_chart({"x": x_values, "y": y_values})
