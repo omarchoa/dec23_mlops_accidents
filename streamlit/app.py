@@ -1,9 +1,6 @@
 import streamlit as st
 
-def main():
-    # Menu in the sidebar
-    st.sidebar.title('Menu')
-    
+def main():   
    # Centrer la page principale
     st.markdown("""
         <style>
