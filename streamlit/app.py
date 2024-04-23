@@ -1,18 +1,6 @@
 import streamlit as st
 
-def main():   
-    # Center the main page
-    st.markdown("""
-        <style>
-            .centered {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                flex-direction: column;
-            }
-        </style>
-    """, unsafe_allow_html=True)
+def main():  
     
     selected_home = st.sidebar.button("Home")
     selected_features = st.sidebar.button("Features")
