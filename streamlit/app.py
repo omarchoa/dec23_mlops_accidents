@@ -35,7 +35,7 @@ def show_homepage():
     st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
     st.write("") 
     st.markdown("<p style='text-align:center;'>Project led by <span style='color:orange;'>Fabrice Charraud, Omar Choa, Michael Deroche</span>, and <span style='color:orange;'>Alexandre Winger</span>.</p>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;'>cohorte dec23_mlops // <span style='color:#6ab7ff;'>Datascientest</span></p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;'>cohort dec23_mlops // <span style='color:#6ab7ff;'>Datascientest</span></p>", unsafe_allow_html=True)
 
 def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
