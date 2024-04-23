@@ -34,7 +34,7 @@ def show_features():
     # Features
     place = st.slider("Place", min_value=0, max_value=100, step=1)
     catu = st.slider("Catu", min_value=0, max_value=10, step=1)
-    sexe = st.radio("Sexe", min_value=0, max_value=1, step=1)
+    sexe = st.button("Sexe", min_value=0, max_value=1, step=1)
     secu1 = st.slider("Secu1", min_value=0.0, max_value=10.0, step=0.1)
     year_acc = st.slider("Year Acc", min_value=2000, max_value=2025, step=1)
     victim_age = st.slider("Victim Age", min_value=0, max_value=100, step=1)
