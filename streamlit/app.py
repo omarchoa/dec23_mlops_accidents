@@ -18,7 +18,7 @@ def show_homepage():
     with col2:
         st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', use_column_width=True, output_format='PNG')
     
-    st.write("")  # Ajouter un espace vertical pour créer une nouvelle ligne
+    st.write("")  # New line
     
     st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
