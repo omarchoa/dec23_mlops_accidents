@@ -15,7 +15,7 @@ def main():
     """, unsafe_allow_html=True)
     
     # Track the selected page
-    selected_page = st.sidebar.radio("Navigation", ["Home", "Features"], index=0)
+    selected_page = st.sidebar.button("Navigation", ["Home", "Features"], index=0)
 
     # Display the corresponding page based on the selection
     if selected_page == "Home":
