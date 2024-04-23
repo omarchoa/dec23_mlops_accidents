@@ -6,7 +6,7 @@ header_admin = {"identification": "admin:4dmin"}
 payload_new_user = {"username": "antoine", "password": "jussieu", "rights": 0}
 payload_old_user = {"user": "antoine"}
 payload_year_range = {"start_year": 2021, "end_year": 2021}
-payload_input_data = {
+payload_input_data_pred_call = {
     "place": 10,
     "catu": 3,
     "sexe": 1,
@@ -36,6 +36,7 @@ payload_input_data = {
     "nb_victim": 2,
     "nb_vehicules": 1,
 }
+payload_input_data_label_pred = {"request_id": 6012919476848551, "y_true": 1}
 
 
 def test_gateway_status():
@@ -139,7 +140,7 @@ def test_prediction_call():
     # time.sleep(5)
     response = requests.post(
         url="http://gateway:8001/prediction/call",
-        json=payload_input_data,
+        json=payload_input_data_pred_call,
         headers=header_admin,
     )
     assert response.status_code == 200
@@ -152,4 +153,16 @@ def test_scoring_status():
     response = requests.get(url="http://gateway:8001/scoring/status")
     assert response.status_code == 200
     message = "Test /scoring/status: PASSED"
+    print(message)
+
+
+def test_scoring_label_prediction():
+    # time.sleep(5)
+    response = requests.post(
+        url="http://gateway:8001/scoring/label_prediction",
+        json=payload_input_data_label_pred,
+        headers=header_admin,
+    )
+    assert response.status_code == 200
+    message = "Test /scoring/label_prediction: PASSED"
     print(message)
