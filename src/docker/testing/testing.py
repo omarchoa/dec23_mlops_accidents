@@ -32,6 +32,17 @@ def test_users_register():
     print(message)
 
 
+def test_users_remove():
+    # time.sleep(5)
+    old_user = {"user": "antoine"}
+    response = requests.delete(
+        url="http://gateway:8001/users/remove", json=old_user, headers=admin
+    )
+    assert response.status_code == 200
+    message = "Test /users/remove: PASSED"
+    print(message)
+
+
 def test_data_download_prep_status():
     # time.sleep(5)
     response = requests.get(url="http://gateway:8001/data-download-prep/status")
