@@ -20,9 +20,6 @@ def show_homepage():
         image_width = 150  # Largeur de l'image
         col_width = 600    # Largeur de la colonne
         st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=image_width)
-        # Calculer la marge pour centrer l'image
-        margin = (col_width - image_width) / 2
-        st.markdown(f"<div style='margin-left: {margin}px;'></div>", unsafe_allow_html=True)
         
     st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
