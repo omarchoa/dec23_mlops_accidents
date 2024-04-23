@@ -20,8 +20,7 @@ def main():
     selected_home = st.sidebar.button("Home")
     selected_features = st.sidebar.button("Features")
 
-    if selected_home:
-        show_homepage()
+
     if selected_features:
         show_features()
 
