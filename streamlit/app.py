@@ -1,11 +1,22 @@
 import streamlit as st
 
 def main():
-    st.title('SHIELD: Prediction of Road Accident Priority Levels')
-
     # Menu in the sidebar
     st.sidebar.title('Menu')
-
+    
+   # Centrer la page principale
+    st.markdown("""
+        <style>
+            .centered {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                flex-direction: column;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+    
     selected_home = st.sidebar.button("Home")
     selected_features = st.sidebar.button("Features")
 
@@ -15,7 +26,7 @@ def main():
         show_features()
 
 def show_homepage():
-    st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=100)
+    st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=150)
     st.header('Welcome to SHIELD')
     st.write('This application allows you to predict road accident priority levels.')
     
