@@ -29,10 +29,13 @@ def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
         st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png")
-    st.write("")  # Ajouter un espace vertical pour créer une nouvelle ligne
+    st.write("") 
     st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
-    
+    st.write("") 
+    st.markdown("<p style='text-align:center;'>Project led by :orange[can] Fabrice Charraud, Omar Choa, Michael Deroche et Alexandre Winger.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;'>janv24_MLOps // Datascientest</p>", unsafe_allow_html=True)
+
 def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
 
