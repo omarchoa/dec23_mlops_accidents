@@ -4,7 +4,7 @@ def main():
     
     selected_home = st.sidebar.button("Home")
     selected_features = st.sidebar.button("Features")
-    selected_graph = st.sidebar.button("Graph")
+    selected_graph = st.sidebar.button("Prediction Graph")
 
     # Determine which page to display based on the selected button
     if selected_home:
@@ -71,7 +71,7 @@ def show_features():
         pass
 
 def show_graph():
-    st.markdown("<h1 id='graph' style='text-align: center;'>Graph</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 id='graph' style='text-align: center;'>Prediction Graph</h1>", unsafe_allow_html=True)
 
     st.line_chart([0, 1, 2, 3, 4, 5])
     
