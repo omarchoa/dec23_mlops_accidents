@@ -31,10 +31,8 @@ def show_homepage():
 def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
 
-    # Display current date
-    today = st.date_input("", value=None, min_value=None, max_value=None, key=None)
-
     # Features
+    today = st.date_input("", value=None, min_value=None, max_value=None, key=None)
     hour = st.slider("Hour", min_value=0, max_value=23, step=1)
     dep = st.slider("Dep", min_value=1, max_value=100, step=1)
     place = st.slider("Place", min_value=0, max_value=100, step=1)
