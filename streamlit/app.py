@@ -38,10 +38,18 @@ def show_homepage():
         </style>
     """, unsafe_allow_html=True)
     
+    st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=150)
     st.markdown("<h1>Welcome to SHIELD</h1>", unsafe_allow_html=True)
     st.markdown("<p>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
-    st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=150)
 
+    st.markdown("""
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; height: 100vh;">
+            <h1>Welcome to SHIELD</h1>
+            <p>This application allows you to predict road accident priority levels.</p>
+            <img src="/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png" alt="SHIELD Logo" width="150">
+        </div>
+    """, unsafe_allow_html=True)
+    
 def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
     
