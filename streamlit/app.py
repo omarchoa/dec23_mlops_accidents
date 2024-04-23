@@ -72,7 +72,7 @@ def show_features():
 
 def show_graph():
     st.markdown("<h1 id='graph' style='text-align: center;'>Prediction Graph</h1>", unsafe_allow_html=True)
-
+    st.markdown("<p style='text-align:left;'>Show a graph where each new prediction adds a point to a curve illustrating the performance improvement over time.</p>", unsafe_allow_html=True)
     st.line_chart([0, 1, 2, 3, 4, 5])
     
 if __name__ == '__main__':
