@@ -20,7 +20,8 @@ def main():
     # Display the default homepage
     if not (selected_features or selected_home):
         show_homepage()
-    
+    if selected_home:
+        show_homepage()
     if selected_features:
         show_features()
 
