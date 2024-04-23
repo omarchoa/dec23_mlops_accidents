@@ -8,20 +8,16 @@ def main():
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 200vh;
+                height: 100vh;
                 flex-direction: column;
             }
         </style>
     """, unsafe_allow_html=True)
 
-  
-    selected_home = st.sidebar.button("Home")
-    selected_features = st.sidebar.button("Features")
-    
-  # Display the default homepage
+    # Display the default homepage
     show_homepage()
-    
-    if selected_features:
+
+    if st.sidebar.button("Features"):
         show_features()
 
 def show_homepage():
