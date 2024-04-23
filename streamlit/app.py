@@ -6,7 +6,6 @@ def main():
     # Menu in the sidebar
     st.sidebar.title('Menu')
 
-    # Afficher la page correspondante en fonction de la sélection
     selected_home = st.sidebar.button("Home")
     selected_features = st.sidebar.button("Features")
 
@@ -16,13 +15,14 @@ def main():
         show_features()
 
 def show_homepage():
-    st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width='150', use_column_width=True)
-    st.write('Welcome to SHIELD. This application allows you to predict road accident priority levels.')
+    st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=100)
+    st.header('Welcome to SHIELD')
+    st.write('This application allows you to predict road accident priority levels.')
     
 def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
     
-    # Caractéristiques
+    # Features
     place = st.slider("Place", min_value=0, max_value=100, step=1)
     catu = st.slider("Catu", min_value=0, max_value=10, step=1)
     sexe = st.slider("Sexe", min_value=0, max_value=1, step=1)
