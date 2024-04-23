@@ -32,13 +32,10 @@ def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
 
     # Display current date
-    st.write("Today's date:")
+    st.write("Accident's Date:")
     today = st.date_input("", value=None, min_value=None, max_value=None, key=None)
 
     # Features
-    jour = st.slider("Jour", min_value=1, max_value=31, step=1)
-    mois = st.slider("Mois", min_value=1, max_value=12, step=1)
-    year_acc = st.slider("Year Acc", min_value=2000, max_value=2025, step=1)
     hour = st.slider("Hour", min_value=0, max_value=23, step=1)
     dep = st.slider("Dep", min_value=1, max_value=100, step=1)
     place = st.slider("Place", min_value=0, max_value=100, step=1)
