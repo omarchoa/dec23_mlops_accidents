@@ -145,3 +145,11 @@ def test_prediction_call():
     assert response.status_code == 200
     message = "Test /prediction/call: PASSED"
     print(message)
+
+
+def test_scoring_status():
+    # time.sleep(5)
+    response = requests.get(url="http://gateway:8001/scoring/status")
+    assert response.status_code == 200
+    message = "Test /scoring/status: PASSED"
+    print(message)
