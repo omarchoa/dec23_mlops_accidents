@@ -32,14 +32,7 @@ def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
 
     # Display current date
-    st.write("Accident Date:")
-    st.markdown("""
-        <style>
-            p {
-                padding: 0;
-            }
-        </style>
-    """, unsafe_allow_html=True)
+    st.markdown("Accident Date:")
     today = st.date_input("", value=None, min_value=None, max_value=None, key=None)
 
     # Features
