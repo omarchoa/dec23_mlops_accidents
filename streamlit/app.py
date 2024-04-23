@@ -16,11 +16,10 @@ def main():
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        # Centrer l'image en ajustant la largeur de la colonne
-        image_width = 150  # Largeur de l'image
-        col_width = 600    # Largeur de la colonne
-        st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=image_width)
-        
+        st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', use_column_width=True, output_format='PNG')
+    
+    st.write("")  # Ajouter un espace vertical pour créer une nouvelle ligne
+    
     st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
     
