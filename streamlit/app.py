@@ -31,9 +31,7 @@ def show_homepage():
         st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png")
     st.write("") 
     st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;'>SHIELD (<em>Safety Hazard Identification and Emergency Law Deployment</em>) is an 
-                AI-powered Python app that uses machine learning to predict road accident priority levels, 
-                helping law enforcement optimize resources and maximize impact.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;'>SHIELD (<em>Safety Hazard Identification and Emergency Law Deployment</em>) is an AI-powered Python app that uses machine learning to predict road accident priority levels, helping law enforcement optimize resources and maximize impact.</p>", unsafe_allow_html=True)
     st.write("") 
     st.markdown("<p style='text-align:center;'>SHIELD is developed by <span style='color:orange;'>Fabrice Charraud, Omar Choa, Michael Deroche, Alexandre Winger</span>.</p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center;'>SHIELD (<em>SHIELD constitutes our final project for the DataScientest Machine Learning Engineer Program.</p>", unsafe_allow_html=True)
