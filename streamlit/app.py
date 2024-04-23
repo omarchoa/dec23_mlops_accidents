@@ -1,15 +1,20 @@
 import streamlit as st
+import numpy as np
+import matplotlib.pyplot as plt
 
 def main():  
     
     selected_home = st.sidebar.button("Home")
     selected_features = st.sidebar.button("Features")
+    selected_graph = st.sidebar.button("Graph")
 
     # Determine which page to display based on the selected button
     if selected_home:
         st.session_state.selected_page = "Home"
     elif selected_features:
         st.session_state.selected_page = "Features"
+    elif selected_graph:
+        st.session_state.selected_page = "Graph"
 
     # Display the corresponding page
     if "selected_page" not in st.session_state:
@@ -19,6 +24,8 @@ def main():
         show_homepage()
     elif st.session_state.selected_page == "Features":
         show_features()
+    elif st.session_state.selected_page == "Graph":
+        show_graph()
 
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
@@ -64,6 +71,22 @@ def show_features():
     if st.button("Validate"):
         # Perform processing here
         pass
-        
+
+def show_graph():
+    # Mock data for demonstration purposes
+    iterations = np.arange(1, 11)
+    f1_scores = np.random.uniform(0.5, 1.0, size=10)
+
+    # Plotting the graph
+    plt.figure(figsize=(10, 6))
+    plt.plot(iterations, f1_scores, marker='o', linestyle='-')
+    plt.title('Evolution of F1-score')
+    plt.xlabel('Iterations')
+    plt.ylabel('F1-score')
+    plt.grid(True)
+    
+    # Displaying the graph
+    st.pyplot(plt)
+
 if __name__ == '__main__':
     main()
