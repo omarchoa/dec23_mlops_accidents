@@ -16,7 +16,16 @@ def main():
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', use_column_width=True, output_format='PNG')
+        st.markdown(
+            """
+            <div style="display: flex; justify-content: center;">
+                <img src="/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png" 
+                     alt="SHIELD Logo" 
+                     style="width: 200px;">
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
     
     st.write("")  # New line
     
