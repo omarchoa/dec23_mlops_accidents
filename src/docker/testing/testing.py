@@ -92,3 +92,14 @@ def test_prediction_status():
     assert response.status_code == 200
     message = "Test /prediction/status: PASSED"
     print(message)
+
+
+def test_prediction_test():
+    # time.sleep(5)
+    response = requests.get(
+        url="http://gateway:8001/prediction/test",
+        headers=header_admin,
+    )
+    assert response.status_code == 200
+    message = "Test /prediction/test: PASSED"
+    print(message)
