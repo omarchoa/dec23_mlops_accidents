@@ -14,7 +14,11 @@ def main():
         </style>
     """, unsafe_allow_html=True)
 
-    # Display the default homepage
+  
+    selected_home = st.sidebar.button("Home")
+    selected_features = st.sidebar.button("Features")
+    
+  # Display the default homepage
     show_homepage()
     
     if selected_features:
