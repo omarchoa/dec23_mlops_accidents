@@ -26,18 +26,7 @@ def main():
         show_features()
 
 def show_homepage():
-    st.markdown("""
-        <style>
-            .centered {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                flex-direction: column;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-    
+   
     st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=150)
     
     st.markdown("""
