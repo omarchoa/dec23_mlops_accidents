@@ -16,21 +16,10 @@ def main():
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        st.markdown(
-            """
-            <div style="display: flex; justify-content: center;">
-                <img src="/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png" 
-                     alt="SHIELD Logo" 
-                     style="width: 200px;">
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-    
-    st.write("")  # New line
-    
-    st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
+        st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=200, use_column_width=True)
+        st.write("")  # Ajouter un espace vertical pour créer une nouvelle ligne
+        st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
     
 def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
