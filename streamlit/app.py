@@ -73,10 +73,7 @@ def show_features():
 def show_graph():
     st.markdown("<h1 id='graph' style='text-align: center;'>Graph</h1>", unsafe_allow_html=True)
 
-    # Generate random data for the chart
-    data = [random.randint(0, 10) for _ in range(20)]
-    # Display the line chart
-    st.line_chart(data)
+    st.line_chart([0, 1, 2, 3, 4, 5])
     
 if __name__ == '__main__':
     main()
