@@ -17,8 +17,8 @@ def show_homepage():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=150)
-        st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
     
 def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Accident Features</h1>", unsafe_allow_html=True)
