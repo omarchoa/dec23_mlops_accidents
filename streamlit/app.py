@@ -39,14 +39,8 @@ def show_features():
     nb_victim = st.slider("Number of Victims", min_value=0, max_value=100, step=1)
     nb_vehicules = st.slider("Number of Vehicles", min_value=0, max_value=100, step=1)
     catu = st.slider("Catu", min_value=0, max_value=10, step=1)
-
-    # Display "Sexe" as clickable words
-    st.write("Sexe:")
-    male_clicked = st.markdown("[Male](http://example.com)", unsafe_allow_html=True)
-    female_clicked = st.markdown("[Female](http://example.com)", unsafe_allow_html=True)
-    
-    sexe = st.selectbox("Sexe", options=["Male", "Female"], help="Select gender")
-    sexe = st.selectbox("Sexe", options=["Male", "Female"])
+    sex = st.radio("", ["Male", "Female"])    
+    sex = st.selectbox("Sexe", options=["Male", "Female"], help="Select gender")
     secu1 = st.slider("Secu1", min_value=0.0, max_value=10.0, step=0.1)
     victim_age = st.slider("Victim Age", min_value=0, max_value=100, step=1)
     catv = st.slider("Catv", min_value=0, max_value=10, step=1)
