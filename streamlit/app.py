@@ -26,7 +26,7 @@ def main():
         show_features()
 
 def show_homepage():
-    st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=150)
+    st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", width=150)
     st.header('Welcome to SHIELD')
     st.write('This application allows you to predict road accident priority levels.')
     
