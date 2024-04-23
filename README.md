@@ -105,6 +105,8 @@ The repository is structured as follows:
 │    │    │
 │    │    ├── scoring/                  <- Scripts for the `scoring` microservice.
 │    │    │
+│    │    ├── testing/                  <- <- Tools and utilities for unit testing.
+│    │    │
 │    │    ├── training/                 <- Scripts for the `training` microservice.
 │    │    │
 │    │    └── users/                    <- Scripts for the `users` microservice.
@@ -115,8 +117,6 @@ The repository is structured as follows:
 │    ├── scoring/                       <- Scripts for model performance scoring.
 │    │
 │    └── script/                        <- Tools and utilities for app setup and automation.
-│
-└── tests/                              <- Tools and utilities for unit testing.
 ```
 
 
