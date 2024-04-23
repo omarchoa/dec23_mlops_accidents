@@ -17,10 +17,6 @@ def main():
     # Display the default homepage
     show_homepage()
     
-    selected_home = st.sidebar.button("Home")
-    selected_features = st.sidebar.button("Features")
-
-
     if selected_features:
         show_features()
 
