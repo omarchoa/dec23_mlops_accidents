@@ -14,9 +14,16 @@ def main():
         show_features()
 
 def show_homepage():
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=150)
+        # Centrer l'image en ajustant la largeur de la colonne
+        image_width = 150  # Largeur de l'image
+        col_width = 300    # Largeur de la colonne
+        st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png", caption='SHIELD Logo', width=image_width)
+        # Calculer la marge pour centrer l'image
+        margin = (col_width - image_width) / 2
+        st.markdown(f"<div style='margin-left: {margin}px;'></div>", unsafe_allow_html=True)
+        
     st.markdown("<h1 style='text-align:center;'>Welcome to SHIELD</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center;'>This application allows you to predict road accident priority levels.</p>", unsafe_allow_html=True)
     
