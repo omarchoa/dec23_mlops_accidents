@@ -3,14 +3,14 @@ import streamlit as st
 def main():  
     
     selected_home = st.sidebar.button("Accueil")
-    selected_features = st.sidebar.button("Caractéristiques")
+    selected_features = st.sidebar.button("Ajouter un accident")
     selected_graph = st.sidebar.button("Graphique de Prédiction")
 
     # Déterminer quelle page afficher en fonction du bouton sélectionné
     if selected_home:
         st.session_state.selected_page = "Accueil"
     elif selected_features:
-        st.session_state.selected_page = "Caractéristiques"
+        st.session_state.selected_page = "Ajouter un accident"
     elif selected_graph:
         st.session_state.selected_page = "Graphique"
 
@@ -20,7 +20,7 @@ def main():
 
     if st.session_state.selected_page == "Accueil":
         show_homepage()
-    elif st.session_state.selected_page == "Caractéristiques":
+    elif st.session_state.selected_page == "Ajouter un accident":
         show_features()
     elif st.session_state.selected_page == "Graphique":
         show_graph()
@@ -37,7 +37,7 @@ def show_homepage():
     st.markdown("<p style='text-align:center;'>dec23_mlops // <span style='color:#6ab7ff;'>Datascientest</span></p>", unsafe_allow_html=True)
 
 def show_features():
-    st.markdown("<h1 id='features' style='text-align: center;'>Caractéristiques de l'Accident</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 id='features' style='text-align: center;'>Ajouter un accident</h1>", unsafe_allow_html=True)
    
     # Caractéristiques
     jour_accident = st.date_input("Jour de l'accident", value=None, min_value=None, max_value=None, key=None)
