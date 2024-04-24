@@ -139,15 +139,23 @@ These instructions are divided into three sections:
 
 _Example:_ [`fabricecharraud`](https://hub.docker.com/u/fabricecharraud)
 
-#### 3. Create a Docker Hub repository to host your version of the app
+#### 3. Log in to Docker Hub from your execution environment
+
+In a terminal window, run the following command, replacing `<username>` and `<password>` with your Docker ID information:
+
+```shell
+docker login -u <username> -p <password>
+```
+
+#### 4. Create a Docker Hub repository to host your version of the app
 
 [Instructions](https://docs.docker.com/docker-hub/repos/create/) are available in the official Docker documentation.
 
 _Example:_ [`fabricecharraud/shield`](https://hub.docker.com/r/fabricecharraud/shield)
 
-#### 4. Add the Docker Hub repository's name to your execution environment
+#### 5. Add the Docker Hub repository's name to your execution environment
 
-In a terminal window, create an environmental variable named `DOCKER_REGISTRY` and assign to it the name of the Docker Hub repository that you created in [Step 3](#3-create-a-docker-hub-repository-to-host-your-version-of-the-app).
+In a terminal window, create an environmental variable named `DOCKER_REGISTRY` and assign to it the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
 
 _Example:_
 
@@ -161,7 +169,7 @@ export DOCKER_REGISTRY="fabricecharraud/shield"
 
 ### 🗃️ **Set up the app**
 
-#### 5. Clone the app's GitHub repository
+#### 6. Clone the app's GitHub repository
 
 [Instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) for a wide variety of methods are available in the official GitHub documentation, the simplest being the execution of the following command:
 
@@ -169,7 +177,7 @@ export DOCKER_REGISTRY="fabricecharraud/shield"
 git clone https://github.com/omarchoa/dec23_mlops_accidents.git
 ```
 
-#### 6. Set up a Python virtual environment
+#### 7. Set up a Python virtual environment
 
 Using Python's `venv` module, with `sword` as the virtual environment name, run the following commands:
 
@@ -179,7 +187,7 @@ chmod +x ./sword/bin/activate
 source ./sword/bin/activate
 ```
 
-#### 7. Install the app's global dependencies
+#### 8. Install the app's global dependencies
 
 From the root directory of your local clone of the GitHub repository, run the following command:
 
@@ -187,7 +195,7 @@ From the root directory of your local clone of the GitHub repository, run the fo
 pip install -r requirements.txt
 ```
 
-#### 8. Build the Docker container images and launch the app
+#### 9. Build the Docker container images and launch the app
 
 From the root directory of your local clone of the GitHub repository, run the following command:
 
@@ -195,9 +203,9 @@ From the root directory of your local clone of the GitHub repository, run the fo
 docker-compose -f ./src/docker/docker-compose-dev.yml up
 ```
 
-#### 9. Push the Docker container images to Docker Hub
+#### 10. Push the Docker container images to Docker Hub
 
-To upload the Docker container images to the Docker Hub repository created in [Step 3](#3-create-a-docker-hub-repository-to-host-your-version-of-the-app):
+To upload the Docker container images to the Docker Hub repository created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app):
 - Open a new terminal window.
 - Go to the root directory of your local clone of the GitHub repository.
 - Run the following command:
@@ -212,7 +220,7 @@ python ./src/script/push_images.py
 
 ### ⚙️ **Use the app**
 
-#### 10. Check service status
+#### 11. Check service status
 
 To ping the API gateway, run the following command:
 
@@ -226,7 +234,7 @@ You should receive the following response:
 "The API gateway is up."
 ```
 
-#### 11. Try out the microservice features
+#### 12. Try out the microservice features
 
 The full, interactive list of endpoints is accessible via the API gateway's Swagger UI at [`http://0.0.0.0:8001/docs`](http://0.0.0.0:8001/docs).
 
@@ -235,17 +243,17 @@ The full, interactive list of endpoints is accessible via the API gateway's Swag
 >
 > Other endpoints additionally require **administrator authorization**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `admin:4dmin`.
 
-#### 12. Stop the app
+#### 13. Stop the app
 
-To stop the app, return to the terminal window that you used to launch it in [Step 8](#8-build-the-docker-container-images-and-launch-the-app) and press `Ctrl + C`.
+To stop the app, return to the terminal window that you used to launch it in [Step 9](#9-build-the-docker-container-images-and-launch-the-app) and press `Ctrl + C`.
 
-#### 13. Resume the app
+#### 14. Resume the app
 
-To resume the app, run the same command that you used in [Step 8](#8-build-the-docker-container-images-and-launch-the-app).
+To resume the app, run the same command that you used in [Step 9](#9-build-the-docker-container-images-and-launch-the-app).
 
-#### 14. Shut down the app
+#### 15. Shut down the app
 
-To shut down the app, run the same command that you used in [Step 8](#8-build-the-docker-container-images-and-launch-the-app), replacing `up` with `down`:
+To shut down the app, run the same command that you used in [Step 9](#9-build-the-docker-container-images-and-launch-the-app), replacing `up` with `down`:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml down
