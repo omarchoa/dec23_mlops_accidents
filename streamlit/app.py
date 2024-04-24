@@ -50,7 +50,7 @@ def show_features():
     sexe_usager = st.select_slider("Sexe de l'usager", options={1: "Masculin", 2: "Féminin"})
     equipement_securite = st.select_slider("Équipement de sécurité", options={-1: "Non renseigné", 0: "Aucun équipement", 1: "Ceinture", 2: "Casque", 3: "Dispositif enfants", 4: "Gilet réfléchissant", 5: "Airbag (2RM/3RM)", 6: "Gants (2RM/3RM)", 7: "Gants + Airbag (2RM/3RM)", 8: "Non déterminable", 9: "Autre"})
     age_victime = st.slider("Âge de la ou des victimes", min_value=0, max_value=100, step=1)
-    categorie_vehicule = st.select_slider("Catégorie du véhicule", options={i: categorie_véhicule(i) for i in range(100)})
+    categorie_vehicule = st.select_slider("Catégorie du véhicule", options={i: categorie_vehicule(i) for i in range(100)})
     obstacle_mobile = st.select_slider("Obstacle mobile heurté", options={-1: "Non renseigné", 0: "Aucun", 1: "Piéton", 2: "Véhicule", 4: "Véhicule sur rail", 5: "Animal domestique", 6: "Animal sauvage", 9: "Autre"})
     type_motorisation = st.select_slider("Type de motorisation du véhicule", options={-1: "Non renseigné", 0: "Inconnue", 1: "Hydrocarbures", 2: "Hybride électrique", 3: "Electrique", 4: "Hydrogène", 5: "Humaine", 6: "Autre"})
     categorie_route = st.select_slider("Catégorie de route", options={1: "Autoroute", 2: "Route nationale", 3: "Route Départementale", 4: "Voie Communales", 5: "Hors réseau public", 6: "Parc de stationnement ouvert à la circulation publique", 7: "Routes de métropole urbaine", 9: "Autre"})
