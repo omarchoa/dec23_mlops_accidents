@@ -95,7 +95,22 @@ def translate_gravity(gravity):
         return "Non déterminé"
 
 def show_feedback_features():
-    st.markdown("<h1 id='features' style='text-align: center;'>Rectifier un accident</h1>", unsafe_allow_html=True)
+    st.header("Rectifier un accident")
+
+    # Champ pour entrer la référence de l'accident
+    accident_reference = st.text_input("Référence de l'accident")
+
+    # Sélection de la gravité de l'accident
+    accident_gravity = st.radio("Gravité de l'accident", ("Grave", "Non grave"))
+
+    # Bouton pour soumettre la correction
+    if st.button("Soumettre la correction"):
+        # Traitement de la correction
+        if accident_reference:
+            # Vous pouvez ici inclure le code pour traiter la correction de l'accident
+            st.success(f"Correction soumise pour l'accident {accident_reference} avec gravité : {accident_gravity}")
+        else:
+            st.warning("Veuillez entrer une référence d'accident.")
     
 def show_graph():
     st.markdown("<h1 id='graph' style='text-align: center;'>Graphique de Prédiction</h1>", unsafe_allow_html=True)
