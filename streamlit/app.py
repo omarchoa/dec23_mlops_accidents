@@ -2,10 +2,10 @@ import streamlit as st
     
 def main():  
     
-    selected_home = st.sidebar.button("Accueil")
-    selected_features = st.sidebar.button("Ajouter un accident")
-    selected_feedback_features = st.sidebar.button("Rectifier un accident")
-    selected_graph = st.sidebar.button("Graphique de Prédiction")
+    selected_home = st.sidebar.button("Accueil", icon="🏠")
+    selected_features = st.sidebar.button("Ajouter un accident", icon="🚗")
+    selected_feedback_features = st.sidebar.button("Rectifier un accident", icon="🛠️")
+    selected_graph = st.sidebar.button("Graphique de Prédiction", icon="📊")
 
     # Déterminer quelle page afficher en fonction du bouton sélectionné
     if selected_home:
