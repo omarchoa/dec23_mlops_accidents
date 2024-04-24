@@ -67,8 +67,6 @@ The repository is structured as follows:
 │    │
 │    └── sample/                        <- Sample data for testing and debugging.
 │
-├── logs/                               <- Logs from training and predicting.
-│
 ├── models/ (contents in .gitignore)    <- Trained and serialized models, model predictions,
 │                                          or model summaries.
 │
