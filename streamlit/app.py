@@ -70,17 +70,17 @@ def show_features():
     st.write("")  # Ajouter de l'espace vertical pour créer une nouvelle ligne
     if st.button("Valider"):
         # Effectuer le traitement ici
-        gravity = calculate_gravity(jour_accident, heure_accident, nombre_victimes, age_victime)
+        gravity = translate_gravity(jour_accident, heure_accident, nombre_victimes, age_victime)
         st.write(f"Gravité de l'accident : {gravity}")
 
-def calculate_gravity(jour_accident, heure_accident, nombre_victimes, age_victime):
-    # Logique de calcul de gravité fictive
-    # Par exemple, considérons un accident grave si le nombre de victimes est supérieur à 5 et l'âge moyen des victimes est inférieur à 30
-    if nombre_victimes > 5 and age_victime < 30:
-        gravity = 1
+def translate_gravity(gravity):
+    if gravity == 0:
+        return "Non Grave"
+    elif gravity == 1:
+        return "Grave"
     else:
-        gravity = 0
-    return gravity
+        return "Non déterminé"
+
     
 def show_graph():
     st.markdown("<h1 id='graph' style='text-align: center;'>Graphique de Prédiction</h1>", unsafe_allow_html=True)
