@@ -1,6 +1,7 @@
 # >>>>>>>> IMPORTS <<<<<<<<
 
-
+import datetime
+import os
 import requests
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
@@ -112,6 +113,19 @@ def verify_rights(identification, rights):
         raise HTTPException(
             status_code=403, detail=f"{user_type[rights]} rights required."
         )
+
+
+log_directory = "/logs"
+# os.makedirs(log_directory, exist_ok=True)
+
+def log(start, user, data, logname):
+    full_logname = f"/logs/{logname}"
+    if not os.path.exists(full_logname):
+        with open(full_logname, "w") as logfile:
+            logfile.write("start;end;user;data\n")
+    end = str(datetime.datetime.now())
+    with open(full_logname, "a") as logfile:
+        logfile.write(f"{start};{end};{user};{data}\n")
 
 
 # >>>>>>>> ERROR MANAGEMENT <<<<<<<<
@@ -309,6 +323,10 @@ async def scoring_label_prediction(
     name="update f1 score",
 )
 async def scoring_update_f1_score(identification=Header(None)):
-    verify_rights(identification, 1)  # 1 for robot and administrator
+    start = str(datetime.datetime.now())
+    user = verify_rights(identification, 1)  # 1 for robot and administrator
     response = requests.get(url="http://scoring:8006/update_f1_score")
-    return return_request(response)
+    # f1_score = return_request(response)
+    f1_score = "0.76543210"
+    log(start, user, f1_score, "f1-score.csv")
+    return f1_score

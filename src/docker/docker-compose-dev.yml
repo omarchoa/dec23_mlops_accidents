@@ -59,6 +59,11 @@ services:
     ports:
         - target: 8001
           published: "8001"
+    volumes:
+      - type: bind
+        source: ~/logs
+        target: /logs
+
 
   # users microservice
   users:
