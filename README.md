@@ -141,9 +141,9 @@ _Example:_ [`fabricecharraud`](https://hub.docker.com/u/fabricecharraud)
 
 #### 3. Log in to Docker Hub from your execution environment
 
-In a terminal window, run the following command, replacing `<username>` and `<password>` with your Docker ID information:
+Open a terminal window and run the following command, replacing `<username>` and `<password>` with your Docker ID information:
 
-```shell
+```text
 docker login -u <username> -p <password>
 ```
 
@@ -155,7 +155,7 @@ _Example:_ [`fabricecharraud/shield`](https://hub.docker.com/r/fabricecharraud/s
 
 #### 5. Add the Docker Hub repository's name to your execution environment
 
-In a terminal window, create an environmental variable named `DOCKER_REGISTRY` and assign to it the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
+Using the same terminal window as in [Step 3](#3-log-in-to-docker-hub-from-your-execution-environment), create an environmental variable named `DOCKER_REGISTRY` and assign to it the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
 
 _Example:_
 
@@ -197,7 +197,7 @@ pip install -r requirements.txt
 
 #### 9. Build the Docker container images and launch the app
 
-From the root directory of your local clone of the GitHub repository, run the following command:
+Using the same terminal window as in [Step 5](#5-add-the-docker-hub-repositorys-name-to-your-execution-environment), go to the root directory of your local clone of the GitHub repository and run the following command:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml up
