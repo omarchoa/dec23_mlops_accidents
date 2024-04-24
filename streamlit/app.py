@@ -46,7 +46,13 @@ def authenticate_user(username, password):
 # Page de connexion
 def login_page():
     st.header("Connexion")
-
+    
+    col1, col2, col3 = st.columns([1, 3, 1])
+    with col2:
+        st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png")
+    st.write("") 
+    st.markdown("<h1 style='text-align:center;'>SHIELD</h1><h6 style='text-align:center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>", unsafe_allow_html=True)
+    
     # Champs de saisie pour le nom d'utilisateur et le mot de passe
     username = st.text_input("Nom d'utilisateur")
     password = st.text_input("Mot de passe", type="password")
