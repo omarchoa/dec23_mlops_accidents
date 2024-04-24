@@ -39,7 +39,7 @@ def show_homepage():
 def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Caractéristiques de l'Accident</h1>", unsafe_allow_html=True)
 
-    def map_categorie_vehicule(index):
+def map_categorie_vehicule(index):
     categories = {
         "00": "Indéterminable",
         "01": "Bicyclette",
