@@ -1,6 +1,45 @@
 import streamlit as st
+    
+def main():  
+    
+    selected_home = st.sidebar.button("Accueil")
+    selected_features = st.sidebar.button("Caractéristiques")
+    selected_graph = st.sidebar.button("Graphique de Prédiction")
 
-def map_categorie_vehicule(index):
+    # Déterminer quelle page afficher en fonction du bouton sélectionné
+    if selected_home:
+        st.session_state.selected_page = "Accueil"
+    elif selected_features:
+        st.session_state.selected_page = "Caractéristiques"
+    elif selected_graph:
+        st.session_state.selected_page = "Graphique"
+
+    # Afficher la page correspondante
+    if "selected_page" not in st.session_state:
+        st.session_state.selected_page = "Accueil"  # Par défaut, afficher la page d'accueil
+
+    if st.session_state.selected_page == "Accueil":
+        show_homepage()
+    elif st.session_state.selected_page == "Caractéristiques":
+        show_features()
+    elif st.session_state.selected_page == "Graphique":
+        show_graph()
+
+def show_homepage():
+    col1, col2, col3 = st.columns([1, 3, 1])
+    with col2:
+        st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png")
+    st.write("") 
+    st.markdown("<h1 style='text-align:center;'>SHIELD</h1><h6 style='text-align:center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;'>SHIELD est une application Python alimentée par l'IA qui utilise l'apprentissage automatique pour prédire les niveaux de priorité des accidents de la route, aidant les forces de l'ordre à optimiser les ressources et à optimiser les ressources des forces de l'ordre.</p>", unsafe_allow_html=True)
+    st.write("") 
+    st.markdown("<p style='text-align:center;'>SHIELD est développé par <span style='color:orange;'>Fabrice Charraud, Omar Choa, Michael Deroche, Alexandre Winger</span>. <br>Ce frontend streamlit constitue notre projet final pour le programme DataScientest Machine Learning Engineer.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;'>dec23_mlops // <span style='color:#6ab7ff;'>Datascientest</span></p>", unsafe_allow_html=True)
+
+def show_features():
+    st.markdown("<h1 id='features' style='text-align: center;'>Caractéristiques de l'Accident</h1>", unsafe_allow_html=True)
+
+    def map_categorie_vehicule(index):
     categories = {
         "00": "Indéterminable",
         "01": "Bicyclette",
@@ -44,7 +83,7 @@ def map_categorie_vehicule(index):
         "99": "Autre véhicule"
     }
     return categories[index]
-
+    
 def map_obstacle_mobile(index):
     obstacles = {
         -1: "Non renseigné",
@@ -182,45 +221,6 @@ def map_type_collision(index):
     }
     return types[index]
     
-def main():  
-    
-    selected_home = st.sidebar.button("Accueil")
-    selected_features = st.sidebar.button("Caractéristiques")
-    selected_graph = st.sidebar.button("Graphique de Prédiction")
-
-    # Déterminer quelle page afficher en fonction du bouton sélectionné
-    if selected_home:
-        st.session_state.selected_page = "Accueil"
-    elif selected_features:
-        st.session_state.selected_page = "Caractéristiques"
-    elif selected_graph:
-        st.session_state.selected_page = "Graphique"
-
-    # Afficher la page correspondante
-    if "selected_page" not in st.session_state:
-        st.session_state.selected_page = "Accueil"  # Par défaut, afficher la page d'accueil
-
-    if st.session_state.selected_page == "Accueil":
-        show_homepage()
-    elif st.session_state.selected_page == "Caractéristiques":
-        show_features()
-    elif st.session_state.selected_page == "Graphique":
-        show_graph()
-
-def show_homepage():
-    col1, col2, col3 = st.columns([1, 3, 1])
-    with col2:
-        st.image("/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png")
-    st.write("") 
-    st.markdown("<h1 style='text-align:center;'>SHIELD</h1><h6 style='text-align:center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;'>SHIELD est une application Python alimentée par l'IA qui utilise l'apprentissage automatique pour prédire les niveaux de priorité des accidents de la route, aidant les forces de l'ordre à optimiser les ressources et à optimiser les ressources des forces de l'ordre.</p>", unsafe_allow_html=True)
-    st.write("") 
-    st.markdown("<p style='text-align:center;'>SHIELD est développé par <span style='color:orange;'>Fabrice Charraud, Omar Choa, Michael Deroche, Alexandre Winger</span>. <br>Ce frontend streamlit constitue notre projet final pour le programme DataScientest Machine Learning Engineer.</p>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;'>dec23_mlops // <span style='color:#6ab7ff;'>Datascientest</span></p>", unsafe_allow_html=True)
-
-def show_features():
-    st.markdown("<h1 id='features' style='text-align: center;'>Caractéristiques de l'Accident</h1>", unsafe_allow_html=True)
-
     # Caractéristiques
     jour_accident = st.date_input("Jour de l'accident", value=None, min_value=None, max_value=None, key=None)
     heure_accident = st.slider("Heure de l'accident", min_value=0, max_value=23, step=1)
