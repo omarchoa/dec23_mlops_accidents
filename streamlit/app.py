@@ -1,10 +1,11 @@
 import streamlit as st
     
 def main():  
-    user_type = login_page()  # Authentifier l'utilisateur
-    
+    if "user_type" not in st.session_state:
+        st.session_state.user_type = login_page()  # Authentifier l'utilisateur
+
     # Si l'utilisateur est authentifié, afficher le frontend
-    if user_type:
+    if st.session_state.user_type:
         selected_home = st.sidebar.button("Accueil")
         selected_features = st.sidebar.button("Ajouter un accident")
         selected_feedback_features = st.sidebar.button("Rectifier un accident")
@@ -46,8 +47,8 @@ def authenticate_user(username, password):
 # Page de connexion
 def login_page():
     st.header("Connexion")
+
     st.markdown("<h1 style='text-align:center;'>SHIELD</h1><h6 style='text-align:center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>", unsafe_allow_html=True)
-    
     # Champs de saisie pour le nom d'utilisateur et le mot de passe
     username = st.text_input("Nom d'utilisateur")
     password = st.text_input("Mot de passe", type="password")
