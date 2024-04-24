@@ -94,7 +94,6 @@ def map_categorie_vehicule(index):
         "80": "VAE",
         "99": "Autre véhicule"
     }
-    return categories.get(str(index), "Non défini")
     
     categorie_vehicule = st.select_slider("Catégorie du véhicule", options={i: map_categorie_vehicule(i) for i in range(100)})
     obstacle_mobile = st.select_slider("Obstacle mobile heurté", options={-1: "Non renseigné", 0: "Aucun", 1: "Piéton", 2: "Véhicule", 4: "Véhicule sur rail", 5: "Animal domestique", 6: "Animal sauvage", 9: "Autre"})
