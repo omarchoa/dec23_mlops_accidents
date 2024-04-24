@@ -44,7 +44,7 @@ def show_features():
     heure_accident = st.slider("Heure de l'accident", min_value=0, max_value=23, step=1)
     departement = st.text_input("Département (Code INSEE)")
     place_occupée = st.slider("Place occupée dans le véhicule", min_value=0, max_value=10, step=1, help="10 – Piéton (non applicable)")
-    nombre_victimes = st.slider("Nombre de victimes", min_value=0, max_value=100, step=1)
+    nombre_victimes = st.slider("Nombre de victimes", min_value=0, max_value=25, step=1)
     nombre_vehicules = st.text_input("Nombre de véhicules impliqués")
     categorie_usager = st.selectbox("Catégorie d'usager", options=["Conducteur", "Passager", "Piéton"])
     sexe_usager = st.selectbox("Sexe de l'usager", options=["Masculin", "Féminin"])
