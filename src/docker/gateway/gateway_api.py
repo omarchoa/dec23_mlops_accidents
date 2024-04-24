@@ -124,7 +124,7 @@ def log(start, user, data, logname):
     if not os.path.exists(full_logname):
         with open(full_logname, "w") as logfile:
             logfile.write("start;end;user;data\n")
-    end = str(datetime.datetime.now())
+    end = str(datetime.datetime.now().timestamp())
     with open(full_logname, "a") as logfile:
         logfile.write(f"{start};{end};{user};{data}\n")
 
@@ -324,10 +324,9 @@ async def scoring_label_prediction(
     name="update f1 score",
 )
 async def scoring_update_f1_score(identification=Header(None)):
-    start = str(datetime.datetime.now())
+    start = str(datetime.datetime.now().timestamp())
     user = verify_rights(identification, 1)  # 1 for robot and administrator
     response = requests.get(url="http://scoring:8006/update_f1_score")
-    f1_score = return_request(response)
-    # f1_score = "0.76543210"
+    f1_score = return_request(response).strip()
     log(start, user, f1_score, "f1-score.csv")
     return f1_score
