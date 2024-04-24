@@ -133,7 +133,7 @@ These instructions are divided into three sections:
 
 [Instructions](https://docs.docker.com/get-docker/) are available in the official Docker documentation.
 
-#### 2. Create a Docker ID for use with Docker Hub
+#### 2. Create a Docker ID
 
 [Instructions](https://docs.docker.com/docker-id/) are available in the official Docker documentation.
 
@@ -141,7 +141,7 @@ _Example:_ [`fabricecharraud`](https://hub.docker.com/u/fabricecharraud)
 
 #### 3. Log in to Docker Hub from your execution environment
 
-Open a terminal window and run the following command, replacing `<username>` and `<password>` with your Docker ID information:
+Open a terminal window and run the following command, replacing `<username>` and `<password>` with the credentials that you used to create your Docker ID in [Step 2](#2-create-a-docker-id):
 
 ```text
 docker login -u <username> -p <password>
@@ -189,25 +189,33 @@ source ./sword/bin/activate
 
 #### 8. Install the app's global dependencies
 
-From the root directory of your local clone of the GitHub repository, run the following command:
+From the directory into which you cloned the GitHub repository in [Step 6](#6-clone-the-apps-github-repository), run the following command:
 
 ```shell
 pip install -r requirements.txt
 ```
 
-#### 9. Build the Docker container images and launch the app
+#### 9. Create the app's directory dependencies
 
-Using the same terminal window as in [Step 5](#5-add-the-docker-hub-repositorys-name-to-your-execution-environment), go to the root directory of your local clone of the GitHub repository and run the following command:
+Run the following command:
+
+```shell
+mkdir ~/mariadb_data
+```
+
+#### 10. Build the Docker container images and launch the app
+
+Using the same terminal window as in [Step 5](#5-add-the-docker-hub-repositorys-name-to-your-execution-environment), go to the directory into which you cloned the GitHub repository in [Step 6](#6-clone-the-apps-github-repository) and run the following command:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml up
 ```
 
-#### 10. Push the Docker container images to Docker Hub
+#### 11. Push the Docker container images to Docker Hub
 
 To upload the Docker container images to the Docker Hub repository created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app):
 - Open a new terminal window.
-- Go to the root directory of your local clone of the GitHub repository.
+- Go to the directory into which you cloned the GitHub repository in [Step 6](#6-clone-the-apps-github-repository).
 - Run the following command:
 
 ```shell
@@ -220,7 +228,7 @@ python ./src/script/push_images.py
 
 ### ⚙️ **Use the app**
 
-#### 11. Check service status
+#### 12. Check service status
 
 To ping the API gateway, run the following command:
 
@@ -234,26 +242,30 @@ You should receive the following response:
 "The API gateway is up."
 ```
 
-#### 12. Try out the microservice features
+#### 13. Try out the microservice features
 
-The full, interactive list of endpoints is accessible via the API gateway's Swagger UI at [`http://0.0.0.0:8001/docs`](http://0.0.0.0:8001/docs).
+The full, interactive list of endpoints is accessible via the API gateway's Swagger UI at [`http://0.0.0.0:8001/docs`](http://0.0.0.0:8001/docs) or [`http://localhost:8001/docs`](http://localhost:8001/docs).
 
 > [!IMPORTANT]
 > Certain endpoints require **user authentication**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `fdo:c0ps`.
 >
 > Other endpoints additionally require **administrator authorization**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `admin:4dmin`.
 
-#### 13. Stop the app
+#### 14. Stop the app
 
-To stop the app, return to the terminal window that you used to launch it in [Step 9](#9-build-the-docker-container-images-and-launch-the-app) and press `Ctrl + C`.
+To stop the app, return to the terminal window that you used to launch it in [Step 10](#10-build-the-docker-container-images-and-launch-the-app) and press `Ctrl + C`.
 
-#### 14. Resume the app
+#### 15. Resume the app
 
-To resume the app, run the same command that you used in [Step 9](#9-build-the-docker-container-images-and-launch-the-app).
+To resume the app, run the same command that you used in [Step 10](#10-build-the-docker-container-images-and-launch-the-app):
 
-#### 15. Shut down the app
+```shell
+docker-compose -f ./src/docker/docker-compose-dev.yml up
+```
 
-To shut down the app, run the same command that you used in [Step 9](#9-build-the-docker-container-images-and-launch-the-app), replacing `up` with `down`:
+#### 16. Shut down the app
+
+To shut down the app, run the same command that you used in [Step 10](#10-build-the-docker-container-images-and-launch-the-app), replacing `up` with `down`:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml down
