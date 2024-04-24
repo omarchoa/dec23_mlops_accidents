@@ -1,5 +1,38 @@
 import streamlit as st
     
+def main():  
+    user_type = login_page()  # Authentifier l'utilisateur
+    
+    # Si l'utilisateur est authentifié, afficher le frontend
+    if user_type:
+        selected_home = st.sidebar.button("Accueil")
+        selected_features = st.sidebar.button("Ajouter un accident")
+        selected_feedback_features = st.sidebar.button("Rectifier un accident")
+        selected_graph = st.sidebar.button("Graphique de Prédiction")
+
+        # Déterminer quelle page afficher en fonction du bouton sélectionné
+        if selected_home:
+            st.session_state.selected_page = "Accueil"
+        elif selected_features:
+            st.session_state.selected_page = "Ajouter un accident"
+        elif selected_feedback_features:
+            st.session_state.selected_page = "Rectifier un accident"    
+        elif selected_graph:
+            st.session_state.selected_page = "Graphique"
+
+        # Afficher la page correspondante
+        if "selected_page" not in st.session_state:
+            st.session_state.selected_page = "Accueil"  # Par défaut, afficher la page d'accueil
+
+        if st.session_state.selected_page == "Accueil":
+            show_homepage()
+        elif st.session_state.selected_page == "Ajouter un accident":
+            show_features()
+        elif st.session_state.selected_page == "Rectifier un accident":
+            show_feedback_features()
+        elif st.session_state.selected_page == "Graphique":
+            show_graph()
+
 # Fonction pour l'authentification utilisateur
 def authenticate_user(username, password):
     # Authentification de l'utilisateur
@@ -31,34 +64,6 @@ def login_page():
         else:
             st.error("Nom d'utilisateur ou mot de passe incorrect.")
     return None
-
-# Fonction principale
-def main():
-    user_type = login_page()  # Authentifier l'utilisateur
-
-    if user_type == "user":
-        st.write("Bienvenue, utilisateur !")
-        # Votre code pour la section utilisateur
-    elif user_type == "admin":
-        st.write("Bienvenue, administrateur !")
-        # Votre code pour la section administrateur
-
-    # Afficher le reste du frontend
-    if user_type:
-        show_frontend(user_type)
-
-def show_frontend(user_type):
-    selected_page = st.sidebar.radio("Navigation", ["Accueil", "Ajouter un accident", "Rectifier un accident", "Graphique de Prédiction"])
-
-    # Afficher la page sélectionnée
-    if selected_page == "Accueil":
-        show_homepage()
-    elif selected_page == "Ajouter un accident":
-        show_features()
-    elif selected_page == "Rectifier un accident":
-        show_feedback_features()
-    elif selected_page == "Graphique de Prédiction":
-        show_graph()
 
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
