@@ -1,36 +1,34 @@
 import streamlit as st
-
+    
 def main():  
-    # Vérifiez si l'utilisateur est authentifié
-    if 'authenticated' not in st.session_state:
-        st.session_state.authenticated = False
+    
+    selected_home = st.sidebar.button("Accueil")
+    selected_features = st.sidebar.button("Ajouter un accident")
+    selected_feedback_features = st.sidebar.button("Rectifier un accident")
+    selected_graph = st.sidebar.button("Graphique de Prédiction")
 
-    # Affichez la page de connexion si l'utilisateur n'est pas authentifié
-    if not st.session_state.authenticated:
-        authenticate_user()
+    # Déterminer quelle page afficher en fonction du bouton sélectionné
+    if selected_home:
+        st.session_state.selected_page = "Accueil"
+    elif selected_features:
+        st.session_state.selected_page = "Ajouter un accident"
+    elif selected_feedback_features:
+        st.session_state.selected_page = "Rectifier un accident"    
+    elif selected_graph:
+        st.session_state.selected_page = "Graphique"
 
-    # Si l'utilisateur est authentifié, redirigez-le vers la page d'accueil
-    else:
-        redirect_to_homepage()
+    # Afficher la page correspondante
+    if "selected_page" not in st.session_state:
+        st.session_state.selected_page = "Accueil"  # Par défaut, afficher la page d'accueil
 
-def authenticate_user():
-    st.title("Page de connexion")
-    username = st.text_input("Nom d'utilisateur")
-    password = st.text_input("Mot de passe", type="password")
-
-    if username == "admin" and password == "admin":
-        st.session_state.authenticated = True
-        st.experimental_set_query_params(page="accueil")  # Rediriger vers la page d'accueil
-        st.success("Connexion réussie en tant qu'administrateur.")
-    elif username == "user" and password == "user":
-        st.session_state.authenticated = True
-        st.experimental_set_query_params(page="accueil")  # Rediriger vers la page d'accueil
-        st.success("Connexion réussie en tant qu'utilisateur.")
-    else:
-        st.error("Nom d'utilisateur ou mot de passe incorrect.")
-
-def redirect_to_homepage():
-    st.experimental_set_query_params(page="accueil")  # Rediriger vers la page d'accueil
+    if st.session_state.selected_page == "Accueil":
+        show_homepage()
+    elif st.session_state.selected_page == "Ajouter un accident":
+        show_features()
+    elif st.session_state.selected_page == "Rectifier un accident":
+        show_feedback_features()
+    elif st.session_state.selected_page == "Graphique":
+        show_graph()
 
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
