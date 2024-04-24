@@ -1,11 +1,16 @@
 import streamlit as st
     
 def main():  
-    if "user_type" not in st.session_state:
-        st.session_state.user_type = login_page()  # Authentifier l'utilisateur
+    # Vérifiez si l'utilisateur est authentifié
+    if 'authenticated' not in st.session_state:
+        st.session_state.authenticated = False
 
-    # Si l'utilisateur est authentifié, afficher le frontend
-    if st.session_state.user_type:
+    # Affichez la page de connexion si l'utilisateur n'est pas authentifié
+    if not st.session_state.authenticated:
+        authenticate_user()
+
+    # Affichez les autres pages de l'application si l'utilisateur est authentifié
+    else:
         selected_home = st.sidebar.button("Accueil")
         selected_features = st.sidebar.button("Ajouter un accident")
         selected_feedback_features = st.sidebar.button("Rectifier un accident")
@@ -34,42 +39,19 @@ def main():
         elif st.session_state.selected_page == "Graphique":
             show_graph()
 
-# Fonction pour l'authentification utilisateur
-def authenticate_user(username, password):
-    # Authentification de l'utilisateur
-    if username == "user" and password == "user":
-        return "user"
-    elif username == "admin" and password == "admin":
-        return "admin"
+def authenticate_user():
+    st.title("Page de connexion")
+    username = st.text_input("Nom d'utilisateur")
+    password = st.text_input("Mot de passe", type="password")
+
+    if username == "admin" and password == "admin":
+        st.session_state.authenticated = True
+        st.success("Connexion réussie en tant qu'administrateur.")
+    elif username == "user" and password == "user":
+        st.session_state.authenticated = True
+        st.success("Connexion réussie en tant qu'utilisateur.")
     else:
-        return None
-
-# Page de connexion
-def login_page():
-    st.header("Connexion")
-
-    # Utiliser st.form() pour encapsuler les champs de saisie
-    with st.form(key='login_form'):
-        # Champs de saisie pour le nom d'utilisateur et le mot de passe
-        username = st.text_input("Nom d'utilisateur", key='username')
-        password = st.text_input("Mot de passe", type="password", key='password')
-
-        # Utiliser st.form_submit_button() pour gérer la soumission du formulaire
-        submitted = st.form_submit_button("Se connecter")
-
-    # Authentifier l'utilisateur si le formulaire est soumis
-    if submitted:
-        # Authentification de l'utilisateur
-        user_type = authenticate_user(username, password)
-        if user_type == "user":
-            st.success("Connexion réussie en tant qu'utilisateur.")
-            return "user"
-        elif user_type == "admin":
-            st.success("Connexion réussie en tant qu'administrateur.")
-            return "admin"
-        else:
-            st.error("Nom d'utilisateur ou mot de passe incorrect.")
-    return None
+        st.error("Nom d'utilisateur ou mot de passe incorrect.")
 
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
