@@ -4,7 +4,7 @@ def main():
     
     selected_home = st.sidebar.button("Accueil")
     selected_features = st.sidebar.button("Ajouter un accident")
-    selected_features = st.sidebar.button("Rectifier un accident")
+    selected_feedback_features = st.sidebar.button("Rectifier un accident")
     selected_graph = st.sidebar.button("Graphique de Prédiction")
 
     # Déterminer quelle page afficher en fonction du bouton sélectionné
@@ -12,7 +12,7 @@ def main():
         st.session_state.selected_page = "Accueil"
     elif selected_features:
         st.session_state.selected_page = "Ajouter un accident"
-    elif selected_features:
+    elif selected_feedback_features:
         st.session_state.selected_page = "Rectifier un accident"    
     elif selected_graph:
         st.session_state.selected_page = "Graphique"
