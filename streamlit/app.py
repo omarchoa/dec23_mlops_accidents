@@ -93,7 +93,7 @@ def translate_gravity(gravity):
         return "Non déterminé"
 
 def show_feedback_features():
-    st.header("Rectifier un accident")
+    st.markdown("<h1 id='features' style='text-align: center;'>Rectifier un accident</h1>", unsafe_allow_html=True)
 
     # Champ pour entrer la référence de l'accident
     accident_reference = st.text_input("Référence de l'accident")
