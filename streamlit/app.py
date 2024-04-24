@@ -47,15 +47,14 @@ def authenticate_user(username, password):
 # Page de connexion
 def login_page():
     st.header("Connexion")
-    st.markdown("<h1 style='text-align:center;'>SHIELD</h1><h6 style='text-align:center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>", unsafe_allow_html=True)
-    
+
     # Utiliser st.form() pour encapsuler les champs de saisie
     with st.form(key='login_form'):
         # Champs de saisie pour le nom d'utilisateur et le mot de passe
         username = st.text_input("Nom d'utilisateur", key='username')
         password = st.text_input("Mot de passe", type="password", key='password')
 
-        # Bouton de connexion
+        # Utiliser st.form_submit_button() pour gérer la soumission du formulaire
         submitted = st.form_submit_button("Se connecter")
 
     # Authentifier l'utilisateur si le formulaire est soumis
