@@ -46,7 +46,7 @@ def show_features():
     place_occupée = st.slider("Place occupée dans le véhicule", min_value=0, max_value=10, step=1, help="10 – Piéton (non applicable)")
     nombre_victimes = st.slider("Nombre de victimes", min_value=0, max_value=100, step=1)
     nombre_vehicules = st.text_input("Nombre de véhicules impliqués")
-    categorie_usager = st.select_slider("Catégorie d'usager", options={1: "Conducteur", 2: "Passager", 3: "Piéton"}, label="Catégorie d'usager :")
+    categorie_usager = st.select_slider("Catégorie d'usager", options={1: "Conducteur", 2: "Passager", 3: "Piéton"})
     sexe_usager = st.select_slider("Sexe de l'usager", options={1: "Masculin", 2: "Féminin"}, label="Sexe de l'usager :")
     equipement_securite = st.select_slider("Équipement de sécurité", options={-1: "Non renseigné", 0: "Aucun équipement", 1: "Ceinture", 2: "Casque", 3: "Dispositif enfants", 4: "Gilet réfléchissant", 5: "Airbag (2RM/3RM)", 6: "Gants (2RM/3RM)", 7: "Gants + Airbag (2RM/3RM)", 8: "Non déterminable", 9: "Autre"}, label="Équipement de sécurité :")
     age_victime = st.slider("Âge de la ou des victimes", min_value=0, max_value=100, step=1)
