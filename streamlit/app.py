@@ -68,10 +68,12 @@ def show_features():
     longitude = st.slider("Longitude", min_value=-180.0, max_value=180.0, step=0.001)
 
     st.write("")  # Ajouter de l'espace vertical pour créer une nouvelle ligne
-    if st.button("Valider"):
-        # Effectuer le traitement ici
-        gravity = translate_gravity(jour_accident, heure_accident, nombre_victimes, age_victime)
-        st.write(f"Gravité de l'accident : {gravity}")
+def determine_gravity(jour_accident, heure_accident, nombre_victimes, age_victime):
+    # Exemple de logique de détermination de la gravité fictive
+    if nombre_victimes > 5:
+        return 1  # Grave
+    else:
+        return 0  # Non grave
 
 def translate_gravity(gravity):
     if gravity == 0:
@@ -80,6 +82,12 @@ def translate_gravity(gravity):
         return "Grave"
     else:
         return "Non déterminé"
+
+if st.button("Valider"):
+    # Effectuer le traitement ici
+    gravity = determine_gravity(jour_accident, heure_accident, nombre_victimes, age_victime)
+    gravity_text = translate_gravity(gravity)
+    st.write(f"Gravité de l'accident : {gravity_text}")
 
     
 def show_graph():
