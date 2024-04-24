@@ -40,7 +40,7 @@ def show_features():
     st.markdown("<h1 id='features' style='text-align: center;'>Caractéristiques de l'Accident</h1>", unsafe_allow_html=True)
 
     # Caractéristiques
-    jour_accident = st.date_input("Date de l'accident", value=None, min_value=None, max_value=None, key=None)
+    jour_accident = st.date_input("", value=None, min_value=None, max_value=None, key=None)
     heure_accident = st.slider("Heure de l'accident", min_value=0, max_value=23, step=1)
     departement = st.text_input("Département (Code INSEE)")
     place_occupée = st.slider("Place occupée dans le véhicule", min_value=0, max_value=10, step=1, format="%d – Piéton (non applicable)")
