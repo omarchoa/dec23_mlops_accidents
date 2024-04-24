@@ -7,6 +7,7 @@ from sklearn.metrics import f1_score
 
 from config import paths
 
+
 def get_f1_score():
     # load model
     model = joblib.load(paths.MODEL_TRAINED)
@@ -69,3 +70,7 @@ def get_f1_score():
     # print response
     # print("F1 score successfully updated.")
     print(f1_score_macro_average)
+
+
+if __name__ == "__main__":
+    get_f1_score()
