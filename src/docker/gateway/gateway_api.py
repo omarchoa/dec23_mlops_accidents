@@ -86,7 +86,7 @@ def get_all_users():
 
 def verify_rights(identification, rights):
     """
-    rights: 
+    rights:
     - 0 for user, robot and administrator,
     - 1 for robot and administrator
     - 2 for administrator
@@ -117,6 +117,7 @@ def verify_rights(identification, rights):
 
 log_directory = "/logs"
 # os.makedirs(log_directory, exist_ok=True)
+
 
 def log(start, user, data, logname):
     full_logname = f"/logs/{logname}"
@@ -326,7 +327,7 @@ async def scoring_update_f1_score(identification=Header(None)):
     start = str(datetime.datetime.now())
     user = verify_rights(identification, 1)  # 1 for robot and administrator
     response = requests.get(url="http://scoring:8006/update_f1_score")
-    # f1_score = return_request(response)
-    f1_score = "0.76543210"
+    f1_score = return_request(response)
+    # f1_score = "0.76543210"
     log(start, user, f1_score, "f1-score.csv")
     return f1_score

@@ -64,5 +64,5 @@ async def update_f1_score():
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
     ## return formatted result as json response
-    #return JSONResponse(content=str(result.stdout).strip())
-    return result.stdout
+    # return JSONResponse(content=str(result.stdout).strip())
+    return str(result.stdout).strip()
