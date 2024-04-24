@@ -154,6 +154,20 @@ services:
         target: /home/shield/models
         read_only: true
 
+  # frontend app
+  streamlit:
+    depends_on:
+      gateway:
+        condition: service_started
+    pull_policy: always
+    image: ${DOCKER_REGISTRY}:streamlit
+    container_name: streamlit
+    networks:
+      - shield
+    ports:
+        - target: 8501
+          published: "8501"
+
 
 # network declarations
 networks:
