@@ -50,7 +50,53 @@ def show_features():
     sexe_usager = st.select_slider("Sexe de l'usager", options={1: "Masculin", 2: "Féminin"})
     equipement_securite = st.select_slider("Équipement de sécurité", options={-1: "Non renseigné", 0: "Aucun équipement", 1: "Ceinture", 2: "Casque", 3: "Dispositif enfants", 4: "Gilet réfléchissant", 5: "Airbag (2RM/3RM)", 6: "Gants (2RM/3RM)", 7: "Gants + Airbag (2RM/3RM)", 8: "Non déterminable", 9: "Autre"})
     age_victime = st.slider("Âge de la ou des victimes", min_value=0, max_value=100, step=1)
-    categorie_vehicule = st.select_slider("Catégorie du véhicule", options={i: categorie_vehicule(i) for i in range(100)})
+    
+    def map_categorie_vehicule(index):
+    categories = {
+        "00": "Indéterminable",
+        "01": "Bicyclette",
+        "02": "Cyclomoteur <50cm3",
+        "03": "Voiturette (Quadricycle à moteur carrossé)",
+        "04": "Référence inutilisée depuis 2006 (scooter immatriculé)",
+        "05": "Référence inutilisée depuis 2006 (motocyclette)",
+        "06": "Référence inutilisée depuis 2006 (side-car)",
+        "07": "VL seul",
+        "08": "Référence inutilisée depuis 2006 (VL + caravane)",
+        "09": "Référence inutilisée depuis 2006 (VL + remorque)",
+        "10": "VU seul 1,5T <= PTAC <= 3,5T avec ou sans remorque",
+        "11": "Référence inutilisée depuis 2006 (VU (10) + caravane)",
+        "12": "Référence inutilisée depuis 2006 (VU (10) + remorque)",
+        "13": "PL seul 3,5T <PTCA <= 7,5T",
+        "14": "PL seul > 7,5T",
+        "15": "PL > 3,5T + remorque",
+        "16": "Tracteur routier seul",
+        "17": "Tracteur routier + semi-remorque",
+        "18": "Référence inutilisée depuis 2006 (transport en commun)",
+        "19": "Référence inutilisée depuis 2006 (tramway)",
+        "20": "Engin spécial",
+        "21": "Tracteur agricole",
+        "30": "Scooter < 50 cm3",
+        "31": "Motocyclette > 50 cm3 et <= 125 cm3",
+        "32": "Scooter > 50 cm3 et <= 125 cm3",
+        "33": "Motocyclette > 125 cm3",
+        "34": "Scooter > 125 cm3",
+        "35": "Quad léger <= 50 cm3 (Quadricycle à moteur non carrossé)",
+        "36": "Quad lourd > 50 cm3 (Quadricycle à moteur non carrossé)",
+        "37": "Autobus",
+        "38": "Autocar",
+        "39": "Train",
+        "40": "Tramway",
+        "41": "3RM <= 50 cm3",
+        "42": "3RM > 50 cm3 <= 125 cm3",
+        "43": "3RM > 125 cm3",
+        "50": "EDP à moteur",
+        "60": "EDP sans moteur",
+        "80": "VAE",
+        "99": "Autre véhicule"
+    }
+    return categories.get(str(index), "Non défini")
+    
+    categorie_vehicule = st.select_slider("Catégorie du véhicule", options={i: map_categorie_vehicule(i) for i in range(100)})
     obstacle_mobile = st.select_slider("Obstacle mobile heurté", options={-1: "Non renseigné", 0: "Aucun", 1: "Piéton", 2: "Véhicule", 4: "Véhicule sur rail", 5: "Animal domestique", 6: "Animal sauvage", 9: "Autre"})
     type_motorisation = st.select_slider("Type de motorisation du véhicule", options={-1: "Non renseigné", 0: "Inconnue", 1: "Hydrocarbures", 2: "Hybride électrique", 3: "Electrique", 4: "Hydrogène", 5: "Humaine", 6: "Autre"})
     categorie_route = st.select_slider("Catégorie de route", options={1: "Autoroute", 2: "Route nationale", 3: "Route Départementale", 4: "Voie Communales", 5: "Hors réseau public", 6: "Parc de stationnement ouvert à la circulation publique", 7: "Routes de métropole urbaine", 9: "Autre"})
