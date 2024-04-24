@@ -1,33 +1,63 @@
 import streamlit as st
     
-def main():  
-    
-    selected_home = st.sidebar.button("Accueil")
-    selected_features = st.sidebar.button("Ajouter un accident")
-    selected_feedback_features = st.sidebar.button("Rectifier un accident")
-    selected_graph = st.sidebar.button("Graphique de Prédiction")
+# Fonction pour l'authentification utilisateur
+def authenticate_user(username, password):
+    # Authentification de l'utilisateur
+    if username == "user" and password == "user":
+        return "user"
+    elif username == "admin" and password == "admin":
+        return "admin"
+    else:
+        return None
 
-    # Déterminer quelle page afficher en fonction du bouton sélectionné
-    if selected_home:
-        st.session_state.selected_page = "Accueil"
-    elif selected_features:
-        st.session_state.selected_page = "Ajouter un accident"
-    elif selected_feedback_features:
-        st.session_state.selected_page = "Rectifier un accident"    
-    elif selected_graph:
-        st.session_state.selected_page = "Graphique"
+# Page de connexion
+def login_page():
+    st.header("Connexion")
 
-    # Afficher la page correspondante
-    if "selected_page" not in st.session_state:
-        st.session_state.selected_page = "Accueil"  # Par défaut, afficher la page d'accueil
+    # Champs de saisie pour le nom d'utilisateur et le mot de passe
+    username = st.text_input("Nom d'utilisateur")
+    password = st.text_input("Mot de passe", type="password")
 
-    if st.session_state.selected_page == "Accueil":
+    # Bouton de connexion
+    if st.button("Se connecter"):
+        # Authentification de l'utilisateur
+        user_type = authenticate_user(username, password)
+        if user_type == "user":
+            st.success("Connexion réussie en tant qu'utilisateur.")
+            return "user"
+        elif user_type == "admin":
+            st.success("Connexion réussie en tant qu'administrateur.")
+            return "admin"
+        else:
+            st.error("Nom d'utilisateur ou mot de passe incorrect.")
+    return None
+
+# Fonction principale
+def main():
+    user_type = login_page()  # Authentifier l'utilisateur
+
+    if user_type == "user":
+        st.write("Bienvenue, utilisateur !")
+        # Votre code pour la section utilisateur
+    elif user_type == "admin":
+        st.write("Bienvenue, administrateur !")
+        # Votre code pour la section administrateur
+
+    # Afficher le reste du frontend
+    if user_type:
+        show_frontend(user_type)
+
+def show_frontend(user_type):
+    selected_page = st.sidebar.radio("Navigation", ["Accueil", "Ajouter un accident", "Rectifier un accident", "Graphique de Prédiction"])
+
+    # Afficher la page sélectionnée
+    if selected_page == "Accueil":
         show_homepage()
-    elif st.session_state.selected_page == "Ajouter un accident":
+    elif selected_page == "Ajouter un accident":
         show_features()
-    elif st.session_state.selected_page == "Rectifier un accident":
+    elif selected_page == "Rectifier un accident":
         show_feedback_features()
-    elif st.session_state.selected_page == "Graphique":
+    elif selected_page == "Graphique de Prédiction":
         show_graph()
 
 def show_homepage():
