@@ -68,7 +68,7 @@ def show_features():
     longitude = st.slider("Longitude", min_value=-180.0, max_value=180.0, step=0.001)
 
     st.write("")  # Ajouter de l'espace vertical pour créer une nouvelle ligne
-    if st.button("Valider"):
+if st.button("Valider"):
     # Effectuer le traitement ici
     gravity = determine_gravity(jour_accident, heure_accident, nombre_victimes, age_victime)
     gravity_text = translate_gravity(gravity)
