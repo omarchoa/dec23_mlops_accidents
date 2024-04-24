@@ -51,7 +51,7 @@ def show_features():
     equipement_securite = st.select_slider("Équipement de sécurité", options={-1: "Non renseigné", 0: "Aucun équipement", 1: "Ceinture", 2: "Casque", 3: "Dispositif enfants", 4: "Gilet réfléchissant", 5: "Airbag (2RM/3RM)", 6: "Gants (2RM/3RM)", 7: "Gants + Airbag (2RM/3RM)", 8: "Non déterminable", 9: "Autre"})
     age_victime = st.slider("Âge de la ou des victimes", min_value=0, max_value=100, step=1)
     
-    def map_categorie_vehicule(index):
+def map_categorie_vehicule(index):
     categories = {
         "00": "Indéterminable",
         "01": "Bicyclette",
