@@ -4,6 +4,7 @@ def main():
     
     selected_home = st.sidebar.button("Accueil")
     selected_features = st.sidebar.button("Ajouter un accident")
+    selected_features = st.sidebar.button("Rectifier un accident")
     selected_graph = st.sidebar.button("Graphique de Prédiction")
 
     # Déterminer quelle page afficher en fonction du bouton sélectionné
@@ -11,6 +12,8 @@ def main():
         st.session_state.selected_page = "Accueil"
     elif selected_features:
         st.session_state.selected_page = "Ajouter un accident"
+    elif selected_features:
+        st.session_state.selected_page = "Rectifier un accident"    
     elif selected_graph:
         st.session_state.selected_page = "Graphique"
 
@@ -22,6 +25,8 @@ def main():
         show_homepage()
     elif st.session_state.selected_page == "Ajouter un accident":
         show_features()
+    elif st.session_state.selected_page == "Rectifier un accident":
+        show_feedback_features()
     elif st.session_state.selected_page == "Graphique":
         show_graph()
 
@@ -88,6 +93,9 @@ def translate_gravity(gravity):
         return "Grave"
     else:
         return "Non déterminé"
+
+def show_feedback_features():
+    st.markdown("<h1 id='features' style='text-align: center;'>Rectifier un accident</h1>", unsafe_allow_html=True)
     
 def show_graph():
     st.markdown("<h1 id='graph' style='text-align: center;'>Graphique de Prédiction</h1>", unsafe_allow_html=True)
