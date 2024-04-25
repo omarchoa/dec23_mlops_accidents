@@ -29,26 +29,6 @@ def main():
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
 
-    # Bouton de connexion et de déconnexion
-    if st.session_state["authenticated"]:
-        if st.sidebar.button("Se déconnecter"):
-            st.session_state["authenticated"] = False
-    else:
-        if st.sidebar.button("Se connecter"):
-            st.session_state["show_login"] = True
-
-    # Affichage du formulaire de connexion si show_login est True
-    if "show_login" in st.session_state and st.session_state["show_login"]:
-        username = st.text_input("Nom d'utilisateur")
-        password = st.text_input("Mot de passe", type="password")
-        if st.button("Valider"):
-            if authenticate(username, password):
-                st.session_state["authenticated"] = True
-                st.session_state["username"] = username
-                st.session_state["show_login"] = False
-            else:
-                st.error("Nom d'utilisateur ou mot de passe incorrect.")
-
     # Affichage du texte au-dessus de l'authentification
     if not st.session_state["authenticated"]:
         st.markdown(
@@ -60,12 +40,19 @@ def main():
             unsafe_allow_html=True,
         )
 
-    # Bouton de déconnexion dans la barre latérale
-    if st.session_state["authenticated"]:
-        if st.sidebar.button("Se déconnecter"):
-            st.session_state["authenticated"] = False
-
     # Pages accessibles après authentification
+    if not st.session_state["authenticated"]:
+        # Champs de saisie de connexion
+        username = st.text_input("Nom d'utilisateur")
+        password = st.text_input("Mot de passe", type="password")
+        if st.button("Se connecter"):
+            if authenticate(username, password):
+                st.session_state["authenticated"] = True
+                st.session_state["username"] = username
+            else:
+                st.error("Nom d'utilisateur ou mot de passe incorrect.")
+    
+    # Si l'utilisateur est authentifié, afficher les pages accessibles
     if st.session_state["authenticated"]:
         # Afficher les options de menu en fonction des rôles de l'utilisateur
         if has_role(st.session_state["username"], "accueil"):
@@ -112,6 +99,11 @@ def main():
             show_feedback_features()
         elif st.session_state["selected_page"] == "Graphique":
             show_graph()
+
+    # Bouton de déconnexion dans la barre latérale
+    if st.session_state["authenticated"]:
+        if st.sidebar.button("Se déconnecter"):
+            st.session_state["authenticated"] = False
    
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
