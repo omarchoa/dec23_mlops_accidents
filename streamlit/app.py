@@ -43,17 +43,16 @@ def main():
     # Pages accessibles après authentification
     if not st.session_state["authenticated"]:
         # Champs de saisie de connexion
-        username = st.text_input("Nom d'utilisateur")
-        password = st.text_input("Mot de passe", type="password")
-        if st.button("Se connecter"):
-            if authenticate(username, password):
-                st.session_state["authenticated"] = True
-                st.session_state["username"] = username
-            else:
-                st.error("Nom d'utilisateur ou mot de passe incorrect.")
-    
-    # Si l'utilisateur est authentifié, afficher les pages accessibles
-    if st.session_state["authenticated"]:
+        if not st.session_state["authenticated"]:
+            username = st.text_input("Nom d'utilisateur")
+            password = st.text_input("Mot de passe", type="password")
+            if st.button("Se connecter"):
+                if authenticate(username, password):
+                    st.session_state["authenticated"] = True
+                    st.session_state["username"] = username
+                else:
+                    st.error("Nom d'utilisateur ou mot de passe incorrect.")
+    else:
         # Afficher les options de menu en fonction des rôles de l'utilisateur
         if has_role(st.session_state["username"], "accueil"):
             selected_home = st.sidebar.button("Accueil")
