@@ -35,25 +35,26 @@ def main():
         show_login_page()
 
 def show_login_page():
-    # Affichage du formulaire de connexion uniquement si l'utilisateur n'est pas déjà authentifié
-    if not st.session_state["authenticated"]:
-        # Affichage du texte au-dessus de l'authentification et le formulaire de champ de saisie
-        st.markdown(
-            "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
-            unsafe_allow_html=True,
-        )
-        
-        # Champs de saisie de connexion
-        username = st.text_input("Nom d'utilisateur")
-        password = st.text_input("Mot de passe", type="password")
-        if st.button("Se connecter"):
-            if authenticate(username, password):
-                st.session_state["authenticated"] = True
-                st.session_state["username"] = username
+    st.markdown(
+        "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
+        unsafe_allow_html=True,
+    )
+    
+    # Champs de saisie de connexion
+    username = st.text_input("Nom d'utilisateur")
+    password = st.text_input("Mot de passe", type="password")
+    if st.button("Se connecter"):
+        if authenticate(username, password):
+            st.session_state["authenticated"] = True
+            st.session_state["username"] = username
+            # Effacer le contenu de la page
+            st.empty()
+            # Forcer le rerun de la page pour afficher le contenu authentifié
+            st.experimental_rerun()
 
 def main_authenticated():
     # Affichage des pages accessibles après authentification
