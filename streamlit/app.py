@@ -431,5 +431,6 @@ def show_graph():
     st.line_chart({"x": x_values, "y": y_values})
 
 
+# Lancement de l'application
 if __name__ == "__main__":
     main()
