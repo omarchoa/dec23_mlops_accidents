@@ -97,7 +97,12 @@ def main():
             show_feedback_features()
         elif st.session_state["selected_page"] == "Graphique":
             show_graph()
-
+            
+        # Bouton de déconnexion
+        if st.session_state["authenticated"]:
+            if st.button("Se déconnecter"):
+                st.session_state["authenticated"] = False
+                
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
