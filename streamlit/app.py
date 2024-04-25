@@ -29,15 +29,16 @@ def main():
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
 
-    # Texte au-dessus de l'authentification
-    st.markdown(
-        "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
-        unsafe_allow_html=True,
-    )
+    # Si l'utilisateur n'est pas authentifié, afficher le texte au-dessus de l'authentification
+    if not st.session_state["authenticated"]:
+        st.markdown(
+            "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
+            unsafe_allow_html=True,
+        )
 
     # Bouton de connexion/déconnexion dans la barre latérale
     if st.session_state["authenticated"]:
