@@ -43,16 +43,17 @@ def main():
     # Pages accessibles après authentification
     if not st.session_state["authenticated"]:
         # Champs de saisie de connexion
-        if not st.session_state["authenticated"]:
-            username = st.text_input("Nom d'utilisateur")
-            password = st.text_input("Mot de passe", type="password")
-            if st.button("Se connecter"):
-                if authenticate(username, password):
-                    st.session_state["authenticated"] = True
-                    st.session_state["username"] = username
-                else:
-                    st.error("Nom d'utilisateur ou mot de passe incorrect.")
-    else:
+        username = st.text_input("Nom d'utilisateur")
+        password = st.text_input("Mot de passe", type="password")
+        if st.button("Se connecter", key="login_button"):
+            if authenticate(username, password):
+                st.session_state["authenticated"] = True
+                st.session_state["username"] = username
+            else:
+                st.error("Nom d'utilisateur ou mot de passe incorrect.")
+    
+    # Si l'utilisateur est authentifié, afficher les pages accessibles
+    if st.session_state["authenticated"]:
         # Afficher les options de menu en fonction des rôles de l'utilisateur
         if has_role(st.session_state["username"], "accueil"):
             selected_home = st.sidebar.button("Accueil")
@@ -99,16 +100,9 @@ def main():
         elif st.session_state["selected_page"] == "Graphique":
             show_graph()
 
-if st.button("Se connecter", key="login_button"):
-    if authenticate(username, password):
-        st.session_state["authenticated"] = True
-        st.session_state["username"] = username
-    else:
-        st.error("Nom d'utilisateur ou mot de passe incorrect.")
-        
     # Bouton de déconnexion dans la barre latérale
     if st.session_state["authenticated"]:
-        if st.sidebar.button("Se déconnecter"):
+        if st.sidebar.button("Se déconnecter", key="logout_button"):
             st.session_state["authenticated"] = False
    
 def show_homepage():
