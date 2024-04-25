@@ -34,6 +34,11 @@ def main():
         main_authenticated()
 
 def show_login_page():
+    # Vérifier si l'utilisateur est déjà authentifié
+    if st.session_state["authenticated"]:
+        # Si l'utilisateur est déjà connecté, ne rien afficher
+        return
+
     # Affichage du texte au-dessus de l'authentification et le formulaire de champ de saisie
     st.markdown(
         "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
