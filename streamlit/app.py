@@ -1,26 +1,38 @@
 import os
+
+import requests
+
 import streamlit as st
-import hashlib
 
 # Données des utilisateurs
-users = {
-    "user1": {"password": hashlib.sha256("user1".encode("utf-8")).hexdigest(), "roles": ["accueil", "ajout_accident"]},
-    "admin": {"password": hashlib.sha256("admin".encode("utf-8")).hexdigest(), "roles": ["accueil", "ajout_accident", "correction_accident", "graphique"]},
-}
+response = requests.get(url="http://gateway:8001/users/all")
+users_db = response.json()
+for key, value in users_db.items():
+    if value["admin"] == 0:  ## standard user
+        value["roles"] = ["accueil", "ajout_accident"]
+    if value["admin"] == 2:  ## admin
+        value["roles"] = [
+            "accueil",
+            "ajout_accident",
+            "correction_accident",
+            "graphique",
+        ]
+
 
 # Fonction de vérification des identifiants de connexion
 def authenticate(username, password):
-    if username in users:
-        hashed_password = users[username]["password"]
-        if hashlib.sha256(password.encode("utf-8")).hexdigest() == hashed_password:
+    if username in users_db:
+        if users_db[username]["pwd"] == password:
             return True
     return False
 
+
 # Fonction de vérification des autorisations
 def has_role(username, role):
-    if username in users and role in users[username]["roles"]:
+    if username in users_db and role in users_db[username]["roles"]:
         return True
     return False
+
 
 # Fonction principale
 def main():
@@ -34,6 +46,7 @@ def main():
     else:
         show_login_page()
 
+
 def show_login_page():
     st.markdown(
         "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
@@ -43,10 +56,13 @@ def show_login_page():
         "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
         unsafe_allow_html=True,
     )
-    
+
     # Champs de saisie de connexion
     username = st.text_input("Nom d'utilisateur")
     password = st.text_input("Mot de passe", type="password")
+
+    identification = f"{username}:{password}"
+
     if st.button("Se connecter"):
         if authenticate(username, password):
             st.session_state["authenticated"] = True
@@ -56,13 +72,30 @@ def show_login_page():
             # Forcer le rerun de la page pour afficher le contenu authentifié
             st.experimental_rerun()
 
+
 def main_authenticated():
     # Affichage des pages accessibles après authentification
     # Afficher les options de menu en fonction des rôles de l'utilisateur
-    selected_home = st.sidebar.button("Accueil", key="accueil") if has_role(st.session_state["username"], "accueil") else None
-    selected_features = st.sidebar.button("Ajouter un accident", key="ajout_accident") if has_role(st.session_state["username"], "ajout_accident") else None
-    selected_feedback_features = st.sidebar.button("Rectifier un accident", key="rectifier_accident") if has_role(st.session_state["username"], "correction_accident") else None
-    selected_graph = st.sidebar.button("Graphique", key="graphique") if has_role(st.session_state["username"], "graphique") else None
+    selected_home = (
+        st.sidebar.button("Accueil", key="accueil")
+        if has_role(st.session_state["username"], "accueil")
+        else None
+    )
+    selected_features = (
+        st.sidebar.button("Ajouter un accident", key="ajout_accident")
+        if has_role(st.session_state["username"], "ajout_accident")
+        else None
+    )
+    selected_feedback_features = (
+        st.sidebar.button("Rectifier un accident", key="rectifier_accident")
+        if has_role(st.session_state["username"], "correction_accident")
+        else None
+    )
+    selected_graph = (
+        st.sidebar.button("Graphique", key="graphique")
+        if has_role(st.session_state["username"], "graphique")
+        else None
+    )
 
     # Déterminer la page à afficher en fonction du bouton sélectionné
     selected_page = st.session_state.get("selected_page", "Accueil")
@@ -96,7 +129,8 @@ def main_authenticated():
         st.empty()
         # Forcer le rerun de la page pour afficher le contenu non authentifié
         st.experimental_rerun()
-        
+
+
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
@@ -108,12 +142,12 @@ def show_homepage():
             st.image(
                 "/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png"
             )  # else use this path
-    
+
     st.markdown(
-            "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
-            unsafe_allow_html=True,
+        "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
+        unsafe_allow_html=True,
     )
-        
+
     st.markdown(
         "<p style='text-align:center;'>SHIELD est une application Python alimentée par l'IA qui utilise l'apprentissage automatique pour prédire les niveaux de priorité des accidents de la route, aidant les forces de l'ordre à optimiser les ressources et à optimiser les ressources des forces de l'ordre.</p>",
         unsafe_allow_html=True,
