@@ -6,7 +6,6 @@ from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict
 
-
 # >>>>>>>> CLASS DECLARATIONS <<<<<<<<
 
 
@@ -85,7 +84,7 @@ def get_all_users():
 
 def verify_rights(identification, rights):
     """
-    rights: 
+    rights:
     - 0 for user, robot and administrator,
     - 1 for robot and administrator
     - 2 for administrator
@@ -152,9 +151,9 @@ async def users_status():
     return return_request(response)
 
 
-# @api.get(path="/users/all", tags=["MICROSERVICES - Users"], name="get all users")
-# async def users_all():
-#     return get_all_users()
+@api.get(path="/users/all", tags=["MICROSERVICES - Users"], name="get all users")
+async def users_all():
+    return get_all_users()
 
 
 @api.post(path="/users/register", tags=["MICROSERVICES - Users"], name="register user")
