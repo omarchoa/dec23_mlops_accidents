@@ -1,39 +1,68 @@
 import os
-
 import streamlit as st
+import hashlib
+
+# Données des utilisateurs
+users = {
+    "user1": {"password": hashlib.sha256("user1password".encode("utf-8")).hexdigest()},
+    "admin": {"password": hashlib.sha256("adminpassword".encode("utf-8")).hexdigest()},
+}
+
+# Fonction de vérification des identifiants de connexion
+def authenticate(username, password):
+    if username in users:
+        hashed_password = users[username]["password"]
+        if hashlib.sha256(password.encode("utf-8")).hexdigest() == hashed_password:
+            return True
+    return False
 
 
+# Fonction principale
 def main():
-    selected_home = st.sidebar.button("Accueil")
-    selected_features = st.sidebar.button("Ajouter un accident")
-    selected_feedback_features = st.sidebar.button("Rectifier un accident")
-    selected_graph = st.sidebar.button("Graphique de Prédiction")
+    # État de la session pour l'authentification
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
 
-    # Déterminer quelle page afficher en fonction du bouton sélectionné
-    if selected_home:
-        st.session_state.selected_page = "Accueil"
-    elif selected_features:
-        st.session_state.selected_page = "Ajouter un accident"
-    elif selected_feedback_features:
-        st.session_state.selected_page = "Rectifier un accident"
-    elif selected_graph:
-        st.session_state.selected_page = "Graphique"
+    # Page de connexion si l'utilisateur n'est pas authentifié
+    if not st.session_state["authenticated"]:
+        username = st.text_input("Nom d'utilisateur")
+        password = st.text_input("Mot de passe", type="password")
+        if st.button("Se connecter"):
+            if authenticate(username, password):
+                st.session_state["authenticated"] = True
+                st.session_state["username"] = username
+            else:
+                st.error("Nom d'utilisateur ou mot de passe incorrect.")
 
-    # Afficher la page correspondante
-    if "selected_page" not in st.session_state:
-        st.session_state.selected_page = (
-            "Accueil"  # Par défaut, afficher la page d'accueil
-        )
+    # Pages accessibles après authentification
+    else:
+        selected_home = st.sidebar.button("Accueil")
+        selected_features = st.sidebar.button("Ajouter un accident")
+        selected_feedback_features = st.sidebar.button("Rectifier un accident")
+        selected_graph = st.sidebar.button("Graphique")
 
-    if st.session_state.selected_page == "Accueil":
-        show_homepage()
-    elif st.session_state.selected_page == "Ajouter un accident":
-        show_features()
-    elif st.session_state.selected_page == "Rectifier un accident":
-        show_feedback_features()
-    elif st.session_state.selected_page == "Graphique":
-        show_graph()
+        # Déterminer la page à afficher en fonction du bouton sélectionné
+        if selected_home:
+            st.session_state["selected_page"] = "Accueil"
+        elif selected_features:
+            st.session_state["selected_page"] = "Ajouter un accident"
+        elif selected_feedback_features:
+            st.session_state["selected_page"] = "Rectifier un accident"
+        elif selected_graph:
+            st.session_state["selected_page"] = "Graphique"
 
+        # Afficher la page correspondante
+        if "selected_page" not in st.session_state:
+            st.session_state["selected_page"] = "Accueil"
+
+        if st.session_state["selected_page"] == "Accueil":
+            show_homepage()
+        elif st.session_state["selected_page"] == "Ajouter un accident":
+            show_features()
+        elif st.session_state["selected_page"] == "Rectifier un accident":
+            show_feedback_features()
+        elif st.session_state["selected_page"] == "Graphique":
+            show_graph()
 
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
