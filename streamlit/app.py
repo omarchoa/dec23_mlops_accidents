@@ -25,18 +25,18 @@ def has_role(username, role):
 
 # Fonction principale
 def main():
-    # Affichage du texte au-dessus de l'authentification
-    st.markdown(
-        "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
-        unsafe_allow_html=True,
-    )
-
-    # Pages accessibles après authentification
+    # Afficher le texte au-dessus de l'authentification et le formulaire de champ de saisie
     if not st.session_state.get("authenticated", False):
+        st.markdown(
+            "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
+            unsafe_allow_html=True,
+        )
+        
+        # Pages accessibles après authentification
         # Champs de saisie de connexion
         username = st.text_input("Nom d'utilisateur")
         password = st.text_input("Mot de passe", type="password")
