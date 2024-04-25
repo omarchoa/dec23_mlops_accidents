@@ -99,6 +99,13 @@ def main():
         elif st.session_state["selected_page"] == "Graphique":
             show_graph()
 
+    if st.button("Se connecter", key="login_button"):
+    if authenticate(username, password):
+        st.session_state["authenticated"] = True
+        st.session_state["username"] = username
+    else:
+        st.error("Nom d'utilisateur ou mot de passe incorrect.")
+        
     # Bouton de déconnexion dans la barre latérale
     if st.session_state["authenticated"]:
         if st.sidebar.button("Se déconnecter"):
