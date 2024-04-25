@@ -24,40 +24,32 @@ def has_role(username, role):
 
 # Fonction principale
 def main():
-    # État de la session pour l'authentification
-    if "authenticated" not in st.session_state:
-        st.session_state["authenticated"] = False
-
-    if not st.session_state["authenticated"]:
-        show_login_page()
-    else:
+    # Vérifier si l'utilisateur est déjà authentifié
+    if st.session_state.get("authenticated", False):
         main_authenticated()
+    else:
+        show_login_page()
 
 def show_login_page():
-    # Vérifier si l'utilisateur est déjà authentifié
-    if st.session_state["authenticated"]:
-        # Si l'utilisateur est déjà connecté, ne rien afficher
-        return
-
-    # Affichage du texte au-dessus de l'authentification et le formulaire de champ de saisie
-    st.markdown(
-        "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
-        unsafe_allow_html=True,
-    )
-    
-    # Champs de saisie de connexion
-    username = st.text_input("Nom d'utilisateur")
-    password = st.text_input("Mot de passe", type="password")
-    if st.button("Se connecter"):
-        if authenticate(username, password):
-            st.session_state["authenticated"] = True
-            st.session_state["username"] = username
-            # Une fois connecté, afficher la page d'accueil
-            main_authenticated()
+    # Affichage du formulaire de connexion uniquement si l'utilisateur n'est pas déjà authentifié
+    if not st.session_state.get("authenticated", False):
+        # Affichage du texte au-dessus de l'authentification et le formulaire de champ de saisie
+        st.markdown(
+            "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
+            unsafe_allow_html=True,
+        )
+        
+        # Champs de saisie de connexion
+        username = st.text_input("Nom d'utilisateur")
+        password = st.text_input("Mot de passe", type="password")
+        if st.button("Se connecter"):
+            if authenticate(username, password):
+                st.session_state["authenticated"] = True
+                st.session_state["username"] = username
 
 def main_authenticated():
     # Affichage des pages accessibles après authentification
@@ -95,7 +87,15 @@ def main_authenticated():
         show_feedback_features()
     elif selected_page == "Graphique":
         show_graph()
-   
+
+# Bouton de déconnexion dans la barre latérale
+if st.sidebar.button("Se déconnecter"):
+    # Réinitialiser l'état de l'authentification et le nom d'utilisateur
+    st.session_state["authenticated"] = False
+    st.session_state["username"] = None
+    # Rediriger vers la page de connexion
+    show_login_page()
+    
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
