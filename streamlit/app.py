@@ -28,6 +28,9 @@ def main():
     # État de la session pour l'authentification
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
+    
+    if "show_login_form" not in st.session_state:
+        st.session_state["show_login_form"] = True
 
     # Affichage du texte au-dessus de l'authentification
     if not st.session_state["authenticated"]:
@@ -41,7 +44,7 @@ def main():
         )
 
     # Pages accessibles après authentification
-    if not st.session_state["authenticated"]:
+    if not st.session_state["authenticated"] and st.session_state["show_login_form"]:
         # Champs de saisie de connexion
         with st.form(key='login_form'):
             username = st.text_input("Nom d'utilisateur")
@@ -51,6 +54,7 @@ def main():
         if submit_button and authenticate(username, password):
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
+            st.session_state["show_login_form"] = False
         elif submit_button:
             st.error("Nom d'utilisateur ou mot de passe incorrect.")
     
@@ -106,6 +110,7 @@ def main():
     if st.session_state["authenticated"]:
         if st.sidebar.button("Se déconnecter"):
             st.session_state["authenticated"] = False
+            st.session_state["show_login_form"] = True
    
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
