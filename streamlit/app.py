@@ -102,7 +102,24 @@ def main():
         if st.session_state["authenticated"]:
             if st.sidebar.button("Se déconnecter"):
                 st.session_state["authenticated"] = False
-                
+
+# Fonction de connexion
+def login():
+    username = st.text_input("Nom d'utilisateur")
+    password = st.text_input("Mot de passe", type="password")
+
+    if authenticate(username, password):
+        st.session_state["authenticated"] = True
+        st.session_state["username"] = username
+        st.success("Connexion réussie!")
+    else:
+        st.error("Nom d'utilisateur ou mot de passe incorrect.")
+
+# Fonction de déconnexion
+def logout():
+    st.session_state["authenticated"] = False
+    st.success("Déconnexion réussie!")
+    
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
