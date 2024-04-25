@@ -45,7 +45,7 @@ def main():
         # Champs de saisie de connexion
         username = st.text_input("Nom d'utilisateur")
         password = st.text_input("Mot de passe", type="password")
-        if st.button("Se connecter", key="login_button"):
+        if st.button("Se connecter", key="login_button") and not st.session_state["authenticated"]:
             if authenticate(username, password):
                 st.session_state["authenticated"] = True
                 st.session_state["username"] = username
@@ -102,7 +102,7 @@ def main():
 
     # Bouton de déconnexion dans la barre latérale
     if st.session_state["authenticated"]:
-        if st.sidebar.button("Se déconnecter", key="logout_button"):
+        if st.sidebar.button("Se déconnecter", key="logout_button") and st.session_state["authenticated"]:
             st.session_state["authenticated"] = False
    
 def show_homepage():
