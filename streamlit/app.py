@@ -64,7 +64,9 @@ def main():
             selected_features = None
 
         if has_role(st.session_state["username"], "correction_accident"):
-            selected_feedback_features = st.sidebar.button("Rectifier un accident")
+            selected_feedback_features = st.sidebar.button(
+                "Rectifier un accident"
+            )
         else:
             selected_feedback_features = None
 
@@ -84,7 +86,17 @@ def main():
             st.session_state["selected_page"] = "Graphique"
 
         # Afficher la page correspondante
-        if "selected_page" not in st.session_
+        if "selected_page" not in st.session_state:
+            st.session_state["selected_page"] = "Accueil"
+
+        if st.session_state["selected_page"] == "Accueil":
+            show_homepage()
+        elif st.session_state["selected_page"] == "Ajouter un accident":
+            show_features()
+        elif st.session_state["selected_page"] == "Rectifier un accident":
+            show_feedback_features()
+        elif st.session_state["selected_page"] == "Graphique":
+            show_graph()
 
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
