@@ -4,8 +4,8 @@ import hashlib
 
 # Données des utilisateurs
 users = {
-    "user1": {"password": hashlib.sha256("user1password".encode("utf-8")).hexdigest(), "roles": ["accueil", "ajout_accident"]},
-    "admin": {"password": hashlib.sha256("adminpassword".encode("utf-8")).hexdigest(), "roles": ["accueil", "ajout_accident", "correction_accident", "graphique"]},
+    "user1": {"password": hashlib.sha256("user1".encode("utf-8")).hexdigest(), "roles": ["accueil", "ajout_accident"]},
+    "admin": {"password": hashlib.sha256("admin".encode("utf-8")).hexdigest(), "roles": ["accueil", "ajout_accident", "correction_accident", "graphique"]},
 }
 
 # Fonction de vérification des identifiants de connexion
