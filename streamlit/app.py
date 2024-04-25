@@ -36,6 +36,13 @@ def main():
     else:
         show_login_page()
 
+def show_user1_homepage():
+    st.markdown(
+        "<h1 style='text-align: center;'>Bienvenue sur votre page d'accueil, user1</h1>",
+        unsafe_allow_html=True,
+    )
+    st.write("Contenu spécifique à user1")
+
 def show_login_page():
     st.markdown(
         "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
