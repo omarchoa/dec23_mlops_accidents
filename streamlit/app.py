@@ -24,15 +24,19 @@ def has_role(username, role):
 
 # Fonction principale
 def main():
+    # État de la session pour l'authentification
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
+
     # Vérifier si l'utilisateur est déjà authentifié
-    if st.session_state.get("authenticated", False):
+    if st.session_state["authenticated"]:
         main_authenticated()
     else:
         show_login_page()
 
 def show_login_page():
     # Affichage du formulaire de connexion uniquement si l'utilisateur n'est pas déjà authentifié
-    if not st.session_state.get("authenticated", False):
+    if not st.session_state["authenticated"]:
         # Affichage du texte au-dessus de l'authentification et le formulaire de champ de saisie
         st.markdown(
             "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
