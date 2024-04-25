@@ -64,8 +64,8 @@ def main_authenticated():
     selected_feedback_features = st.sidebar.button("Rectifier un accident", key="rectifier_accident") if has_role(st.session_state["username"], "correction_accident") else None
     selected_graph = st.sidebar.button("Graphique", key="graphique") if has_role(st.session_state["username"], "graphique") else None
 
-    # Bouton de déconnexion dans la barre latérale
-    if st.sidebar.button("Se déconnecter"):
+# Bouton de déconnexion dans la barre latérale
+if st.sidebar.button("Se déconnecter"):
     # Réinitialiser l'état de l'authentification et le nom d'utilisateur
     st.session_state["authenticated"] = False
     st.session_state["username"] = None
