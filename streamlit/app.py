@@ -60,9 +60,6 @@ def show_login_page():
     # Champs de saisie de connexion
     username = st.text_input("Nom d'utilisateur")
     password = st.text_input("Mot de passe", type="password")
-
-    identification = f"{username}:{password}"
-
     if st.button("Se connecter"):
         if authenticate(username, password):
             st.session_state["authenticated"] = True
@@ -134,14 +131,7 @@ def main_authenticated():
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        if os.environ.get("CONTAINERIZED") == "yes":
-            st.image(
-                "/home/shield/streamlit/images/bouclier.png"
-            )  # use this path if deployed in container
-        else:
-            st.image(
-                "/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png"
-            )  # else use this path
+        st.image("/home/shield/streamlit/images/bouclier.png")
 
     st.markdown(
         "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
