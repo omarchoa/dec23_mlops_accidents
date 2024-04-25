@@ -29,7 +29,18 @@ def main():
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
 
-    # Si l'utilisateur n'est pas authentifié, afficher le texte au-dessus de l'authentification
+    # Champs de saisie de connexion
+    if not st.session_state["authenticated"]:
+        username = st.text_input("Nom d'utilisateur")
+        password = st.text_input("Mot de passe", type="password")
+        if st.button("Se connecter"):
+            if authenticate(username, password):
+                st.session_state["authenticated"] = True
+                st.session_state["username"] = username
+            else:
+                st.error("Nom d'utilisateur ou mot de passe incorrect.")
+
+    # Texte au-dessus de l'authentification
     if not st.session_state["authenticated"]:
         st.markdown(
             "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
@@ -40,19 +51,10 @@ def main():
             unsafe_allow_html=True,
         )
 
-    # Bouton de connexion/déconnexion dans la barre latérale
+    # Bouton de déconnexion dans la barre latérale
     if st.session_state["authenticated"]:
         if st.sidebar.button("Se déconnecter"):
             st.session_state["authenticated"] = False
-    else:
-        username = st.sidebar.text_input("Nom d'utilisateur")
-        password = st.sidebar.text_input("Mot de passe", type="password")
-        if st.sidebar.button("Se connecter"):
-            if authenticate(username, password):
-                st.session_state["authenticated"] = True
-                st.session_state["username"] = username
-            else:
-                st.error("Nom d'utilisateur ou mot de passe incorrect.")
 
     # Pages accessibles après authentification
     if st.session_state["authenticated"]:
