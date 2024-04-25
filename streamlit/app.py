@@ -98,9 +98,9 @@ def main():
         elif st.session_state["selected_page"] == "Graphique":
             show_graph()
             
-        # Bouton de déconnexion
+        # Bouton de déconnexion dans la barre latérale
         if st.session_state["authenticated"]:
-            if st.button("Se déconnecter"):
+            if st.sidebar.button("Se déconnecter"):
                 st.session_state["authenticated"] = False
                 
 def show_homepage():
