@@ -23,24 +23,14 @@ def has_role(username, role):
     return False
 
 
-# Fonction principale
-def main():
+# Gestion de la session d'authentification
+def manage_session():
     # État de la session pour l'authentification
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
 
-    # Affichage du texte au-dessus de l'authentification et le formulaire de champ de saisie
+    # Affichage du formulaire de connexion si l'utilisateur n'est pas authentifié
     if not st.session_state["authenticated"]:
-        st.markdown(
-            "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
-            unsafe_allow_html=True,
-        )
-        
-        # Pages accessibles après authentification
         # Champs de saisie de connexion
         username = st.text_input("Nom d'utilisateur")
         password = st.text_input("Mot de passe", type="password")
@@ -49,6 +39,8 @@ def main():
                 st.session_state["authenticated"] = True
                 st.session_state["username"] = username
 
+# Affichage des différentes pages en fonction des rôles de l'utilisateur
+def display_pages():
     # Si l'utilisateur est authentifié, afficher les pages accessibles
     if st.session_state["authenticated"]:
         # Afficher les options de menu en fonction des rôles de l'utilisateur
@@ -97,11 +89,23 @@ def main():
         elif st.session_state["selected_page"] == "Graphique":
             show_graph()
 
-    # Bouton de déconnexion dans la barre latérale
+# Déconnexion de l'utilisateur
+def logout():
     if st.session_state.get("authenticated", False):
         if st.sidebar.button("Se déconnecter"):
             st.session_state["authenticated"] = False
             st.session_state["username"] = None
+
+# Fonction principale
+def main():
+    # Gestion de la session d'authentification
+    manage_session()
+
+    # Affichage des différentes pages en fonction des rôles de l'utilisateur
+    display_pages()
+
+    # Déconnexion de l'utilisateur
+    logout()
    
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
