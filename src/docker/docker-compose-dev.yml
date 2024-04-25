@@ -37,9 +37,6 @@ services:
       - type: bind
         source: ./database
         target: /docker-entrypoint-initdb.d
-    ports:
-        - target: 3306
-          published: "3306"
     networks:
       - shield
 
