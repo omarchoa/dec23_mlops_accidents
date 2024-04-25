@@ -22,6 +22,8 @@ def has_role(username, role):
         return True
     return False
 
+
+# Fonction principale
 # Fonction principale
 def main():
     # État de la session pour l'authentification
@@ -55,12 +57,6 @@ def show_login_page():
 def main_authenticated():
     # Affichage des pages accessibles après authentification
     if st.session_state["authenticated"]:
-        # Bouton de déconnexion dans la barre latérale
-        if st.sidebar.button("Se déconnecter"):
-            st.session_state["authenticated"] = False
-            st.session_state["username"] = None
-            return
-
         # Afficher les options de menu en fonction des rôles de l'utilisateur
         if has_role(st.session_state["username"], "accueil"):
             selected_home = st.sidebar.button("Accueil")
