@@ -22,8 +22,6 @@ def has_role(username, role):
         return True
     return False
 
-
-# Fonction principale
 # Fonction principale
 def main():
     # État de la session pour l'authentification
@@ -53,60 +51,45 @@ def show_login_page():
         if authenticate(username, password):
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
+            # Une fois connecté, afficher la page d'accueil
+            main_authenticated()
 
 def main_authenticated():
     # Affichage des pages accessibles après authentification
-    if st.session_state["authenticated"]:
-        # Afficher les options de menu en fonction des rôles de l'utilisateur
-        if has_role(st.session_state["username"], "accueil"):
-            selected_home = st.sidebar.button("Accueil")
-        else:
-            selected_home = None
+    # Afficher les options de menu en fonction des rôles de l'utilisateur
+    selected_home = st.sidebar.button("Accueil", key="accueil") if has_role(st.session_state["username"], "accueil") else None
+    selected_features = st.sidebar.button("Ajouter un accident", key="ajout_accident") if has_role(st.session_state["username"], "ajout_accident") else None
+    selected_feedback_features = st.sidebar.button("Rectifier un accident", key="rectifier_accident") if has_role(st.session_state["username"], "correction_accident") else None
+    selected_graph = st.sidebar.button("Graphique", key="graphique") if has_role(st.session_state["username"], "graphique") else None
 
-        if has_role(st.session_state["username"], "ajout_accident"):
-            selected_features = st.sidebar.button("Ajouter un accident")
-        else:
-            selected_features = None
+    # Déconnexion
+    if st.sidebar.button("Se déconnecter", key="deconnexion"):
+        st.session_state["authenticated"] = False
+        st.session_state["username"] = None
 
-        if has_role(st.session_state["username"], "correction_accident"):
-            selected_feedback_features = st.sidebar.button(
-                "Rectifier un accident"
-            )
-        else:
-            selected_feedback_features = None
+    # Déterminer la page à afficher en fonction du bouton sélectionné
+    selected_page = st.session_state.get("selected_page", "Accueil")
 
-        if has_role(st.session_state["username"], "graphique"):
-            selected_graph = st.sidebar.button("Graphique")
-        else:
-            selected_graph = None
+    if selected_home:
+        selected_page = "Accueil"
+    elif selected_features:
+        selected_page = "Ajouter un accident"
+    elif selected_feedback_features:
+        selected_page = "Rectifier un accident"
+    elif selected_graph:
+        selected_page = "Graphique"
 
-        # Déterminer la page à afficher en fonction du bouton sélectionné
-        if selected_home:
-            st.session_state["selected_page"] = "Accueil"
-        elif selected_features:
-            st.session_state["selected_page"] = "Ajouter un accident"
-        elif selected_feedback_features:
-            st.session_state["selected_page"] = "Rectifier un accident"
-        elif selected_graph:
-            st.session_state["selected_page"] = "Graphique"
+    st.session_state["selected_page"] = selected_page
 
-        # Afficher la page correspondante
-        if "selected_page" not in st.session_state:
-            st.session_state["selected_page"] = "Accueil"
-
-        if st.session_state["selected_page"] == "Accueil":
-            show_homepage()
-        elif st.session_state["selected_page"] == "Ajouter un accident":
-            show_features()
-        elif st.session_state["selected_page"] == "Rectifier un accident":
-            show_feedback_features()
-        elif st.session_state["selected_page"] == "Graphique":
-            show_graph()
-
-        # Bouton de déconnexion dans la barre latérale
-        if st.sidebar.button("Se déconnecter"):
-            st.session_state["authenticated"] = False
-            st.session_state["username"] = None
+    # Afficher la page correspondante
+    if selected_page == "Accueil":
+        show_homepage()
+    elif selected_page == "Ajouter un accident":
+        show_features()
+    elif selected_page == "Rectifier un accident":
+        show_feedback_features()
+    elif selected_page == "Graphique":
+        show_graph()
    
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
