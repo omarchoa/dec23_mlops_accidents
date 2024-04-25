@@ -29,17 +29,6 @@ def main():
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
 
-    # Champs de saisie de connexion
-    if not st.session_state["authenticated"]:
-        username = st.text_input("Nom d'utilisateur")
-        password = st.text_input("Mot de passe", type="password")
-        if st.button("Se connecter"):
-            if authenticate(username, password):
-                st.session_state["authenticated"] = True
-                st.session_state["username"] = username
-            else:
-                st.error("Nom d'utilisateur ou mot de passe incorrect.")
-
     # Texte au-dessus de l'authentification
     if not st.session_state["authenticated"]:
         st.markdown(
@@ -50,6 +39,17 @@ def main():
             "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
             unsafe_allow_html=True,
         )
+
+    # Champs de saisie de connexion
+    if not st.session_state["authenticated"]:
+        username = st.text_input("Nom d'utilisateur")
+        password = st.text_input("Mot de passe", type="password")
+        if st.button("Se connecter"):
+            if authenticate(username, password):
+                st.session_state["authenticated"] = True
+                st.session_state["username"] = username
+            else:
+                st.error("Nom d'utilisateur ou mot de passe incorrect.")
 
     # Bouton de déconnexion dans la barre latérale
     if st.session_state["authenticated"]:
