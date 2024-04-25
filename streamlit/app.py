@@ -87,14 +87,6 @@ def main_authenticated():
         show_feedback_features()
     elif selected_page == "Graphique":
         show_graph()
-
-# Bouton de déconnexion dans la barre latérale
-if st.sidebar.button("Se déconnecter"):
-    # Réinitialiser l'état de l'authentification et le nom d'utilisateur
-    st.session_state["authenticated"] = False
-    st.session_state["username"] = None
-    # Rediriger vers la page de connexion
-    show_login_page()
     
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
