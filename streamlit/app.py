@@ -43,14 +43,16 @@ def main():
     # Pages accessibles après authentification
     if not st.session_state["authenticated"]:
         # Champs de saisie de connexion
-        username = st.text_input("Nom d'utilisateur")
-        password = st.text_input("Mot de passe", type="password")
-        if st.button("Se connecter", key="login_button") and not st.session_state["authenticated"]:
-            if authenticate(username, password):
-                st.session_state["authenticated"] = True
-                st.session_state["username"] = username
-            else:
-                st.error("Nom d'utilisateur ou mot de passe incorrect.")
+        with st.form(key='login_form'):
+            username = st.text_input("Nom d'utilisateur")
+            password = st.text_input("Mot de passe", type="password")
+            submit_button = st.form_submit_button(label='Se connecter')
+
+        if submit_button and authenticate(username, password):
+            st.session_state["authenticated"] = True
+            st.session_state["username"] = username
+        elif submit_button:
+            st.error("Nom d'utilisateur ou mot de passe incorrect.")
     
     # Si l'utilisateur est authentifié, afficher les pages accessibles
     if st.session_state["authenticated"]:
@@ -102,7 +104,7 @@ def main():
 
     # Bouton de déconnexion dans la barre latérale
     if st.session_state["authenticated"]:
-        if st.sidebar.button("Se déconnecter", key="logout_button") and st.session_state["authenticated"]:
+        if st.sidebar.button("Se déconnecter"):
             st.session_state["authenticated"] = False
    
 def show_homepage():
