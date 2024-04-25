@@ -25,8 +25,12 @@ def has_role(username, role):
 
 # Fonction principale
 def main():
-    # Afficher le texte au-dessus de l'authentification et le formulaire de champ de saisie
-    if not st.session_state.get("authenticated", False):
+    # État de la session pour l'authentification
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
+
+    # Affichage du texte au-dessus de l'authentification et le formulaire de champ de saisie
+    if not st.session_state["authenticated"]:
         st.markdown(
             "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
             unsafe_allow_html=True,
@@ -40,13 +44,13 @@ def main():
         # Champs de saisie de connexion
         username = st.text_input("Nom d'utilisateur")
         password = st.text_input("Mot de passe", type="password")
-        submit_button = st.button("Se connecter")
+        if st.button("Se connecter"):
+            if authenticate(username, password):
+                st.session_state["authenticated"] = True
+                st.session_state["username"] = username
 
-        if submit_button and authenticate(username, password):
-            st.session_state["authenticated"] = True
-            st.session_state["username"] = username
-    
-    if st.session_state.get("authenticated", False):
+    # Si l'utilisateur est authentifié, afficher les pages accessibles
+    if st.session_state["authenticated"]:
         # Afficher les options de menu en fonction des rôles de l'utilisateur
         if has_role(st.session_state["username"], "accueil"):
             selected_home = st.sidebar.button("Accueil")
