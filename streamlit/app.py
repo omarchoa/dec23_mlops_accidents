@@ -110,7 +110,12 @@ def show_homepage():
             st.image(
                 "/mount/src/dec23_mlops_accidents/streamlit/images/bouclier.png"
             )  # else use this path
-
+    
+    st.markdown(
+            "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
+            unsafe_allow_html=True,
+    )
+        
     st.markdown(
         "<p style='text-align:center;'>SHIELD est une application Python alimentée par l'IA qui utilise l'apprentissage automatique pour prédire les niveaux de priorité des accidents de la route, aidant les forces de l'ordre à optimiser les ressources et à optimiser les ressources des forces de l'ordre.</p>",
         unsafe_allow_html=True,
