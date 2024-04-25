@@ -99,7 +99,7 @@ def main():
         elif st.session_state["selected_page"] == "Graphique":
             show_graph()
 
-    if st.button("Se connecter", key="login_button"):
+if st.button("Se connecter", key="login_button"):
     if authenticate(username, password):
         st.session_state["authenticated"] = True
         st.session_state["username"] = username
