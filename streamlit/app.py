@@ -30,18 +30,11 @@ def main():
 
     if st.session_state["authenticated"]:
         if st.session_state["username"] == "user1":
-            show_user1_homepage()
+            show_homepage()
         else:
             show_authenticated_content()
     else:
         show_login_page()
-
-def show_user1_homepage():
-    st.markdown(
-        "<h1 style='text-align: center;'>Bienvenue sur votre page d'accueil, user1</h1>",
-        unsafe_allow_html=True,
-    )
-    st.write("Contenu spécifique à user1")
 
 def show_login_page():
     st.markdown(
