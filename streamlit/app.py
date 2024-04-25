@@ -28,11 +28,9 @@ def main():
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
 
+    # Vérifier si l'utilisateur est déjà authentifié
     if st.session_state["authenticated"]:
-        if st.session_state["username"] == "user1":
-            show_homepage()
-        else:
-            show_authenticated_content()
+        main_authenticated()
     else:
         show_login_page()
 
