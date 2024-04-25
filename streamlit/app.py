@@ -51,13 +51,8 @@ def main():
                 st.session_state["username"] = username
             else:
                 st.error("Nom d'utilisateur ou mot de passe incorrect.")
-
-    # Bouton de déconnexion dans la barre latérale
-    if st.session_state["authenticated"]:
-        if st.sidebar.button("Se déconnecter"):
-            st.session_state["authenticated"] = False
-
-    # Pages accessibles après authentification
+    
+    # Si l'utilisateur est authentifié, afficher les pages accessibles
     if st.session_state["authenticated"]:
         # Afficher les options de menu en fonction des rôles de l'utilisateur
         if has_role(st.session_state["username"], "accueil"):
@@ -105,7 +100,11 @@ def main():
         elif st.session_state["selected_page"] == "Graphique":
             show_graph()
 
-    
+    # Bouton de déconnexion dans la barre latérale
+    if st.session_state["authenticated"]:
+        if st.sidebar.button("Se déconnecter"):
+            st.session_state["authenticated"] = False
+   
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
