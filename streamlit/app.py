@@ -4,8 +4,8 @@ import hashlib
 
 # Données des utilisateurs
 users = {
-    "user": {"password": hashlib.sha256("user".encode("utf-8")).hexdigest()},
-    "admin": {"password": hashlib.sha256("admin".encode("utf-8")).hexdigest()},
+    "user1": {"password": hashlib.sha256("user1password".encode("utf-8")).hexdigest(), "roles": ["accueil", "ajout_accident"]},
+    "admin": {"password": hashlib.sha256("adminpassword".encode("utf-8")).hexdigest(), "roles": ["accueil", "ajout_accident", "correction_accident", "graphique"]},
 }
 
 # Fonction de vérification des identifiants de connexion
@@ -16,12 +16,28 @@ def authenticate(username, password):
             return True
     return False
 
+# Fonction de vérification des autorisations
+def has_role(username, role):
+    if username in users and role in users[username]["roles"]:
+        return True
+    return False
+
 
 # Fonction principale
 def main():
     # État de la session pour l'authentification
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
+
+    # Texte au-dessus de l'authentification
+    st.markdown(
+        "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
+        unsafe_allow_html=True,
+    )
 
     # Page de connexion si l'utilisateur n'est pas authentifié
     if not st.session_state["authenticated"]:
@@ -36,10 +52,26 @@ def main():
 
     # Pages accessibles après authentification
     else:
-        selected_home = st.sidebar.button("Accueil")
-        selected_features = st.sidebar.button("Ajouter un accident")
-        selected_feedback_features = st.sidebar.button("Rectifier un accident")
-        selected_graph = st.sidebar.button("Graphique")
+        # Afficher les options de menu en fonction des rôles de l'utilisateur
+        if has_role(st.session_state["username"], "accueil"):
+            selected_home = st.sidebar.button("Accueil")
+        else:
+            selected_home = None
+
+        if has_role(st.session_state["username"], "ajout_accident"):
+            selected_features = st.sidebar.button("Ajouter un accident")
+        else:
+            selected_features = None
+
+        if has_role(st.session_state["username"], "correction_accident"):
+            selected_feedback_features = st.sidebar.button("Rectifier un accident")
+        else:
+            selected_feedback_features = None
+
+        if has_role(st.session_state["username"], "graphique"):
+            selected_graph = st.sidebar.button("Graphique")
+        else:
+            selected_graph = None
 
         # Déterminer la page à afficher en fonction du bouton sélectionné
         if selected_home:
@@ -52,17 +84,7 @@ def main():
             st.session_state["selected_page"] = "Graphique"
 
         # Afficher la page correspondante
-        if "selected_page" not in st.session_state:
-            st.session_state["selected_page"] = "Accueil"
-
-        if st.session_state["selected_page"] == "Accueil":
-            show_homepage()
-        elif st.session_state["selected_page"] == "Ajouter un accident":
-            show_features()
-        elif st.session_state["selected_page"] == "Rectifier un accident":
-            show_feedback_features()
-        elif st.session_state["selected_page"] == "Graphique":
-            show_graph()
+        if "selected_page" not in st.session_
 
 def show_homepage():
     col1, col2, col3 = st.columns([1, 3, 1])
