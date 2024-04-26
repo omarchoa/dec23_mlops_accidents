@@ -177,3 +177,14 @@ def test_scoring_update_f1_score():
     assert response.status_code == 200
     message = "Test /scoring/update_f1_score: PASSED"
     print(message)
+
+
+def test_scoring_get_f1_scores():
+    time.sleep(5)
+    response = requests.get(
+        url="http://gateway:8001/scoring/get-f1-scores",
+        headers=header_admin,
+    )
+    assert response.status_code == 200
+    message = "Test /scoring/update_f1_score: PASSED"
+    print(message)
