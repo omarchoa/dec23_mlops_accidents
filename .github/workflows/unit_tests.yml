@@ -8,9 +8,6 @@ on:
     branches:
       - master
 
-env:
-  DOCKER_REGISTRY: fabricecharraud/shield
-
 jobs:
   Pipeline:
     runs-on: ubuntu-latest
