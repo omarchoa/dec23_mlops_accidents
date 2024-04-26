@@ -16,10 +16,11 @@ class InputDataLabelPred(BaseModel):
     y_true: int
 
 
-# define `database` microservice uri
+# define connection to `database` microservice
 SQLALCHEMY_DATABASE_URI = (
     "mysql+pymysql://user:password@database:3306/shield_project_db"
 )
+mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI)
 
 
 # create fastapi instance
@@ -71,8 +72,18 @@ async def update_f1_score():
     ## run shell command and save output to result
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
+    ## save f1 score from subprocess output
+    f1_score = float(str(result.stdout).strip())
+
+    ## save f1 score to `database` microservice
+    with mariadb_engine.connect() as connection:
+        connection.execute(
+            text(f'INSERT INTO f1_score_table (f1_score) VALUES ("{f1_score}");')
+        )
+        connection.execute(text("COMMIT;"))
+
     ## return f1 score
-    return result.stdout
+    return f1_score
 
 
 # endpoint - get f1 scores
@@ -83,7 +94,6 @@ async def update_f1_score():
 )
 async def get_f1_scores():
     ## get f1 scores from `database` microservice
-    mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI)
     with mariadb_engine.connect() as connection:
         results = connection.execute(text("SELECT * FROM f1_score_table;"))
         f1_score_list = [f"{time.timestamp()};{score}" for time, score in results]

@@ -1,4 +1,5 @@
 # >>>>>>>> IMPORTS <<<<<<<<
+
 import datetime
 import os
 
@@ -6,8 +7,6 @@ import requests
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict
-from sqlalchemy import text
-from sqlalchemy.engine import create_engine
 
 # >>>>>>>> CLASS DECLARATIONS <<<<<<<<
 
@@ -123,24 +122,6 @@ def log(start, data, logname):
             logfile.write("start;end;user;data\n")
     with open(full_logname, "a") as logfile:
         logfile.write(f"{start};{data}\n")
-
-
-# >>>>>>>> VARIABLE DECLARATIONS <<<<<<<<
-
-
-SQLALCHEMY_DATABASE_URI = (
-    "mysql+pymysql://user:password@database:3306/shield_project_db"
-)
-
-
-# >>>>>>>> ERROR MANAGEMENT <<<<<<<<
-## revise
-
-
-# responses = {
-#     200: {"description": "OK"},
-#     401: {"description": "Identifiant ou mot de passe invalide(s)"}
-# }
 
 
 # >>>>>>>> API GATEWAY DECLARATION <<<<<<<<
@@ -338,18 +319,10 @@ async def scoring_update_f1_score(identification=Header(None)):
     response = requests.get(url="http://scoring:8006/update-f1-score")
 
     ## save f1 score from `scoring` microservice response
-    f1_score = return_request(response).strip()
+    f1_score = return_request(response)
 
     ## save f1 score to csv file
     log(start, f1_score, "f1-score.csv")
-
-    ## save f1 score to `database` microservice
-    mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI)
-    with mariadb_engine.connect() as connection:
-        connection.execute(
-            text(f'INSERT INTO f1_score_table (f1_score) VALUES ("{f1_score}");')
-        )
-        connection.execute(text("COMMIT;"))
 
     ## return f1 score
     return f1_score
