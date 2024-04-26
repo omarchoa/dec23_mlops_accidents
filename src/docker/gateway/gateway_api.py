@@ -355,31 +355,20 @@ async def scoring_update_f1_score(identification=Header(None)):
     return f1_score
 
 
-# @api.get(
-#     path="/scoring/get_f1_score",
-#     tags=["MICROSERVICES - Scoring"],
-#     name="get f1 score",
-# )
-# async def get_f1_score():
-#     with open("/logs/f1-score.csv", "r") as log_file:
-#         content = log_file.readlines()
-#     string_result = "".join(content)
-#     return string_result
-
-
 @api.get(
     path="/scoring/get_f1_scores",
     tags=["MICROSERVICES - Scoring"],
     name="get f1 scores",
 )
-async def scoring_get_f1_scores():
-    ## get f1 scores from `database` microservice
-    mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI)
-    with mariadb_engine.connect() as connection:
-        results = connection.execute(text("SELECT * FROM f1_score_table;"))
-        f1_score_list = [f"{time.timestamp()};{score}" for time, score in results]
-        f1_score_list.insert(0, "timestamp;f1-score")
-        f1_scores = "\n".join(f1_score_list)
+async def scoring_get_f1_scores(identification=Header(None)):
+    ## perform authentication and authorization checks
+    verify_rights(identification, 1)  ### 1 for robot and administrator
+
+    ## call mirror endpoint in `scoring` microservice
+    response = requests.get(url="http://scoring:8006/get_f1_scores")
+
+    ## save f1 scores from `scoring` microservice response
+    f1_scores = return_request(response).strip()
 
     ## return f1 scores
     return f1_scores

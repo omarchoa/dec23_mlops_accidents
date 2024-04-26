@@ -4,6 +4,8 @@ import subprocess
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from sqlalchemy import text
+from sqlalchemy.engine import create_engine
 
 from config import paths
 
@@ -12,6 +14,12 @@ from config import paths
 class InputDataLabelPred(BaseModel):
     request_id: int
     y_true: int
+
+
+# define `database` microservice uri
+SQLALCHEMY_DATABASE_URI = (
+    "mysql+pymysql://user:password@database:3306/shield_project_db"
+)
 
 
 # create fastapi instance
@@ -63,5 +71,24 @@ async def update_f1_score():
     ## run shell command and save output to result
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
-    ## return f1-score
+    ## return f1 score
     return result.stdout
+
+
+# endpoint - get f1 scores
+@api.get(
+    path="/get_f1_scores",
+    tags=["MICROSERVICES - Scoring"],
+    name="get f1 scores",
+)
+async def get_f1_scores():
+    ## get f1 scores from `database` microservice
+    mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI)
+    with mariadb_engine.connect() as connection:
+        results = connection.execute(text("SELECT * FROM f1_score_table;"))
+        f1_score_list = [f"{time.timestamp()};{score}" for time, score in results]
+        f1_score_list.insert(0, "timestamp;f1-score")
+        f1_scores = "\n".join(f1_score_list)
+
+    ## return f1 scores
+    return f1_scores
