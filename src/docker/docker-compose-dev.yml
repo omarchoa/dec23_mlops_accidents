@@ -6,7 +6,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/dummy/dummy.Dockerfile
-    image: ${DOCKER_REGISTRY}:dummy
+    image: ${DOCKER_HUB_REPO}:dummy
     container_name: dummy
     networks:
       - shield
@@ -27,7 +27,7 @@ services:
     build:
       context: database
       dockerfile: database.Dockerfile
-    image: ${DOCKER_REGISTRY}:database
+    image: ${DOCKER_HUB_REPO}:database
     container_name: database
     volumes:
       - type: bind
@@ -45,7 +45,7 @@ services:
     build:
       context: gateway
       dockerfile: gateway.Dockerfile
-    image: ${DOCKER_REGISTRY}:gateway
+    image: ${DOCKER_HUB_REPO}:gateway
     container_name: gateway
     networks:
       - shield
@@ -69,7 +69,7 @@ services:
     build:
       context: users
       dockerfile: Dockerfile
-    image: ${DOCKER_REGISTRY}:users
+    image: ${DOCKER_HUB_REPO}:users
     container_name: users
     networks:
       - shield
@@ -83,7 +83,7 @@ services:
     build:
       context: data-download-prep
       dockerfile: Dockerfile
-    image: ${DOCKER_REGISTRY}:data-download-prep
+    image: ${DOCKER_HUB_REPO}:data-download-prep
     container_name: data-download-prep
     networks:
       - shield
@@ -104,7 +104,7 @@ services:
     build:
       context: ../.. ## use repo root as build context to enable Dockerfile to access files located outside of its own working directory
       dockerfile: src/docker/training/training.Dockerfile ## path to Dockerfile
-    image: ${DOCKER_REGISTRY}:training
+    image: ${DOCKER_HUB_REPO}:training
     container_name: training
     networks:
       - shield
@@ -129,7 +129,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/prediction/prediction.Dockerfile
-    image: ${DOCKER_REGISTRY}:prediction
+    image: ${DOCKER_HUB_REPO}:prediction
     container_name: prediction
     networks:
       - shield
@@ -155,7 +155,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/scoring/scoring.Dockerfile
-    image: ${DOCKER_REGISTRY}:scoring
+    image: ${DOCKER_HUB_REPO}:scoring
     container_name: scoring
     networks:
       - shield
