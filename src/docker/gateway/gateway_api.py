@@ -303,7 +303,7 @@ async def scoring_status():
 
 
 @api.post(
-    path="/scoring/label_prediction",
+    path="/scoring/label-prediction",
     tags=["MICROSERVICES - Scoring"],
     name="label prediction",
 )
@@ -312,7 +312,7 @@ async def scoring_label_prediction(
 ):
     verify_rights(identification, 0)  # at least user rights
     payload = input_data.model_dump()
-    response = requests.post(url="http://scoring:8006/label_prediction", json=payload)
+    response = requests.post(url="http://scoring:8006/label-prediction", json=payload)
     response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
     if "updated" in response_clean:
         return JSONResponse(content=response_clean)
@@ -323,7 +323,7 @@ async def scoring_label_prediction(
 
 
 @api.get(
-    path="/scoring/update_f1_score",
+    path="/scoring/update-f1-score",
     tags=["MICROSERVICES - Scoring"],
     name="update f1 score",
 )
@@ -335,7 +335,7 @@ async def scoring_update_f1_score(identification=Header(None)):
     verify_rights(identification, 1)  ### 1 for robot and administrator
 
     ## call mirror endpoint in `scoring` microservice
-    response = requests.get(url="http://scoring:8006/update_f1_score")
+    response = requests.get(url="http://scoring:8006/update-f1-score")
 
     ## save f1 score from `scoring` microservice response
     f1_score = return_request(response).strip()
@@ -356,7 +356,7 @@ async def scoring_update_f1_score(identification=Header(None)):
 
 
 @api.get(
-    path="/scoring/get_f1_scores",
+    path="/scoring/get-f1-scores",
     tags=["MICROSERVICES - Scoring"],
     name="get f1 scores",
 )
@@ -365,7 +365,7 @@ async def scoring_get_f1_scores(identification=Header(None)):
     verify_rights(identification, 1)  ### 1 for robot and administrator
 
     ## call mirror endpoint in `scoring` microservice
-    response = requests.get(url="http://scoring:8006/get_f1_scores")
+    response = requests.get(url="http://scoring:8006/get-f1-scores")
 
     ## save f1 scores from `scoring` microservice response
     f1_scores = return_request(response).strip()

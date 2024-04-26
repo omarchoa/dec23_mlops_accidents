@@ -35,7 +35,7 @@ async def status():
 
 # endpoint - label prediction
 @api.post(
-    path="/label_prediction",
+    path="/label-prediction",
     tags=["PROCESSES"],
     name="label prediction",
 )
@@ -60,7 +60,7 @@ async def label_prediction(input_data: InputDataLabelPred):
 
 # endpoint - update f1 score
 @api.get(
-    path="/update_f1_score",
+    path="/update-f1-score",
     tags=["PROCESSES"],
     name="update f1 score",
 )
@@ -77,7 +77,7 @@ async def update_f1_score():
 
 # endpoint - get f1 scores
 @api.get(
-    path="/get_f1_scores",
+    path="/get-f1-scores",
     tags=["MICROSERVICES - Scoring"],
     name="get f1 scores",
 )
