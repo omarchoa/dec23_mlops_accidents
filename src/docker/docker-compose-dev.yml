@@ -81,26 +81,26 @@ services:
     networks:
       - shield
 
-  # data-download-prep microservice
-  data-download-prep:
-    depends_on:
-      gateway:
-        condition: service_started
-    pull_policy: build
-    build:
-      context: data-download-prep
-      dockerfile: Dockerfile
-    image: ${DOCKER_HUB_REPO}:data-download-prep
-    container_name: data-download-prep
-    networks:
-      - shield
-    volumes:
-      - type: volume
-        source: data-download-prep
-        target: /home/shield/data-download-prep
-      - type: volume
-        source: logs
-        target: /home/shield/logs
+  # # data-download-prep microservice
+  # data-download-prep:
+  #   depends_on:
+  #     gateway:
+  #       condition: service_started
+  #   pull_policy: build
+  #   build:
+  #     context: data-download-prep
+  #     dockerfile: Dockerfile
+  #   image: ${DOCKER_HUB_REPO}:data-download-prep
+  #   container_name: data-download-prep
+  #   networks:
+  #     - shield
+  #   volumes:
+  #     - type: volume
+  #       source: data-download-prep
+  #       target: /home/shield/data-download-prep
+  #     - type: volume
+  #       source: logs
+  #       target: /home/shield/logs
 
   # training microservice
   training:
@@ -127,57 +127,57 @@ services:
         source: models
         target: /home/shield/models
 
-  # prediction microservice
-  prediction:
-    depends_on:
-      gateway:
-        condition: service_started
-    pull_policy: build
-    build:
-      context: ../..
-      dockerfile: src/docker/prediction/prediction.Dockerfile
-    image: ${DOCKER_HUB_REPO}:prediction
-    container_name: prediction
-    networks:
-      - shield
-    volumes:
-      - type: volume
-        source: data-download-prep
-        target: /home/shield/data-download-prep
-        read_only: true
-      - type: volume
-        source: logs
-        target: /home/shield/logs
-      - type: volume
-        source: models
-        target: /home/shield/models
-        read_only: true
+  # # prediction microservice
+  # prediction:
+  #   depends_on:
+  #     gateway:
+  #       condition: service_started
+  #   pull_policy: build
+  #   build:
+  #     context: ../..
+  #     dockerfile: src/docker/prediction/prediction.Dockerfile
+  #   image: ${DOCKER_HUB_REPO}:prediction
+  #   container_name: prediction
+  #   networks:
+  #     - shield
+  #   volumes:
+  #     - type: volume
+  #       source: data-download-prep
+  #       target: /home/shield/data-download-prep
+  #       read_only: true
+  #     - type: volume
+  #       source: logs
+  #       target: /home/shield/logs
+  #     - type: volume
+  #       source: models
+  #       target: /home/shield/models
+  #       read_only: true
 
-  # scoring microservice
-  scoring:
-    depends_on:
-      gateway:
-        condition: service_started
-    pull_policy: build
-    build:
-      context: ../..
-      dockerfile: src/docker/scoring/scoring.Dockerfile
-    image: ${DOCKER_HUB_REPO}:scoring
-    container_name: scoring
-    networks:
-      - shield
-    volumes:
-      - type: volume
-        source: data-download-prep
-        target: /home/shield/data-download-prep
-        read_only: true
-      - type: volume
-        source: logs
-        target: /home/shield/logs
-      - type: volume
-        source: models
-        target: /home/shield/models
-        read_only: true
+  # # scoring microservice
+  # scoring:
+  #   depends_on:
+  #     gateway:
+  #       condition: service_started
+  #   pull_policy: build
+  #   build:
+  #     context: ../..
+  #     dockerfile: src/docker/scoring/scoring.Dockerfile
+  #   image: ${DOCKER_HUB_REPO}:scoring
+  #   container_name: scoring
+  #   networks:
+  #     - shield
+  #   volumes:
+  #     - type: volume
+  #       source: data-download-prep
+  #       target: /home/shield/data-download-prep
+  #       read_only: true
+  #     - type: volume
+  #       source: logs
+  #       target: /home/shield/logs
+  #     - type: volume
+  #       source: models
+  #       target: /home/shield/models
+  #       read_only: true
 
   # testing microservice
   testing:
