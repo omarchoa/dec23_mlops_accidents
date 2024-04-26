@@ -35,6 +35,14 @@ services:
         target: /var/lib/mysql
     networks:
       - shield
+    environment:
+      MARIADB_ROOT_PASSWORD: /run/secrets/mariadb_root_password
+      MARIADB_DATABASE: shield_project_db
+      MARIADB_USER: user
+      MARIADB_PASSWORD: /run/secrets/mariadb_password
+    secrets:
+      - mariadb_root_password
+      - mariadb_password
 
   # api gateway
   gateway:
@@ -198,3 +206,11 @@ volumes:
     name: logs
   models:
     name: models
+
+
+# secret declarations
+secrets:
+  mariadb_root_password:
+     file: database/mariadb_root_password.txt
+  mariadb_password:
+     file: database/mariadb_password.txt
