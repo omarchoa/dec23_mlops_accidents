@@ -1,5 +1,4 @@
 # >>>>>>>> IMPORTS <<<<<<<<
-
 import datetime
 import os
 import requests
@@ -114,7 +113,6 @@ def verify_rights(identification, rights):
         raise HTTPException(
             status_code=403, detail=f"{user_type[rights]} rights required."
         )
-
 # define database uri
 SQLALCHEMY_DATABASE_URI = (
     "mysql+pymysql://user:password@database:3306/shield_project_db"
@@ -128,7 +126,6 @@ def log(start, data, logname):
             logfile.write("start;end;user;data\n")
     with open(full_logname, "a") as logfile:
         logfile.write(f"{start};{data}\n")
-
 
 # >>>>>>>> ERROR MANAGEMENT <<<<<<<<
 ## revise
