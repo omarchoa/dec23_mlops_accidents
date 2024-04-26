@@ -1,6 +1,9 @@
+import json
 import time
 
 import requests
+
+from config import paths
 
 header_admin = {"identification": "admin:4dmin"}
 payload_new_user = {"username": "antoine", "password": "jussieu", "rights": 0}
@@ -36,7 +39,6 @@ payload_input_data_pred_call = {
     "nb_victim": 2,
     "nb_vehicules": 1,
 }
-payload_input_data_label_pred = {"request_id": 6012919476848551, "y_true": 1}
 delay = 5
 
 
@@ -159,13 +161,26 @@ def test_scoring_status():
 
 def test_scoring_label_prediction():
     time.sleep(delay)
+
+    with open(paths.LOGS_PREDS_UNLABELED, "r") as file:
+        line_string = file.readline().strip("\n")
+        line_json = json.loads(line_string)
+
+    payload_input_data_label_pred = {
+        "request_id": int(line_json["request_id"]),
+        "y_true": 1,
+    }
+
     response = requests.post(
         url="http://gateway:8001/scoring/label-prediction",
         json=payload_input_data_label_pred,
         headers=header_admin,
     )
+
     assert response.status_code == 200
+
     message = "Test /scoring/label_prediction: PASSED"
+
     print(message)
 
 
