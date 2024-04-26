@@ -37,10 +37,11 @@ payload_input_data_pred_call = {
     "nb_vehicules": 1,
 }
 payload_input_data_label_pred = {"request_id": 6012919476848551, "y_true": 1}
+sleep_time = 10
 
 
 def test_gateway_status():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(url="http://gateway:8001/gateway/status")
     assert response.status_code == 200
     message = "Test /gateway/status: PASSED"
@@ -48,7 +49,7 @@ def test_gateway_status():
 
 
 def test_users_status():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(url="http://gateway:8001/users/status")
     assert response.status_code == 200
     message = "Test /users/status: PASSED"
@@ -56,7 +57,7 @@ def test_users_status():
 
 
 def test_users_register():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.post(
         url="http://gateway:8001/users/register",
         json=payload_new_user,
@@ -68,7 +69,7 @@ def test_users_register():
 
 
 def test_users_remove():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.delete(
         url="http://gateway:8001/users/remove",
         json=payload_old_user,
@@ -80,7 +81,7 @@ def test_users_remove():
 
 
 def test_data_download_prep_status():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(url="http://gateway:8001/data-download-prep/status")
     assert response.status_code == 200
     message = "Test /data-download-prep/status: PASSED"
@@ -88,7 +89,7 @@ def test_data_download_prep_status():
 
 
 def test_data_download_prep_run():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.post(
         url="http://gateway:8001/data-download-prep/run",
         json=payload_year_range,
@@ -100,7 +101,7 @@ def test_data_download_prep_run():
 
 
 def test_training_status():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(url="http://gateway:8001/training/status")
     assert response.status_code == 200
     message = "Test /training/status: PASSED"
@@ -108,7 +109,7 @@ def test_training_status():
 
 
 def test_training_train():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(
         url="http://gateway:8001/training/train", headers=header_admin
     )
@@ -118,7 +119,7 @@ def test_training_train():
 
 
 def test_prediction_status():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(url="http://gateway:8001/prediction/status")
     assert response.status_code == 200
     message = "Test /prediction/status: PASSED"
@@ -126,7 +127,7 @@ def test_prediction_status():
 
 
 def test_prediction_test():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(
         url="http://gateway:8001/prediction/test",
         headers=header_admin,
@@ -137,7 +138,7 @@ def test_prediction_test():
 
 
 def test_prediction_call():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.post(
         url="http://gateway:8001/prediction/call",
         json=payload_input_data_pred_call,
@@ -149,7 +150,7 @@ def test_prediction_call():
 
 
 def test_scoring_status():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(url="http://gateway:8001/scoring/status")
     assert response.status_code == 200
     message = "Test /scoring/status: PASSED"
@@ -157,7 +158,7 @@ def test_scoring_status():
 
 
 def test_scoring_label_prediction():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.post(
         url="http://gateway:8001/scoring/label-prediction",
         json=payload_input_data_label_pred,
@@ -169,7 +170,7 @@ def test_scoring_label_prediction():
 
 
 def test_scoring_update_f1_score():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(
         url="http://gateway:8001/scoring/update-f1-score",
         headers=header_admin,
@@ -180,7 +181,7 @@ def test_scoring_update_f1_score():
 
 
 def test_scoring_get_f1_scores():
-    time.sleep(5)
+    time.sleep(sleep_time)
     response = requests.get(
         url="http://gateway:8001/scoring/get-f1-scores",
         headers=header_admin,
