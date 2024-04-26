@@ -155,12 +155,12 @@ _Example:_ [`fabricecharraud/shield`](https://hub.docker.com/r/fabricecharraud/s
 
 #### 5. Add the Docker Hub repository's name to your execution environment
 
-Using the same terminal window as in [Step 3](#3-log-in-to-docker-hub-from-your-execution-environment), create an environmental variable named `DOCKER_REGISTRY` and assign to it the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
+In the `src/docker` directory, open the `.env` file and replace the double-quoted string with the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
 
 _Example:_
 
-```shell
-export DOCKER_HUB_REPO="fabricecharraud/shield"
+```text
+DOCKER_HUB_REPO="fabricecharraud/shield"
 ```
 
 [Back to instruction menu](#-getting-started-for-developers)
