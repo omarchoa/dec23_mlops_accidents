@@ -22,6 +22,9 @@ jobs:
     - name: Create `mariadb_data` directory for `database` microservice
       run: mkdir ~/mariadb_data
 
+    - name: Create `logs` directory for logs
+      run: mkdir ~/logs
+
     - name: Build Docker images and run Docker containers in background
       run: docker-compose -f src/docker/docker-compose-dev.yml up --detach
 

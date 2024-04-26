@@ -6,7 +6,8 @@ import requests
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict
-
+from sqlalchemy import text
+from sqlalchemy.engine import create_engine
 
 # >>>>>>>> CLASS DECLARATIONS <<<<<<<<
 
@@ -114,19 +115,19 @@ def verify_rights(identification, rights):
             status_code=403, detail=f"{user_type[rights]} rights required."
         )
 
+# define database uri
+SQLALCHEMY_DATABASE_URI = (
+    "mysql+pymysql://user:password@database:3306/shield_project_db"
+)
 
-log_directory = "/logs"
-# os.makedirs(log_directory, exist_ok=True)
 
-
-def log(start, user, data, logname):
+def log(start, data, logname):
     full_logname = f"/logs/{logname}"
     if not os.path.exists(full_logname):
         with open(full_logname, "w") as logfile:
             logfile.write("start;end;user;data\n")
-    end = str(datetime.datetime.now().timestamp())
     with open(full_logname, "a") as logfile:
-        logfile.write(f"{start};{end};{user};{data}\n")
+        logfile.write(f"{start};{data}\n")
 
 
 # >>>>>>>> ERROR MANAGEMENT <<<<<<<<
@@ -325,8 +326,43 @@ async def scoring_label_prediction(
 )
 async def scoring_update_f1_score(identification=Header(None)):
     start = str(datetime.datetime.now().timestamp())
-    user = verify_rights(identification, 1)  # 1 for robot and administrator
+    verify_rights(identification, 1)  # 1 for robot and administrator
     response = requests.get(url="http://scoring:8006/update_f1_score")
     f1_score = return_request(response).strip()
-    log(start, user, f1_score, "f1-score.csv")
+    log(start, f1_score, "f1-score.csv")
+    mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI)
+    with mariadb_engine.connect() as connection:
+        connection.execute(
+            text(
+                f'INSERT INTO f1_score_table (f1_score) VALUES ("{f1_score}");'
+            )
+        )
+        connection.execute(text("COMMIT;"))
     return f1_score
+
+
+# @api.get(
+#     path="/scoring/get_f1_score",
+#     tags=["MICROSERVICES - Scoring"],
+#     name="get f1 score",
+# )
+# async def get_f1_score():
+#     with open("/logs/f1-score.csv", "r") as log_file:
+#         content = log_file.readlines()
+#     string_result = "".join(content)
+#     return string_result
+
+
+@api.get(
+    path="/scoring/get_maria_f1_score",
+    tags=["MICROSERVICES - Scoring"],
+    name="get f1 score",
+)
+async def get_maria_f1_score():
+    mariadb_engine = create_engine(SQLALCHEMY_DATABASE_URI)
+    with mariadb_engine.connect() as connection:
+        results = connection.execute(text("SELECT * FROM f1_score_table;"))
+        f1_score_list = [f"{time.timestamp()};{score}" for time, score in results]
+        f1_score_list.insert(0, "timestamp;f1-score")
+        f1_scores = "\n".join(f1_score_list)
+    return f1_scores

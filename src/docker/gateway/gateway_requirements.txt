@@ -1,3 +1,5 @@
 fastapi
+pymysql
 requests
+sqlalchemy
 uvicorn
