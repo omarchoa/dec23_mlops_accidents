@@ -65,7 +65,6 @@ services:
         source: ~/logs
         target: /logs
 
-
   # users microservice
   users:
     depends_on:
