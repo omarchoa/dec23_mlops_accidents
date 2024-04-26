@@ -27,4 +27,7 @@ jobs:
       run: docker-compose -f src/docker/docker-compose-dev.yml up --detach
 
     - name: Run unit tests
+      env:
+        MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+        MARIADB_PASSWORD: ${{ secrets.MARIADB_PASSWORD }}
       run: docker exec testing pytest -v /home/shield/testing/testing.py
