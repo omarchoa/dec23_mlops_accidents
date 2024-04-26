@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - env-vars-&-secrets
   pull_request:
     branches:
       - master
