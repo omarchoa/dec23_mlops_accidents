@@ -160,7 +160,7 @@ Using the same terminal window as in [Step 3](#3-log-in-to-docker-hub-from-your-
 _Example:_
 
 ```shell
-export DOCKER_REGISTRY="fabricecharraud/shield"
+export DOCKER_HUB_REPO="fabricecharraud/shield"
 ```
 
 [Back to instruction menu](#-getting-started-for-developers)
