@@ -1,6 +1,6 @@
-import requests
 import time
 
+import requests
 
 header_admin = {"identification": "admin:4dmin"}
 payload_new_user = {"username": "antoine", "password": "jussieu", "rights": 0}
@@ -159,7 +159,7 @@ def test_scoring_status():
 def test_scoring_label_prediction():
     time.sleep(5)
     response = requests.post(
-        url="http://gateway:8001/scoring/label_prediction",
+        url="http://gateway:8001/scoring/label-prediction",
         json=payload_input_data_label_pred,
         headers=header_admin,
     )
@@ -171,7 +171,18 @@ def test_scoring_label_prediction():
 def test_scoring_update_f1_score():
     time.sleep(5)
     response = requests.get(
-        url="http://gateway:8001/scoring/update_f1_score",
+        url="http://gateway:8001/scoring/update-f1-score",
+        headers=header_admin,
+    )
+    assert response.status_code == 200
+    message = "Test /scoring/update_f1_score: PASSED"
+    print(message)
+
+
+def test_scoring_get_f1_scores():
+    time.sleep(5)
+    response = requests.get(
+        url="http://gateway:8001/scoring/get-f1-scores",
         headers=header_admin,
     )
     assert response.status_code == 200

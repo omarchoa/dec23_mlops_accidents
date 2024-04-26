@@ -2,5 +2,7 @@ fastapi
 joblib
 numpy
 pandas
+pymysql
 scikit-learn
+sqlalchemy
 uvicorn
