@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - env-vars
   pull_request:
     branches:
       - master
