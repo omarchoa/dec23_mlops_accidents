@@ -160,6 +160,11 @@ services:
     container_name: testing
     networks:
       - shield
+    volumes:
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+        read_only: true
 
 # initialization microservice
   initialization:
