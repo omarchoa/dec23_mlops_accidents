@@ -76,6 +76,7 @@ def return_request(response):
     if response.status_code == 200:
         return eval(response.content.decode("utf-8"))
     else:
+        print(response.content.decode("utf-8"))
         raise HTTPException(status_code=400, detail="Bad request.")
 
 
@@ -345,3 +346,22 @@ async def scoring_get_f1_scores(identification=Header(None)):
 
     ## return f1 scores
     return f1_scores
+
+
+@api.get(
+    path="/scoring/get-latest-f1-score",
+    tags=["MICROSERVICES - Scoring"],
+    name="get latest f1-score",
+)
+async def scoring_get_latest_f1_score(identification=Header(None)):
+    ## perform authentication and authorization checks
+    verify_rights(identification, 1)  ### 1 for robot and administrator
+
+    ## call mirror endpoint in `scoring` microservice
+    response = requests.get(url="http://scoring:8006/get-latest-f1-score")
+
+    ## save latest f1-score from `scoring` microservice response
+    f1_score = return_request(response)
+
+    ## return latest f1-score
+    return f1_score

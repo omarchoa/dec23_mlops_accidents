@@ -14,11 +14,16 @@ services:
         target: /var/lib/mysql
     networks:
       - shield
+    ports:
+        - target: 3306
+          published: "3306"
 
   # api gateway
   gateway:
     depends_on:
       database:
+        condition: service_started
+      data-download-prep:
         condition: service_started
     pull_policy: build
     build:
@@ -54,9 +59,9 @@ services:
 
   # data-download-prep microservice
   data-download-prep:
-    depends_on:
-      gateway:
-        condition: service_started
+    # depends_on:
+    #   gateway:
+    #     condition: service_started
     pull_policy: build
     build:
       context: data-download-prep
@@ -156,7 +161,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/testing/testing.Dockerfile
-    image: omarchoa/shield:testing
+    image: ${DOCKER_HUB_REPO}:testing
     container_name: testing
     networks:
       - shield

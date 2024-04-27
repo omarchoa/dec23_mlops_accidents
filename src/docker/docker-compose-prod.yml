@@ -3,7 +3,7 @@ services:
   # dummy microservice (dev tool)
   dummy:
     pull_policy: always ## always pull the image from Docker Hub
-    image: "${DOCKER_HUB_REPO}:dummy"
+    image: ${DOCKER_HUB_REPO}:dummy
     container_name: dummy
     networks:
       - shield
@@ -36,7 +36,7 @@ services:
       dummy:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_HUB_REPO}:gateway"
+    image: ${DOCKER_HUB_REPO}:gateway
     container_name: gateway
     networks:
       - shield
@@ -52,7 +52,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_HUB_REPO}:users"
+    image: ${DOCKER_HUB_REPO}:users
     container_name: users
     networks:
       - shield
@@ -63,7 +63,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_HUB_REPO}:data-download-prep"
+    image: ${DOCKER_HUB_REPO}:data-download-prep
     container_name: data-download-prep
     networks:
       - shield
@@ -81,7 +81,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_HUB_REPO}:training"
+    image: ${DOCKER_HUB_REPO}:training
     container_name: training
     networks:
       - shield
@@ -103,7 +103,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_HUB_REPO}:prediction"
+    image: ${DOCKER_HUB_REPO}:prediction
     container_name: prediction
     networks:
       - shield
@@ -126,7 +126,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_HUB_REPO}:scoring"
+    image: ${DOCKER_HUB_REPO}:scoring
     container_name: scoring
     networks:
       - shield
@@ -146,7 +146,7 @@ services:
   # testing microservice
   testing:
     pull_policy: always
-    image: omarchoa/shield:testing
+    image: ${DOCKER_HUB_REPO}:testing
     container_name: testing
     networks:
       - shield
