@@ -303,13 +303,7 @@ async def scoring_label_prediction(
     verify_rights(identification, 0)  # at least user rights
     payload = input_data.model_dump()
     response = requests.post(url="http://scoring:8006/label-prediction", json=payload)
-    response_clean = str(response.content)[3:-2]  ### strip unnecessary characters
-    if "updated" in response_clean:
-        return JSONResponse(content=response_clean)
-    elif "not found" in response_clean:
-        raise HTTPException(status_code=404, detail=response_clean)
-    else:
-        raise HTTPException(status_code=400, detail="Bad request.")
+    return return_request(response)
 
 
 @api.get(

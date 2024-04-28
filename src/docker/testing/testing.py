@@ -204,3 +204,13 @@ def test_scoring_get_f1_scores():
     assert response.status_code == 200
     message = "Test /scoring/update_f1_score: PASSED"
     print(message)
+
+
+def test_frontend_status():
+    time.sleep(delay)
+    response = requests.get(
+        url="http://frontend:8501/",
+    )
+    assert response.status_code == 200
+    message = "Test /frontend/status: PASSED"
+    print(message)

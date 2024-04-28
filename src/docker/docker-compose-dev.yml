@@ -191,6 +191,23 @@ services:
         source: models
         target: /home/shield/models
 
+  # frontend app
+  frontend:
+    depends_on:
+      gateway:
+        condition: service_started
+    pull_policy: build
+    build:
+      context: frontend
+      dockerfile: frontend.Dockerfile
+    image: ${DOCKER_HUB_REPO}:frontend
+    container_name: frontend
+    networks:
+      - shield
+    ports:
+        - target: 8501
+          published: "8501"
+
 
 # network declarations
 networks:
