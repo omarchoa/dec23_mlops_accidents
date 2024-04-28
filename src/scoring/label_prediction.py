@@ -4,7 +4,6 @@ import sys
 
 from config import paths
 
-
 # load prediction label from input file
 input = sys.argv[1]
 with open(input, "r") as file:
@@ -33,6 +32,6 @@ for record in preds_unlabeled:
 
 # print response
 if record_exists == "yes":
-    print("Record updated. Thank you for your feedback.")
+    print("Enregistrement mis à jour. Merci pour votre retour.")
 else:
-    print("Record not found. Please provide a valid request_id.")
+    print("Enregistrement non trouvé. Veuillez fournir une référence valable.")

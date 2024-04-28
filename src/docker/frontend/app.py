@@ -514,14 +514,22 @@ def show_feedback_features():
 
     # Bouton pour soumettre la correction
     if st.button("Soumettre la correction"):
-        # Traitement de la correction
-        if accident_reference:
-            # Vous pouvez ici inclure le code pour traiter la correction de l'accident
-            st.success(
-                f"Correction soumise pour l'accident {accident_reference} avec gravité : {accident_gravity}"
-            )
-        else:
-            st.warning("Veuillez entrer une référence d'accident.")
+        ## Convertir les données d'entrée au format attendu par le microservice `scoring`
+        y_true = 1 if accident_gravity == "Grave" else 0
+        input_data_label_pred = {"request_id": accident_reference, "y_true": y_true}
+
+        ## Appeler le microservice `scoring` en lui passant les données d'entrée et la chaîne d'authentification
+        response = requests.post(
+            url="http://scoring:8006/label-prediction",
+            json=input_data_label_pred,
+            headers=st.session_state["authentication_string"],
+        )
+
+        ## Afficher la réponse du microservice `scoring`
+        if "Merci" in response.text:
+            st.success(response.text)
+        elif "Veuillez" in response.text:
+            st.error(response.text)
 
 
 def show_graph():
