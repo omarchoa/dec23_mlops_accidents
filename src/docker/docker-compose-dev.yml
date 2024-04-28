@@ -21,9 +21,7 @@ services:
   # api gateway
   gateway:
     depends_on:
-      database:
-        condition: service_started
-      data-download-prep:
+      training:
         condition: service_started
     pull_policy: build
     build:
@@ -46,8 +44,6 @@ services:
     depends_on:
       database:
         condition: service_started
-      gateway:
-        condition: service_started
     pull_policy: build
     build:
       context: users
@@ -59,9 +55,9 @@ services:
 
   # data-download-prep microservice
   data-download-prep:
-    # depends_on:
-    #   gateway:
-    #     condition: service_started
+    depends_on:
+      users:
+        condition: service_started
     pull_policy: build
     build:
       context: data-download-prep
@@ -81,7 +77,7 @@ services:
   # training microservice
   training:
     depends_on:
-      gateway:
+      data-download-prep:
         condition: service_started
     pull_policy: build ## always build the image from a local Dockerfile
     build:
