@@ -1,61 +1,45 @@
 services:
 
-  # dummy microservice (dev tool)
-  dummy:
-    pull_policy: build
-    build:
-      context: ../..
-      dockerfile: src/docker/dummy/dummy.Dockerfile
-    image: ${DOCKER_REGISTRY}:dummy
-    container_name: dummy
-    networks:
-      - shield
-    volumes:
-      - type: volume
-        source: data-download-prep
-        target: /home/shield/data-download-prep
-      - type: volume
-        source: logs
-        target: /home/shield/logs
-      - type: volume
-        source: models
-        target: /home/shield/models
-
   # database microservice
   database:
-    image: mariadb:10.8.2
+    pull_policy: build
+    build:
+      context: database
+      dockerfile: database.Dockerfile
+    image: ${DOCKER_HUB_REPO}:database
     container_name: database
-    environment:
-      - MARIADB_ROOT_PASSWORD=password
-      - MARIADB_DATABASE=shield_project_db
-      - MARIADB_USER=user
-      - MARIADB_PASSWORD=password
     volumes:
       - type: bind
         source: ~/mariadb_data
         target: /var/lib/mysql
-      - type: bind
-        source: ./database
-        target: /docker-entrypoint-initdb.d
     networks:
       - shield
+    ports:
+        - target: 3306
+          published: "3306"
 
   # api gateway
   gateway:
     depends_on:
-      dummy:
+      database:
+        condition: service_started
+      data-download-prep:
         condition: service_started
     pull_policy: build
     build:
       context: gateway
       dockerfile: gateway.Dockerfile
-    image: ${DOCKER_REGISTRY}:gateway
+    image: ${DOCKER_HUB_REPO}:gateway
     container_name: gateway
     networks:
       - shield
     ports:
         - target: 8001
           published: "8001"
+    volumes:
+      - type: bind
+        source: ~/logs
+        target: /logs
 
   # users microservice
   users:
@@ -68,21 +52,21 @@ services:
     build:
       context: users
       dockerfile: Dockerfile
-    image: ${DOCKER_REGISTRY}:users
+    image: ${DOCKER_HUB_REPO}:users
     container_name: users
     networks:
       - shield
 
   # data-download-prep microservice
   data-download-prep:
-    depends_on:
-      gateway:
-        condition: service_started
+    # depends_on:
+    #   gateway:
+    #     condition: service_started
     pull_policy: build
     build:
       context: data-download-prep
       dockerfile: Dockerfile
-    image: ${DOCKER_REGISTRY}:data-download-prep
+    image: ${DOCKER_HUB_REPO}:data-download-prep
     container_name: data-download-prep
     networks:
       - shield
@@ -103,7 +87,7 @@ services:
     build:
       context: ../.. ## use repo root as build context to enable Dockerfile to access files located outside of its own working directory
       dockerfile: src/docker/training/training.Dockerfile ## path to Dockerfile
-    image: ${DOCKER_REGISTRY}:training
+    image: ${DOCKER_HUB_REPO}:training
     container_name: training
     networks:
       - shield
@@ -128,7 +112,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/prediction/prediction.Dockerfile
-    image: ${DOCKER_REGISTRY}:prediction
+    image: ${DOCKER_HUB_REPO}:prediction
     container_name: prediction
     networks:
       - shield
@@ -154,7 +138,7 @@ services:
     build:
       context: ../..
       dockerfile: src/docker/scoring/scoring.Dockerfile
-    image: ${DOCKER_REGISTRY}:scoring
+    image: ${DOCKER_HUB_REPO}:scoring
     container_name: scoring
     networks:
       - shield
@@ -171,22 +155,45 @@ services:
         target: /home/shield/models
         read_only: true
 
-  # frontend app
-  streamlit:
+  # testing microservice
+  testing:
+    pull_policy: build
+    build:
+      context: ../..
+      dockerfile: src/docker/testing/testing.Dockerfile
+    image: ${DOCKER_HUB_REPO}:testing
+    container_name: testing
+    networks:
+      - shield
+    volumes:
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+        read_only: true
+
+# initialization microservice
+  initialization:
     depends_on:
       gateway:
         condition: service_started
     pull_policy: build
     build:
-      context: ../..
-      dockerfile: src/docker/streamlit/streamlit.Dockerfile
-    image: ${DOCKER_REGISTRY}:streamlit
-    container_name: streamlit
+      context: initialization
+      dockerfile: initialization.Dockerfile
+    image: ${DOCKER_HUB_REPO}:initialization
+    container_name: initialization
     networks:
       - shield
-    ports:
-        - target: 8501
-          published: "8501"
+    volumes:
+      - type: volume
+        source: data-download-prep
+        target: /home/shield/data-download-prep
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
 
 
 # network declarations

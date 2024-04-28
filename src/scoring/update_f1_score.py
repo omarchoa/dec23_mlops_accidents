@@ -66,5 +66,4 @@ log_json = json.dumps(obj=log_dict)
 with open(paths.LOGS_F1_SCORES, "a") as file:
     file.write(log_json + "\n")
 
-# print response
-print("F1 score successfully updated.")
+print(f1_score_macro_average)

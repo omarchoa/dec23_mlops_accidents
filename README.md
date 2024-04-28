@@ -24,7 +24,7 @@
 
 **Figure 1** illustrates the global app architecture.
 
-![SHIELD global architecture](/reports/figures/architecture_v2.png)
+![SHIELD global architecture](/reports/figures/architecture_global.png)
 <p align="center">
     <b>Figure 1.</b> The global app architecture.
 </p>
@@ -33,7 +33,7 @@ Each microservice runs in its own Docker container. Requests are handled by a de
 
 **Figure 2** illustrates this sub-architecture, taking the `training` microservice as an example.
 
-![Training microservice sub-architecture](/reports/figures/architecture_v2_training.png)
+![Training microservice sub-architecture](/reports/figures/architecture_sub_training.png)
 <p align="center">
     <b>Figure 2.</b> The sub-architecture of the <code>training</code> microservice.
 </p>
@@ -49,25 +49,31 @@ The repository is structured as follows:
 ├── README.md                           <- The top-level README for developers using this
 │                                          project.
 │
+├── requirements.txt                    <- The requirements file for reproducing the analysis
+│                                          environment, e.g. generated with `pip freeze >
+│                                          requirements.txt`
+│
+├── .github/
+│    │
+│    └── workflows/                     <- GitHub workflow files.
+│
 ├── data/
 │    │
-│    ├── (in .gitignore) cleaned/       <- Intermediate data that has been transformed.
+│    ├── cleaned/ (in .gitignore)       <- Intermediate data that has been transformed.
 │    │
-│    ├── (in .gitignore) preprocessed/  <- The final, canonical data sets for modeling.
+│    ├── preprocessed/ (in .gitignore)  <- The final, canonical data sets for modeling.
 │    │
-│    ├── (in .gitignore) raw/           <- The original, immutable data dump.
+│    ├── raw/ (in .gitignore)           <- The original, immutable data dump.
 │    │
 │    └── sample/                        <- Sample data for testing and debugging.
 │
-├── logs/                               <- Logs from training and predicting.
-│
-├── models/                             <- Trained and serialized models, model predictions,
+├── models/ (contents in .gitignore)    <- Trained and serialized models, model predictions,
 │                                          or model summaries.
 │
 ├── notebooks/                          <- Jupyter notebooks. Naming convention is a number
 │                                          (for ordering), the creator's initials, and a short
-│                                          `-` delimited description, e.g.
-│                                          `1.0-jqp-initial-data-exploration`.
+│                                          `-` delimited description, e.g. `1.0-jqp-initial-
+│                                          data-exploration`.
 │
 ├── references/                         <- Data dictionaries, manuals, and all other
 │                                          explanatory materials.
@@ -81,14 +87,12 @@ The repository is structured as follows:
 │    │
 │    ├── config/                        <- Configuration package with helper modules.
 │    │
-│    ├── data/                          <- Scripts to download or generate data.
-│    │
 │    ├── docker/                        <- Scripts to build Docker images and run Docker
 │    │    │                                containers.
 │    │    │
-│    │    ├── bdd/                      <- Scripts for the `users` microservice.
+│    │    ├── data-download-prep/       <- Scripts for the `data-download-prep` microservice.
 │    │    │
-│    │    ├── data/                     <- Scripts for the `data` microservice.
+│    │    ├── database/                 <- Scripts for the `database` microservice.
 │    │    │
 │    │    ├── dummy/                    <- Scripts for the `dummy` microservice (for testing
 │    │    │                                and debugging).
@@ -99,42 +103,134 @@ The repository is structured as follows:
 │    │    │
 │    │    ├── scoring/                  <- Scripts for the `scoring` microservice.
 │    │    │
-│    │    └── training/                 <- Scripts for the `training` microservice.
+│    │    ├── testing/                  <- <- Tools and utilities for unit testing.
+│    │    │
+│    │    ├── training/                 <- Scripts for the `training` microservice.
+│    │    │
+│    │    └── users/                    <- Scripts for the `users` microservice.
 │    │
 │    ├── models/                        <- Scripts to train models and then use trained models
 │    │                                     to make predictions.
 │    │
-│    └── scoring/                       <- Scripts for model performance scoring.
-│
-└── tests/                              <- Tools and utilities for unit testing.
+│    ├── scoring/                       <- Scripts for model performance scoring.
+│    │
+│    └── script/                        <- Tools and utilities for app setup and automation.
 ```
 
 
-## 🎬 Getting Started
+## 🎬 Getting Started for Developers
 
-To use the app from the repository root:
+These instructions are divided into three sections:
+- [🐳 Set up the Docker environment](#-set-up-the-docker-environment)
+- [🗃️ Set up the app](#%EF%B8%8F-set-up-the-app)
+- [⚙️ Use the app](#%EF%B8%8F-use-the-app)
 
-### 1. Install Docker
+---
 
-[Instructions](https://docs.docker.com/get-docker/) for a wide variety of platforms are available on the official Docker website.
+### 🐳 **Set up the Docker environment**
 
-### 2. Launch the app
+#### 1. Get Docker
 
-To build the Docker images from the repository Dockerfiles, run the following command:
+[Instructions](https://docs.docker.com/get-docker/) are available in the official Docker documentation.
+
+#### 2. Create a Docker ID
+
+[Instructions](https://docs.docker.com/docker-id/) are available in the official Docker documentation.
+
+_Example:_ [`fabricecharraud`](https://hub.docker.com/u/fabricecharraud)
+
+#### 3. Log in to Docker Hub from your execution environment
+
+Open a terminal window and run the following command, replacing `<username>` and `<password>` with the credentials that you used to create your Docker ID in [Step 2](#2-create-a-docker-id):
+
+```text
+docker login -u <username> -p <password>
+```
+
+#### 4. Create a Docker Hub repository to host your version of the app
+
+[Instructions](https://docs.docker.com/docker-hub/repos/create/) are available in the official Docker documentation.
+
+_Example:_ [`fabricecharraud/shield`](https://hub.docker.com/r/fabricecharraud/shield)
+
+#### 5. Add the Docker Hub repository's name to your execution environment
+
+In the `src/docker` directory, open the `.env` file and replace the double-quoted string with the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
+
+_Example:_
+
+```text
+DOCKER_HUB_REPO="fabricecharraud/shield"
+```
+
+[Back to instruction menu](#-getting-started-for-developers)
+
+---
+
+### 🗃️ **Set up the app**
+
+#### 6. Clone the app's GitHub repository
+
+[Instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) for a wide variety of methods are available in the official GitHub documentation, the simplest being the execution of the following command:
+
+```shell
+git clone https://github.com/omarchoa/dec23_mlops_accidents.git
+```
+
+#### 7. Set up a Python virtual environment
+
+Using Python's `venv` module, with `sword` as the virtual environment name, run the following commands:
+
+```shell
+python -m venv sword
+chmod +x ./sword/bin/activate
+source ./sword/bin/activate
+```
+
+#### 8. Install the app's global dependencies
+
+From the directory into which you cloned the GitHub repository in [Step 6](#6-clone-the-apps-github-repository), run the following command:
+
+```shell
+pip install -r requirements.txt
+```
+
+#### 9. Create the app's directory dependencies
+
+Run the following command:
+
+```shell
+mkdir ~/mariadb_data
+```
+
+#### 10. Build the Docker container images and launch the app
+
+Using the same terminal window as in [Step 5](#5-add-the-docker-hub-repositorys-name-to-your-execution-environment), go to the directory into which you cloned the GitHub repository in [Step 6](#6-clone-the-apps-github-repository) and run the following command:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml up
 ```
 
-To pull the Docker images from Docker Hub instead, run the following command:
+#### 11. Push the Docker container images to Docker Hub
+
+To upload the Docker container images to the Docker Hub repository created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app):
+- Open a new terminal window.
+- Go to the directory into which you cloned the GitHub repository in [Step 6](#6-clone-the-apps-github-repository).
+- Run the following command:
 
 ```shell
-docker-compose -f ./src/docker/docker-compose-prod.yml up
+python ./src/script/push_images.py
 ```
 
-### 3. Check service status
+[Back to instruction menu](#-getting-started-for-developers)
 
-To ping the API gateway, open a new terminal window and run the following command:
+---
+
+### ⚙️ **Use the app**
+
+#### 12. Check service status
+
+To ping the API gateway, run the following command:
 
 ```shell
 curl -X GET i http://0.0.0.0:8001/gateway/status/
@@ -146,73 +242,33 @@ You should receive the following response:
 "The API gateway is up."
 ```
 
-### 4. Try out the microservice features
+#### 13. Try out the microservice features
 
-The full, interactive list of endpoints is accessible via the API gateway's Swagger UI at [`http://0.0.0.0:8001/docs`](http://0.0.0.0:8001/docs).
+The full, interactive list of endpoints is accessible via the API gateway's Swagger UI at [`http://0.0.0.0:8001/docs`](http://0.0.0.0:8001/docs) or [`http://localhost:8001/docs`](http://localhost:8001/docs).
 
 > [!IMPORTANT]
 > Certain endpoints require **user authentication**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `fdo:c0ps`.
 >
 > Other endpoints additionally require **administrator authorization**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `admin:4dmin`.
 
-### 5. Stop the app
+#### 14. Stop the app
 
-To stop the app, return to the terminal window that you used to launch it in [Step 2](#2-launch-the-app) and press `Ctrl + C`.
+To stop the app, return to the terminal window that you used to launch it in [Step 10](#10-build-the-docker-container-images-and-launch-the-app) and press `Ctrl + C`.
 
-### 6. Resume the app
+#### 15. Resume the app
 
-To resume the app, run the same command that you used in [Step 2](#2-launch-the-app).
+To resume the app, run the same command that you used in [Step 10](#10-build-the-docker-container-images-and-launch-the-app):
 
-### 7. Shut down the app
+```shell
+docker-compose -f ./src/docker/docker-compose-dev.yml up
+```
 
-To shut down the app, run the same command that you used in [Step 2](#3-launch-the-app), replacing `up` with `down`:
+#### 16. Shut down the app
+
+To shut down the app, run the same command that you used in [Step 10](#10-build-the-docker-container-images-and-launch-the-app), replacing `up` with `down`:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml down
 ```
 
-_or_
-
-```shell
-docker-compose -f ./src/docker/docker-compose-prod.yml down
-```
-
-
-<!--
-
-
-
-### 4- Execute train_model.py to instanciate the model in joblib format
-
-    `python .\src\models\train_model.py`
-
-
-### 6- Check if the api is running:
-
-In a new terminal, type:
-
-    `curl.exe -X GET http://127.0.0.1:8000/status`
-
-It should return: "L'api fonctionne."
-
-### 7- Run the tests:
-
-`python ./src/features/api/test_api.py`
-
-### 8- Manually test the api:
-
-In your navigator, go to http://127.0.0.1:8000/docs
-
-You can test all the endpoints. When needed, you will be asked a username and a password. We implemented two types of users:
-_ Adminstrator Users: try it with `admin:4dmin`. This user's type can run every endpoint.
-_ Standard Users: try it with `fdo:c0ps`. This user's type can only run the following endpoints: /status (which doesn't requires any identification), /predict_from_call, /predict_from_test, /label
-
-### 9- Test the api with terminal command:
-
-Commands are not available for Windows for now. You will have to test the endpoints by going to http://127.0.0.1:8000/docs in your navigator (please refer to ### 8- for further informations.)
-
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
-
-
--->
-
+[Back to instruction menu](#-getting-started-for-developers)

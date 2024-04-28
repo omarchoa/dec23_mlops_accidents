@@ -3,7 +3,7 @@ services:
   # dummy microservice (dev tool)
   dummy:
     pull_policy: always ## always pull the image from Docker Hub
-    image: "${DOCKER_REGISTRY}:dummy"
+    image: ${DOCKER_HUB_REPO}:dummy
     container_name: dummy
     networks:
       - shield
@@ -21,20 +21,12 @@ services:
   # database microservice
   database:
     pull_policy: always
-    image: mariadb:10.8.2
+    image: ${DOCKER_HUB_REPO}:database
     container_name: database
-    environment:
-      - MARIADB_ROOT_PASSWORD=password
-      - MARIADB_DATABASE=shield_project_db
-      - MARIADB_USER=user
-      - MARIADB_PASSWORD=password
     volumes:
       - type: bind
         source: ~/mariadb_data
         target: /var/lib/mysql
-      - type: bind
-        source: ./database
-        target: /docker-entrypoint-initdb.d
     networks:
       - shield
 
@@ -44,7 +36,7 @@ services:
       dummy:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_REGISTRY}:gateway"
+    image: ${DOCKER_HUB_REPO}:gateway
     container_name: gateway
     networks:
       - shield
@@ -60,7 +52,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_REGISTRY}:users"
+    image: ${DOCKER_HUB_REPO}:users
     container_name: users
     networks:
       - shield
@@ -71,7 +63,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_REGISTRY}:data-download-prep"
+    image: ${DOCKER_HUB_REPO}:data-download-prep
     container_name: data-download-prep
     networks:
       - shield
@@ -89,7 +81,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_REGISTRY}:training"
+    image: ${DOCKER_HUB_REPO}:training
     container_name: training
     networks:
       - shield
@@ -111,7 +103,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_REGISTRY}:prediction"
+    image: ${DOCKER_HUB_REPO}:prediction
     container_name: prediction
     networks:
       - shield
@@ -134,7 +126,7 @@ services:
       gateway:
         condition: service_started
     pull_policy: always
-    image: "${DOCKER_REGISTRY}:scoring"
+    image: ${DOCKER_HUB_REPO}:scoring
     container_name: scoring
     networks:
       - shield
@@ -151,19 +143,13 @@ services:
         target: /home/shield/models
         read_only: true
 
-  # frontend app
-  streamlit:
-    depends_on:
-      gateway:
-        condition: service_started
+  # testing microservice
+  testing:
     pull_policy: always
-    image: ${DOCKER_REGISTRY}:streamlit
-    container_name: streamlit
+    image: ${DOCKER_HUB_REPO}:testing
+    container_name: testing
     networks:
       - shield
-    ports:
-        - target: 8501
-          published: "8501"
 
 
 # network declarations
