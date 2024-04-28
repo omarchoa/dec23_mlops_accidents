@@ -12,7 +12,6 @@ import pandas as pd
 
 from config import paths
 
-
 # load model
 model = joblib.load(paths.MODEL_TRAINED)
 
@@ -77,9 +76,11 @@ if __name__ == "__main__":
 
     # define response
     if priority == 1:
-        response = "Road accident priority level: high."
+        severity = "Accident grave."
     else:
-        response = "Road accident priority level: low."
+        severity = "Accident non grave."
+    reference = "Référence : " + log_dict["request_id"] + "."
+    response = severity + " " + reference
 
     # print response
     print(response)

@@ -153,9 +153,9 @@ async def users_status():
     return return_request(response)
 
 
-# @api.get(path="/users/all", tags=["MICROSERVICES - Users"], name="get all users")
-# async def users_all():
-#     return get_all_users()
+@api.get(path="/users/all", tags=["MICROSERVICES - Users"], name="get all users")
+async def users_all():
+    return get_all_users()
 
 
 @api.post(path="/users/register", tags=["MICROSERVICES - Users"], name="register user")
