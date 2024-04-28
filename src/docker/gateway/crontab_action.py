@@ -3,24 +3,47 @@ import os
 import requests
 
 threshold = 0.75
-now = str(datetime.datetime.now())
-f1_score_file = "/logs/f1-score.csv"
+URI = "http://0.0.0.0:8001"  # gateway
+log_filename = "/logs/crontab.csv"
+retraining = False
 
-if not os.path.exists(f1_score_file):
-    comment = 'file "f1-score.csv" not existing'
+
+def format_timestamp(timestamp):
+    return timestamp.strftime('%Y-%m-%d %H:%M:%S')
+
+
+def log(start, comment):
+    with open(log_filename, "a") as log_file:
+        log_file.write(f"{format_timestamp(start)}: {comment}\n")
+
+
+start = datetime.datetime.now()
+response = requests.get(
+    url=f"{URI}/scoring/get-latest-f1-score",
+    headers={"identification": "robot:Autom@t"},
+)
+
+if response.status_code == 200:
+    latest_score = eval(response.content.decode("utf-8"))
+    if latest_score >= threshold:
+        comment = f"latest_score ({latest_score}) >= threshold ({threshold}): nothing to do"
+    else:
+        comment = f"latest_score ({latest_score}) < threshold ({threshold}): model shall be retrained !"
+        retraining = True
 else:
-    try:
-        with open(f1_score_file, "r") as f1_file:
-            for line in f1_file:
-                pass
-        latest_score = float(line.split(";")[-1].strip())
-        if latest_score >= threshold:
-            comment = f"latest_score ({latest_score}) >= threshold ({threshold}): nothing to do"
-        else:
-            comment = f"latest_score ({latest_score}) < threshold ({threshold}): model shall be retrained !"
-    except:
-        comment = "latest f1-score can't be extracted from f1-score.csv"
+    comment = f"request status on {URI}/scoring/get-latest-f1-score: {response.status_code}"
 
-end = str(datetime.datetime.now())
-with open("/logs/crontab.csv", "a") as log_file:
-    log_file.write(f"{now};{end};{comment}\n")
+log(start, comment)
+
+if retraining:
+    start = datetime.datetime.now()
+    response = requests.get(
+        url=f"{URI}/training/train",
+        headers={"identification": "robot:Autom@t"},
+    )
+    if response.status_code == 200:
+        end = datetime.datetime.now()
+        comment = f"retraining took {end - start} s"
+    else:
+        comment = f"retraining failed, request status on {URI}/training/train: {response.status_code}"
+    log(start, comment)

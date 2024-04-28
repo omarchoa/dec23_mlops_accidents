@@ -116,13 +116,10 @@ def verify_rights(identification, rights):
         )
 
 
-def log(start, data, logname):
+def log(data, logname):
     full_logname = f"/logs/{logname}"
-    if not os.path.exists(full_logname):
-        with open(full_logname, "w") as logfile:
-            logfile.write("start;end;user;data\n")
     with open(full_logname, "a") as logfile:
-        logfile.write(f"{start};{data}\n")
+        logfile.write(f"{data}\n")
 
 
 # >>>>>>>> API GATEWAY DECLARATION <<<<<<<<
@@ -230,8 +227,19 @@ async def training_status():
 
 @api.get(path="/training/train", tags=["MICROSERVICES - Training"], name="train model")
 async def training_train(identification=Header(None)):
-    verify_rights(identification, 1)  # 1 for robot and administrator
+    user = verify_rights(identification, 1)  # 1 for robot and administrator
+
+    ## get current timestamp
+    start = datetime.datetime.now()
+
     response = requests.get(url="http://training:8004/train")
+
+    ## get current timestamp
+    end = datetime.datetime.now()
+
+    ## save train information into csv file
+    log(f"{start.strftime('%Y-%m-%d %H:%M:%S')}: {user}, training took {end - start}s", "training.csv")
+
     return return_request(response)
 
 
@@ -310,9 +318,6 @@ async def scoring_label_prediction(
     name="update f1 score",
 )
 async def scoring_update_f1_score(identification=Header(None)):
-    ## get current timestamp
-    start = str(datetime.datetime.now().timestamp())
-
     ## perform authentication and authorization checks
     verify_rights(identification, 1)  ### 1 for robot and administrator
 
@@ -321,9 +326,6 @@ async def scoring_update_f1_score(identification=Header(None)):
 
     ## save f1 score from `scoring` microservice response
     f1_score = return_request(response)
-
-    ## save f1 score to csv file
-    log(start, f1_score, "f1-score.csv")
 
     ## return f1 score
     return f1_score
