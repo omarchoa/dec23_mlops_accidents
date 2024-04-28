@@ -189,6 +189,9 @@ services:
         source: data-download-prep
         target: /home/shield/data-download-prep
       - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
         source: models
         target: /home/shield/models
 
