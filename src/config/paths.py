@@ -34,7 +34,7 @@ MODEL_TRAINED_NEW = Path(MODEL_SAVES, "new_trained_model.joblib")
 # script paths
 SCRIPTS = Path(ROOT, "src")
 SCRIPTS_DOCKER = Path(SCRIPTS, "docker")
-SCRIPTS_MODELS_TRAIN = Path(SCRIPTS_DOCKER, "training", "training.py")
+SCRIPTS_MODELS_TRAIN = Path(SCRIPTS_DOCKER, "training", "training_script.py")
 SCRIPTS_MODELS_PREDICT = Path(SCRIPTS_DOCKER, "prediction", "prediction.py")
 SCRIPTS_SCORING = Path(SCRIPTS, "scoring")
 SCRIPTS_SCORING_LABEL_PREDICTION = Path(SCRIPTS_SCORING, "label_prediction.py")
