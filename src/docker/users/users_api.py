@@ -18,23 +18,23 @@ class OldUser(BaseModel):
     user: str
 
 
+# define database connection
+SQLALCHEMY_DATABASE_URI = (
+    "mysql+pymysql://user:password@database:3306/shield_project_db"
+)
+mariadb_engine = create_engine(
+    SQLALCHEMY_DATABASE_URI, echo=False
+)  # echo is for debug mode
+
+
 # define function to get all users from database
 def get_users_db():
-    mariadb_engine = create_engine(
-        SQLALCHEMY_DATABASE_URI, echo=False
-    )  # echo is for debug mode
     with mariadb_engine.connect() as connection:
         results = connection.execute(text("SELECT * FROM users_table;"))
         users_db = {
             login: {"pwd": pwd, "admin": admin} for login, pwd, admin in results
         }
     return users_db
-
-
-# define database uri
-SQLALCHEMY_DATABASE_URI = (
-    "mysql+pymysql://user:password@database:3306/shield_project_db"
-)
 
 
 # create fastapi instance
@@ -63,9 +63,6 @@ async def all():
 async def register(new_user: NewUser):
     """Add a user to the database."""
 
-    mariadb_engine = create_engine(
-        SQLALCHEMY_DATABASE_URI, echo=False
-    )  # echo is for debug mode
     with mariadb_engine.connect() as connection:
         connection.execute(
             text(
@@ -82,9 +79,6 @@ async def register(new_user: NewUser):
 async def remove(old_user: OldUser):
     """Remove a user from the database."""
 
-    mariadb_engine = create_engine(
-        SQLALCHEMY_DATABASE_URI, echo=False
-    )  # echo is for debug mode
     with mariadb_engine.connect() as connection:
         connection.execute(
             text(f'DELETE FROM users_table WHERE login = "{old_user.user}";')
