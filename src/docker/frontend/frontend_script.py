@@ -7,148 +7,8 @@ import pandas as pd
 import plotly.express as px
 import requests
 import streamlit as st
-
-# Données des utilisateurs
-response = requests.get(url="http://gateway:8001/users/all")
-users_db = response.json()
-for key, value in users_db.items():
-    if value["admin"] == 0:  ## standard user
-        value["roles"] = ["accueil", "ajout_accident"]
-    if value["admin"] == 2:  ## admin
-        value["roles"] = [
-            "accueil",
-            "ajout_accident",
-            "correction_accident",
-            "graphique",
-        ]
-
-
-# Fonction de vérification des identifiants de connexion
-def authenticate(username, password):
-    if username in users_db:
-        if users_db[username]["pwd"] == password:
-            return True
-    return False
-
-
-# Fonction de vérification des autorisations
-def has_role(username, role):
-    if username in users_db and role in users_db[username]["roles"]:
-        return True
-    return False
-
-
-def show_login_page():
-    st.markdown(
-        "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<p style='text-align: center;'>Application web pour la prédiction et la gestion des accidents de la route.</p>",
-        unsafe_allow_html=True,
-    )
-
-    # Champs de saisie de connexion
-    username = st.text_input("Nom d'utilisateur")
-    password = st.text_input("Mot de passe", type="password")
-    if st.button("Se connecter"):
-        if authenticate(username, password):
-            ## À partir des identifiants, créer la chaîne d'authentification à passer à la passerelle `gateway`
-            authentication_string = {"identification": f"{username}:{password}"}
-
-            ## La sauvegarder avec d'autres variables dans l'état de session pour une utilisation ultérieure dans d'autres fonctions
-            st.session_state["authentication_string"] = authentication_string
-            st.session_state["authenticated"] = True
-            st.session_state["username"] = username
-
-            ## Effacer le contenu de la page
-            st.empty()
-
-            ## Forcer le rerun de la page pour afficher le contenu authentifié
-            st.rerun()
-
-
-def main_authenticated():
-    # Affichage des pages accessibles après authentification
-    # Afficher les options de menu en fonction des rôles de l'utilisateur
-    selected_home = (
-        st.sidebar.button("Accueil", key="accueil")
-        if has_role(st.session_state["username"], "accueil")
-        else None
-    )
-    selected_features = (
-        st.sidebar.button("Ajouter un accident", key="ajout_accident")
-        if has_role(st.session_state["username"], "ajout_accident")
-        else None
-    )
-    selected_feedback_features = (
-        st.sidebar.button("Rectifier un accident", key="rectifier_accident")
-        if has_role(st.session_state["username"], "correction_accident")
-        else None
-    )
-    selected_graph = (
-        st.sidebar.button("Graphique", key="graphique")
-        if has_role(st.session_state["username"], "graphique")
-        else None
-    )
-
-    # Déterminer la page à afficher en fonction du bouton sélectionné
-    selected_page = st.session_state.get("selected_page", "Accueil")
-
-    if selected_home:
-        selected_page = "Accueil"
-    elif selected_features:
-        selected_page = "Ajouter un accident"
-    elif selected_feedback_features:
-        selected_page = "Rectifier un accident"
-    elif selected_graph:
-        selected_page = "Graphique"
-
-    st.session_state["selected_page"] = selected_page
-
-    # Afficher la page correspondante
-    if selected_page == "Accueil":
-        show_homepage()
-    elif selected_page == "Ajouter un accident":
-        show_features()
-    elif selected_page == "Rectifier un accident":
-        show_feedback_features()
-    elif selected_page == "Graphique":
-        show_graph()
-
-    # Afficher le bouton de déconnexion dans la barre latérale
-    if st.sidebar.button("Se déconnecter"):
-        st.session_state["authenticated"] = False
-        st.session_state["username"] = None
-        # Effacer le contenu de la page
-        st.empty()
-        # Forcer le rerun de la page pour afficher le contenu non authentifié
-        st.experimental_rerun()
-
-
-def show_homepage():
-    col1, col2, col3 = st.columns([1, 3, 1])
-    with col2:
-        st.image("/home/shield/frontend/images/bouclier.png")
-
-    st.markdown(
-        "<h1 style='text-align: center;'>SHIELD</h1><h6 style='text-align: center;'><em>Safety Hazard Identification and Emergency Law Deployment</em></h6>",
-        unsafe_allow_html=True,
-    )
-
-    st.markdown(
-        "<p style='text-align:center;'>SHIELD est une application Python alimentée par l'IA qui utilise l'apprentissage automatique pour prédire les niveaux de priorité des accidents de la route, aidant les forces de l'ordre à optimiser les ressources et à optimiser les ressources des forces de l'ordre.</p>",
-        unsafe_allow_html=True,
-    )
-    st.write("")
-    st.markdown(
-        "<p style='text-align:center;'>SHIELD est développé par <span style='color:orange;'>Fabrice Charraud, Omar Choa, Michael Deroche, Alexandre Winger</span>. <br>Ce frontend streamlit constitue notre projet final pour le programme DataScientest Machine Learning Engineer.</p>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<p style='text-align:center;'>dec23_mlops // <span style='color:#6ab7ff;'>Datascientest</span></p>",
-        unsafe_allow_html=True,
-    )
+from frontend_modules.home import home
+from frontend_modules.user_management import authorize, login
 
 
 def show_features():
@@ -553,6 +413,64 @@ def show_graph():
         df, x=df.index, y="f1-score", labels={"x": "Timestamp", "y": "F1-score"}
     )
     st.plotly_chart(fig)
+
+
+def main_authenticated():
+    # Affichage des pages accessibles après authentification
+    # Afficher les options de menu en fonction des rôles de l'utilisateur
+    selected_home = (
+        st.sidebar.button("Accueil", key="accueil")
+        if authorize(st.session_state["username"], "accueil")
+        else None
+    )
+    selected_features = (
+        st.sidebar.button("Ajouter un accident", key="ajout_accident")
+        if authorize(st.session_state["username"], "ajout_accident")
+        else None
+    )
+    selected_feedback_features = (
+        st.sidebar.button("Rectifier un accident", key="rectifier_accident")
+        if authorize(st.session_state["username"], "correction_accident")
+        else None
+    )
+    selected_graph = (
+        st.sidebar.button("Graphique", key="graphique")
+        if authorize(st.session_state["username"], "graphique")
+        else None
+    )
+
+    # Déterminer la page à afficher en fonction du bouton sélectionné
+    selected_page = st.session_state.get("selected_page", "Accueil")
+
+    if selected_home:
+        selected_page = "Accueil"
+    elif selected_features:
+        selected_page = "Ajouter un accident"
+    elif selected_feedback_features:
+        selected_page = "Rectifier un accident"
+    elif selected_graph:
+        selected_page = "Graphique"
+
+    st.session_state["selected_page"] = selected_page
+
+    # Afficher la page correspondante
+    if selected_page == "Accueil":
+        home()
+    elif selected_page == "Ajouter un accident":
+        show_features()
+    elif selected_page == "Rectifier un accident":
+        show_feedback_features()
+    elif selected_page == "Graphique":
+        show_graph()
+
+    # Afficher le bouton de déconnexion dans la barre latérale
+    if st.sidebar.button("Se déconnecter"):
+        st.session_state["authenticated"] = False
+        st.session_state["username"] = None
+        # Effacer le contenu de la page
+        st.empty()
+        # Forcer le rerun de la page pour afficher le contenu non authentifié
+        st.experimental_rerun()
 
 
 # main function
