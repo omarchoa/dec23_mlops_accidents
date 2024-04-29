@@ -61,7 +61,7 @@ services:
     pull_policy: build
     build:
       context: data-download-prep
-      dockerfile: Dockerfile
+      dockerfile: data-download-prep.Dockerfile
     image: ${DOCKER_HUB_REPO}:data-download-prep
     container_name: data-download-prep
     networks:
