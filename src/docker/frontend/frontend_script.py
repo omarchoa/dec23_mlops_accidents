@@ -1,3 +1,6 @@
+# >>>>>>>> IMPORTS <<<<<<<<
+
+
 from io import StringIO
 
 import pandas as pd
@@ -33,19 +36,6 @@ def has_role(username, role):
     if username in users_db and role in users_db[username]["roles"]:
         return True
     return False
-
-
-# Fonction principale
-def main():
-    # État de la session pour l'authentification
-    if "authenticated" not in st.session_state:
-        st.session_state["authenticated"] = False
-
-    # Vérifier si l'utilisateur est déjà authentifié
-    if st.session_state["authenticated"]:
-        main_authenticated()
-    else:
-        show_login_page()
 
 
 def show_login_page():
@@ -565,5 +555,23 @@ def show_graph():
     st.plotly_chart(fig)
 
 
+# main function
+def main():
+    ## initialize authentication state
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
+
+    ## if user has been authenticated, grant access to main part of app
+    if st.session_state["authenticated"] == True:
+        main_authenticated()
+    ## else, show login page
+    else:
+        show_login_page()
+
+
+# >>>>>>>> SCRIPT EXECUTION <<<<<<<<
+
+
+# if file is run as script, run main()
 if __name__ == "__main__":
     main()
