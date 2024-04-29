@@ -6,18 +6,6 @@ import streamlit as st
 response = requests.get(url="http://gateway:8001/users/all")
 users_db = response.json()
 
-# define features accessible to each user
-for key, value in users_db.items():
-    if value["admin"] == 0:  ## standard user
-        value["features"] = ["accueil", "ajout_accident"]
-    if value["admin"] == 2:  ## admin
-        value["features"] = [
-            "accueil",
-            "ajout_accident",
-            "correction_accident",
-            "graphique",
-        ]
-
 
 # define authentication function
 def authenticate(username, password):
@@ -53,7 +41,7 @@ def login():
     password = st.text_input("Mot de passe", type="password")
 
     ## when user clicks on action button
-    if st.button("Se connecter") == True:
+    if st.button("Connexion") == True:
 
         ## authenticate user, and if successful
         if authenticate(username, password) == True:
@@ -65,6 +53,7 @@ def login():
             st.session_state["authentication_string"] = authentication_string
             st.session_state["authenticated"] = True
             st.session_state["username"] = username
+            st.session_state["admin"] = users_db[username]["admin"]
 
             ### clear page
             st.empty()

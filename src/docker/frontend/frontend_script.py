@@ -1,72 +1,61 @@
-# >>>>>>>> IMPORTS <<<<<<<<
-
-
+# imports
 import streamlit as st
-from frontend_modules.home import home
+from frontend_modules.layouts import admin, non_admin
 from frontend_modules.prediction import predict
 from frontend_modules.scoring import label_prediction, plot_f1_scores
 from frontend_modules.users import authorize, login
 
+# ## get username from session state
+# username = st.session_state["username"]
 
-def main_authenticated():
-    # Affichage des pages accessibles après authentification
-    # Afficher les options de menu en fonction des rôles de l'utilisateur
-    selected_home = (
-        st.sidebar.button("Accueil", key="accueil")
-        if authorize(st.session_state["username"], "accueil")
-        else None
-    )
-    selected_features = (
-        st.sidebar.button("Ajouter un accident", key="ajout_accident")
-        if authorize(st.session_state["username"], "ajout_accident")
-        else None
-    )
-    selected_feedback_features = (
-        st.sidebar.button("Rectifier un accident", key="rectifier_accident")
-        if authorize(st.session_state["username"], "correction_accident")
-        else None
-    )
-    selected_graph = (
-        st.sidebar.button("Graphique", key="graphique")
-        if authorize(st.session_state["username"], "graphique")
-        else None
-    )
+# # Afficher les options de menu en fonction des rôles de l'utilisateur
+# selected_home = (
+#     st.sidebar.button(label="Accueil", key="home")
+#     if authorize(username=username, feature="home")
+#     else None
+# )
+# selected_features = (
+#     st.sidebar.button("Ajouter un accident", key="ajout_accident")
+#     if authorize(username=username, feature="ajout_accident")
+#     else None
+# )
+# selected_feedback_features = (
+#     st.sidebar.button("Rectifier un accident", key="rectifier_accident")
+#     if authorize(username=username, feature="correction_accident")
+#     else None
+# )
+# selected_graph = (
+#     st.sidebar.button("Graphique", key="graphique")
+#     if authorize(username=username, feature="graphique")
+#     else None
+# )
 
-    # Déterminer la page à afficher en fonction du bouton sélectionné
-    selected_page = st.session_state.get("selected_page", "Accueil")
+# # Déterminer la page à afficher en fonction du bouton sélectionné
+# selected_page = st.session_state.get("selected_page", "home")
 
-    if selected_home:
-        selected_page = "Accueil"
-    elif selected_features:
-        selected_page = "Ajouter un accident"
-    elif selected_feedback_features:
-        selected_page = "Rectifier un accident"
-    elif selected_graph:
-        selected_page = "Graphique"
+# if selected_home:
+#     selected_page = "home"
+# elif selected_features:
+#     selected_page = "Ajouter un accident"
+# elif selected_feedback_features:
+#     selected_page = "Rectifier un accident"
+# elif selected_graph:
+#     selected_page = "Graphique"
 
-    st.session_state["selected_page"] = selected_page
+# st.session_state["selected_page"] = selected_page
 
-    # Afficher la page correspondante
-    if selected_page == "Accueil":
-        home()
-    elif selected_page == "Ajouter un accident":
-        predict()
-    elif selected_page == "Rectifier un accident":
-        label_prediction()
-    elif selected_page == "Graphique":
-        plot_f1_scores()
-
-    # Afficher le bouton de déconnexion dans la barre latérale
-    if st.sidebar.button("Se déconnecter"):
-        st.session_state["authenticated"] = False
-        st.session_state["username"] = None
-        # Effacer le contenu de la page
-        st.empty()
-        # Forcer le rerun de la page pour afficher le contenu non authentifié
-        st.experimental_rerun()
+# # Afficher la page correspondante
+# if selected_page == "home":
+#     home()
+# elif selected_page == "Ajouter un accident":
+#     predict()
+# elif selected_page == "Rectifier un accident":
+#     label_prediction()
+# elif selected_page == "Graphique":
+#     plot_f1_scores()
 
 
-# main function
+# define main function
 def main():
     ## initialize authentication state
     if "authenticated" not in st.session_state:
@@ -74,13 +63,13 @@ def main():
 
     ## if user has been authenticated, grant access to corresponding content
     if st.session_state["authenticated"] == True:
-        main_authenticated()
+        if st.session_state["admin"] == 2:
+            admin()
+        else:
+            non_admin()
     ## else, show login page
     else:
         login()
-
-
-# >>>>>>>> SCRIPT EXECUTION <<<<<<<<
 
 
 # if file is run as script, run main()
