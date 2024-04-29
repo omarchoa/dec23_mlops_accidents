@@ -47,7 +47,7 @@ services:
     pull_policy: build
     build:
       context: users
-      dockerfile: Dockerfile
+      dockerfile: users.Dockerfile
     image: ${DOCKER_HUB_REPO}:users
     container_name: users
     networks:
