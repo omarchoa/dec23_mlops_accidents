@@ -5,6 +5,7 @@ from frontend_modules.home import home
 from frontend_modules.prediction import prediction_call, prediction_test
 from frontend_modules.scoring import scoring_label_prediction
 from frontend_modules.status import status
+from frontend_modules.training import training_train
 from frontend_modules.users import users_all, users_register, users_remove
 
 
@@ -40,6 +41,10 @@ def button_actions():
     ## data download prep run
     if st.session_state["page"] == "data_download_prep_run":
         data_download_prep_run()
+
+    ## training train
+    if st.session_state["page"] == "training_train":
+        training_train()
 
     ## prediction test
     if st.session_state["page"] == "prediction_test":
