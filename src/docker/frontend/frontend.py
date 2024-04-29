@@ -1,3 +1,6 @@
+from io import StringIO
+
+import pandas as pd
 import requests
 import streamlit as st
 
@@ -520,7 +523,7 @@ def show_feedback_features():
 
         ## Appeler le microservice `scoring` en lui passant les données d'entrée et la chaîne d'authentification
         response = requests.post(
-            url="http://scoring:8006/label-prediction",
+            url="http://gateway:8001/scoring/label-prediction",
             json=input_data_label_pred,
             headers=st.session_state["authentication_string"],
         )
@@ -541,14 +544,21 @@ def show_graph():
         "<p style='text-align:left;'>Afficher un graphique où chaque nouvelle prédiction ajoute un point à une courbe illustrant l'amélioration des performances au fil du temps.</p>",
         unsafe_allow_html=True,
     )
-    # Générer les valeurs x
-    x_values = list(range(1, 21))
+    # Appeler le microservice `scoring` en lui passant la chaîne d'authentification
+    response = requests.get(
+        url="http://gateway:8001/scoring/get-f1-scores",
+        headers=st.session_state["authentication_string"],
+    )
 
-    # Calculer les valeurs y comme des nombres progressivement croissants
-    y_values = [i**2 for i in x_values]
+    # Convertir la réponse en DataFrame
+    response_stream = response.json()
+    data_string = StringIO(response_stream)
+    df = pd.read_table(filepath_or_buffer=data_string, sep=";")
+    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s", origin="1970-01-01")
+    df.set_index(keys="timestamp", inplace=True)
 
     # Afficher la courbe en utilisant line_chart de Streamlit
-    st.line_chart({"x": x_values, "y": y_values})
+    st.line_chart(data=df["f1-score"])
 
 
 if __name__ == "__main__":
