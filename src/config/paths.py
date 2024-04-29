@@ -36,9 +36,12 @@ SCRIPTS = Path(ROOT, "src")
 SCRIPTS_DOCKER = Path(SCRIPTS, "docker")
 SCRIPTS_MODELS_TRAIN = Path(SCRIPTS_DOCKER, "training", "training_script.py")
 SCRIPTS_MODELS_PREDICT = Path(SCRIPTS_DOCKER, "prediction", "prediction_script.py")
-SCRIPTS_SCORING = Path(SCRIPTS, "scoring")
-SCRIPTS_SCORING_LABEL_PREDICTION = Path(SCRIPTS_SCORING, "label_prediction.py")
-SCRIPTS_SCORING_UPDATE_F1_SCORE = Path(SCRIPTS_SCORING, "update_f1_score.py")
+SCRIPTS_SCORING_LABEL_PREDICTION = Path(
+    SCRIPTS_DOCKER, "scoring", "scoring_script_label_prediction.py"
+)
+SCRIPTS_SCORING_UPDATE_F1_SCORE = Path(
+    SCRIPTS_DOCKER, "scoring", "scoring_script_update_f1_score.py"
+)
 
 # other paths
 ## USERS = Path(ROOT, "src", "features", "api", "users_db_bis.json")
