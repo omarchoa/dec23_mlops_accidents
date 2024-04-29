@@ -1,24 +1,31 @@
 # imports
 import streamlit as st
 from frontend_modules.home import home
+from frontend_modules.prediction import prediction_call, prediction_test
+from frontend_modules.scoring import scoring_label_prediction
 
 
 # define button actions function
 def button_actions():
 
     ## home
-    if st.session_state["button_home"] == True:
-        ### display home page
+    if st.session_state["page"] == "home":
         home()
 
     ## logout
-    if st.session_state["button_logout"] == True:
-
-        ### unauthenticate user
-        st.session_state["authenticated"] = False
-
-        ### clear page
-        st.empty()
-
-        ### rerun page to display unauthenticated content
+    if st.session_state["page"] == "logout":
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
         st.rerun()
+
+    ## prediction test
+    if st.session_state["page"] == "prediction_test":
+        prediction_test()
+
+    ## prediction call
+    if st.session_state["page"] == "prediction_call":
+        prediction_call()
+
+    ## scoring label prediction
+    if st.session_state["page"] == "scoring_label_prediction":
+        scoring_label_prediction()

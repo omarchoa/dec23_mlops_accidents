@@ -1,62 +1,12 @@
 # imports
 import streamlit as st
 from frontend_modules.layouts import admin, non_admin
-from frontend_modules.prediction import predict
-from frontend_modules.scoring import label_prediction, plot_f1_scores
-from frontend_modules.users import authorize, login
-
-# ## get username from session state
-# username = st.session_state["username"]
-
-# # Afficher les options de menu en fonction des rôles de l'utilisateur
-# selected_home = (
-#     st.sidebar.button(label="Accueil", key="home")
-#     if authorize(username=username, feature="home")
-#     else None
-# )
-# selected_features = (
-#     st.sidebar.button("Ajouter un accident", key="ajout_accident")
-#     if authorize(username=username, feature="ajout_accident")
-#     else None
-# )
-# selected_feedback_features = (
-#     st.sidebar.button("Rectifier un accident", key="rectifier_accident")
-#     if authorize(username=username, feature="correction_accident")
-#     else None
-# )
-# selected_graph = (
-#     st.sidebar.button("Graphique", key="graphique")
-#     if authorize(username=username, feature="graphique")
-#     else None
-# )
-
-# # Déterminer la page à afficher en fonction du bouton sélectionné
-# selected_page = st.session_state.get("selected_page", "home")
-
-# if selected_home:
-#     selected_page = "home"
-# elif selected_features:
-#     selected_page = "Ajouter un accident"
-# elif selected_feedback_features:
-#     selected_page = "Rectifier un accident"
-# elif selected_graph:
-#     selected_page = "Graphique"
-
-# st.session_state["selected_page"] = selected_page
-
-# # Afficher la page correspondante
-# if selected_page == "home":
-#     home()
-# elif selected_page == "Ajouter un accident":
-#     predict()
-# elif selected_page == "Rectifier un accident":
-#     label_prediction()
-# elif selected_page == "Graphique":
-#     plot_f1_scores()
+from frontend_modules.users import login
 
 
 # define main function
 def main():
+
     ## initialize authentication state
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
@@ -72,6 +22,6 @@ def main():
         login()
 
 
-# if file is run as script, run main()
+# if file is executed as script, run main function
 if __name__ == "__main__":
     main()

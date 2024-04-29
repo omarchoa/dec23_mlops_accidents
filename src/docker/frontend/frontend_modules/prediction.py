@@ -4,16 +4,45 @@ import requests
 import streamlit as st
 
 
-# define predict function
-def predict():
+# define prediction test function
+def prediction_test():
 
-    ## display prediction page text
+    ## display page text
     st.markdown(
-        "<h1 id='features' style='text-align: center;'>Ajouter un accident</h1>",
+        "<h1 id='features' style='text-align: center;'>Effectuer une prédiction test</h1>",
         unsafe_allow_html=True,
     )
 
-    ## get input data
+    ## get authentication string from session state
+    authentication_string = st.session_state["authentication_string"]
+
+    ## when user clicks on action button
+    if st.button("Valider") == True:
+
+        ### send input data and authentication string to `prediction` microservice via api gateway
+        response = requests.get(
+            url="http://gateway:8001/prediction/test",
+            headers=authentication_string,
+        )
+
+        ### display `prediction` microservice response
+        if "non" in response.text:
+            st.success(response.text)
+        else:
+            st.warning(response.text)
+
+
+# define prediction call function
+def prediction_call():
+
+    ## display page text
+    st.markdown(
+        "<h1 id='features' style='text-align: center;'>Effectuer une prédiction réelle</h1>",
+        unsafe_allow_html=True,
+    )
+
+    ## get input data for fiche baac, rubrique caractéristiques
+    st.header(body="Caractéristiques")
     jour_accident = st.date_input(
         "Jour de l'accident",
         value=None,
@@ -27,77 +56,11 @@ def predict():
         max_value=23,
         step=1,
     )
-    departement = st.text_input("Département (Code INSEE)")
-    place_occupée = st.slider(
-        "Place occupée dans le véhicule",
-        min_value=0,
-        max_value=10,
-        step=1,
-        help="10 – Piéton (non applicable)",
-    )
-    nombre_victimes = st.slider(
-        "Nombre de victimes",
-        min_value=0,
-        max_value=25,
-        step=1,
-    )
-    nombre_vehicules = st.text_input("Nombre de véhicules impliqués")
-    categorie_usager = st.selectbox(
-        "Catégorie d'usager",
-        options=dicts.catu.keys(),
-    )
-    sexe_usager = st.selectbox(
-        "Sexe de l'usager",
-        options=dicts.sexe.keys(),
-    )
-    equipement_securite = st.selectbox(
-        "Équipement de sécurité",
-        options=dicts.secu1.keys(),
-    )
-    age_victime = st.slider(
-        "Âge de la ou des victimes",
-        min_value=0,
-        max_value=100,
-        step=1,
-    )
-    categorie_vehicule = st.selectbox(
-        "Catégorie du véhicule",
-        options=dicts.catv.keys(),
-    )
-    obstacle_mobile = st.selectbox(
-        "Obstacle mobile heurté",
-        options=dicts.obsm.keys(),
-    )
-    type_motorisation = st.selectbox(
-        "Type de motorisation du véhicule",
-        options=dicts.motor.keys(),
-    )
-    categorie_route = st.selectbox(
-        "Catégorie de route",
-        options=dicts.catr.keys(),
-    )
-    regime_circulation = st.selectbox(
-        "Régime de circulation",
-        options=dicts.circ.keys(),
-    )
-    etat_surface = st.selectbox(
-        "État de la surface",
-        options=dicts.surf.keys(),
-    )
-    situation_accident = st.selectbox(
-        "Situation de l’accident",
-        options=dicts.situ.keys(),
-    )
-    vitesse_max_autorisee = st.slider(
-        "Vitesse maximale autorisée",
-        min_value=0,
-        max_value=300,
-        step=1,
-    )
     lumiere = st.selectbox(
         "Lumière",
         options=dicts.lum.keys(),
     )
+    departement = st.text_input("Département (Code INSEE)")
     commune = st.text_input("Commune (Code INSEE)")
     localisation = st.selectbox(
         "Localisation",
@@ -126,6 +89,81 @@ def predict():
         min_value=-180.0,
         max_value=180.0,
         step=0.001,
+    )
+
+    ## get input data for fiche baac, rubrique lieux
+    st.header(body="Lieux")
+    categorie_route = st.selectbox(
+        "Catégorie de route",
+        options=dicts.catr.keys(),
+    )
+    regime_circulation = st.selectbox(
+        "Régime de circulation",
+        options=dicts.circ.keys(),
+    )
+    etat_surface = st.selectbox(
+        "État de la surface",
+        options=dicts.surf.keys(),
+    )
+    situation_accident = st.selectbox(
+        "Situation de l’accident",
+        options=dicts.situ.keys(),
+    )
+    vitesse_max_autorisee = st.slider(
+        "Vitesse maximale autorisée",
+        min_value=0,
+        max_value=300,
+        step=1,
+    )
+
+    ## get input data for fiche baac, rubrique véhicules
+    st.header(body="Véhicules")
+    categorie_vehicule = st.selectbox(
+        "Catégorie du véhicule",
+        options=dicts.catv.keys(),
+    )
+    obstacle_mobile = st.selectbox(
+        "Obstacle mobile heurté",
+        options=dicts.obsm.keys(),
+    )
+    type_motorisation = st.selectbox(
+        "Type de motorisation du véhicule",
+        options=dicts.motor.keys(),
+    )
+    nombre_vehicules = st.text_input("Nombre de véhicules impliqués")
+
+    ## get input data for fiche baac, rubrique usagers
+    st.header(body="Usagers")
+    place_occupée = st.slider(
+        "Place occupée dans le véhicule",
+        min_value=0,
+        max_value=10,
+        step=1,
+        help="10 – Piéton (non applicable)",
+    )
+    categorie_usager = st.selectbox(
+        "Catégorie d'usager",
+        options=dicts.catu.keys(),
+    )
+    sexe_usager = st.selectbox(
+        "Sexe de l'usager",
+        options=dicts.sexe.keys(),
+    )
+    age_victime = st.slider(
+        "Âge de la ou des victimes",
+        min_value=0,
+        max_value=100,
+        step=1,
+    )
+    equipement_securite = st.selectbox(
+        "Équipement de sécurité",
+        options=dicts.secu1.keys(),
+    )
+    nombre_victimes = st.slider(
+        "Nombre de victimes",
+        min_value=0,
+        max_value=25,
+        step=1,
     )
 
     st.write("")

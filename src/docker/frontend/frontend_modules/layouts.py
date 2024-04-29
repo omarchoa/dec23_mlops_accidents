@@ -6,6 +6,10 @@ from frontend_modules.navigation import button_actions
 # define admin function
 def admin():
 
+    # # set home page as landing page
+    # if "page" not in st.session_state:
+    #     st.session_state["page"] = "home"
+
     ## display home section
     st.sidebar.header(body="Accueil")
     button_home = st.sidebar.button(label="Accueil")
@@ -63,26 +67,28 @@ def admin():
 # define non admin function
 def non_admin():
 
+    ## set home page as landing page
+    if "page" not in st.session_state:
+        st.session_state["page"] = "home"
+
     ## display home section
     st.sidebar.header(body="Accueil")
-    button_home = st.sidebar.button(label="Accueil", key="home")
-    button_logout = st.sidebar.button(label="Déconnexion", key="logout")
+    if st.sidebar.button(label="Accueil"):
+        st.session_state["page"] = "home"
+    if st.sidebar.button(label="Déconnexion"):
+        st.session_state["page"] = "logout"
 
     ## display prediction section
     st.sidebar.header(body="Prédiction")
-    st.sidebar.button(label="Effectuer une prédiction test", key="prediction_test")
-    st.sidebar.button(label="Effectuer une prédiction réelle", key="prediction_call")
+    if st.sidebar.button(label="Effectuer une prédiction test"):
+        st.session_state["page"] = "prediction_test"
+    if st.sidebar.button(label="Effectuer une prédiction réelle"):
+        st.session_state["page"] = "prediction_call"
 
     ## display scoring section
     st.sidebar.header(body="Évaluation")
-    st.sidebar.button(
-        label="Valider ou corriger une prédiction",
-        key="scoring_label_prediction",
-    )
-
-    ## save button actions to session state
-    st.session_state["button_home"] = button_home
-    st.session_state["button_logout"] = button_logout
+    if st.sidebar.button(label="Valider ou corriger une prédiction"):
+        st.session_state["page"] = "scoring_label_prediction"
 
     ## execute button actions
     button_actions()

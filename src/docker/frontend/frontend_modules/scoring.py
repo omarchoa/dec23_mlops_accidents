@@ -7,12 +7,12 @@ import requests
 import streamlit as st
 
 
-# define label prediction function
-def label_prediction():
+# define scoring label prediction function
+def scoring_label_prediction():
 
     ## display label prediction page text
     st.markdown(
-        "<h1 id='features' style='text-align: center;'>Rectifier un accident</h1>",
+        "<h1 id='features' style='text-align: center;'>Valider ou corriger une prédiction</h1>",
         unsafe_allow_html=True,
     )
 
@@ -44,8 +44,8 @@ def label_prediction():
             st.error(response.text)
 
 
-# define plot f1 scores function
-def plot_f1_scores():
+# define scoring plot f1 scores function
+def scoring_plot_f1_scores():
 
     ## display plot f1 scores page text
     st.markdown(
