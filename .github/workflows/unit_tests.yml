@@ -26,4 +26,4 @@ jobs:
       run: docker-compose -f src/docker/docker-compose-dev.yml up --detach
 
     - name: Run unit tests
-      run: docker exec testing pytest -v /home/shield/testing/testing.py
+      run: docker exec testing pytest -v /home/shield/testing/testing_script.py
