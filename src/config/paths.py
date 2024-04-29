@@ -29,7 +29,6 @@ LOGS_F1_SCORES = Path(LOGS, "f1_scores.jsonl")
 # model paths
 MODEL_SAVES = Path(ROOT, "models")
 MODEL_TRAINED = Path(MODEL_SAVES, "trained_model.joblib")
-MODEL_TRAINED_NEW = Path(MODEL_SAVES, "new_trained_model.joblib")
 
 # script paths
 SCRIPTS = Path(ROOT, "src")
@@ -42,6 +41,3 @@ SCRIPTS_SCORING_LABEL_PREDICTION = Path(
 SCRIPTS_SCORING_UPDATE_F1_SCORE = Path(
     SCRIPTS_DOCKER, "scoring", "scoring_script_update_f1_score.py"
 )
-
-# other paths
-## USERS = Path(ROOT, "src", "features", "api", "users_db_bis.json")
