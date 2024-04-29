@@ -4,6 +4,7 @@ from frontend_modules.home import home
 from frontend_modules.prediction import prediction_call, prediction_test
 from frontend_modules.scoring import scoring_label_prediction
 from frontend_modules.status import status
+from frontend_modules.users import users_all, users_register, users_remove
 
 
 # define button actions function
@@ -22,6 +23,18 @@ def button_actions():
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
+    ## users all
+    if st.session_state["page"] == "users_all":
+        users_all()
+
+    ## users register
+    if st.session_state["page"] == "users_register":
+        users_register()
+
+    ## users remove
+    if st.session_state["page"] == "users_remove":
+        users_remove()
 
     ## prediction test
     if st.session_state["page"] == "prediction_test":
