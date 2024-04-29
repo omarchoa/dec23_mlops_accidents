@@ -87,32 +87,37 @@ The repository is structured as follows:
 │    │
 │    ├── config/                        <- Configuration package with helper modules.
 │    │
-│    ├── docker/                        <- Scripts to build Docker images and run Docker
+│    ├── docker/                        <- Files to build Docker images and run Docker
 │    │    │                                containers.
 │    │    │
-│    │    ├── data-download-prep/       <- Scripts for the `data-download-prep` microservice.
+│    │    ├── data-download-prep/       <- Files for the microservice in charge of downloading
+│    │    │                                and preparing input data (accidents).
 │    │    │
-│    │    ├── database/                 <- Scripts for the `database` microservice.
+│    │    ├── database/                 <- Files for the database microservice (MariaDB).
 │    │    │
-│    │    ├── dummy/                    <- Scripts for the `dummy` microservice (for testing
-│    │    │                                and debugging).
+│    │    ├── frontend/                 <- Files for the frontend component (Streamlit).
 │    │    │
-│    │    ├── gateway/                  <- Scripts for the API gateway.
+│    │    ├── gateway/                  <- Files for the API gateway and model performance
+│    │    │                                monitoring.
 │    │    │
-│    │    ├── prediction/               <- Scripts for the `prediction` microservice.
+│    │    ├── initialization/           <- Files for the microservice in charge of
+│    │    │                                initializing the app.
 │    │    │
-│    │    ├── scoring/                  <- Scripts for the `scoring` microservice.
+│    │    ├── prediction/               <- Files for the microservice in charge of producing
+│    │    │                                predictions (severity) from input data (accidents).
 │    │    │
-│    │    ├── testing/                  <- <- Tools and utilities for unit testing.
+│    │    ├── scoring/                  <- Files for the microservice in charge of labeling
+│    │    │                                predictions (severity) and updating ML metrics
+│    │    │                                (F1 scores).
 │    │    │
-│    │    ├── training/                 <- Scripts for the `training` microservice.
+│    │    ├── testing/                  <- Files for the microservice in charge of unit
+│    │    │                                testing.
 │    │    │
-│    │    └── users/                    <- Scripts for the `users` microservice.
-│    │
-│    ├── models/                        <- Scripts to train models and then use trained models
-│    │                                     to make predictions.
-│    │
-│    ├── scoring/                       <- Scripts for model performance scoring.
+│    │    ├── training/                 <- Files for the microservice in charge of model
+│    │    │                                training and retraining.
+│    │    │
+│    │    └── users/                    <- Files for the microservice in charge of user data
+│    │                                     management.
 │    │
 │    └── script/                        <- Tools and utilities for app setup and automation.
 ```
@@ -201,6 +206,7 @@ Run the following command:
 
 ```shell
 mkdir ~/mariadb_data
+mkdir ~/logs
 ```
 
 #### 10. Build the Docker container images and launch the app

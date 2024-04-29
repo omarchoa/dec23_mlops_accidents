@@ -18,8 +18,8 @@ COPY ./src/config \
     /home/shield/src/config
 
 # copy microservice script file
-COPY ./src/docker/testing/testing.py \
-    /home/shield/testing/testing.py
+COPY ./src/docker/testing/testing_script.py \
+    /home/shield/testing/testing_script.py
 
 # run container
 CMD tail -f /dev/null
