@@ -1,6 +1,7 @@
 from io import StringIO
 
 import pandas as pd
+import plotly.express as px
 import requests
 import streamlit as st
 
@@ -557,8 +558,11 @@ def show_graph():
     df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s", origin="1970-01-01")
     df.set_index(keys="timestamp", inplace=True)
 
-    # Afficher la courbe en utilisant line_chart de Streamlit
-    st.line_chart(data=df["f1-score"])
+    # Afficher la courbe en utilisant plotly
+    fig = px.line(
+        df, x=df.index, y="f1-score", labels={"x": "Timestamp", "y": "F1-score"}
+    )
+    st.plotly_chart(fig)
 
 
 if __name__ == "__main__":
