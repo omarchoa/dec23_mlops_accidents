@@ -74,7 +74,7 @@ def show_login_page():
             st.empty()
 
             ## Forcer le rerun de la page pour afficher le contenu authentifié
-            st.experimental_rerun()
+            st.rerun()
 
 
 def main_authenticated():
