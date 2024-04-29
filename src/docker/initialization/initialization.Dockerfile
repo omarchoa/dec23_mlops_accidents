@@ -6,7 +6,7 @@ RUN apk add curl
 RUN apk add jq
 
 # copy microservice script
-COPY initialization.sh .
+COPY initialization_script.sh .
 
 # run microservice script
-CMD [ "sh", "initialization.sh" ]
+CMD [ "sh", "initialization_script.sh" ]
