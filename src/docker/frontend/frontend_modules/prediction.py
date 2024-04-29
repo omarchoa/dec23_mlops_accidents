@@ -8,22 +8,28 @@ import streamlit as st
 def prediction_test():
 
     ## display page text
-    st.markdown(
-        "<h1 id='features' style='text-align: center;'>Effectuer une prédiction test</h1>",
-        unsafe_allow_html=True,
-    )
+    st.title(body="Effectuer une prédiction test")
 
     ## get authentication string from session state
     authentication_string = st.session_state["authentication_string"]
 
-    ## when user clicks on action button
-    if st.button("Valider") == True:
+    ## display action message
+    st.write("Cliquez sur le bouton ci-dessous pour effectuer une prédiction test.")
 
-        ### send input data and authentication string to `prediction` microservice via api gateway
-        response = requests.get(
-            url="http://gateway:8001/prediction/test",
-            headers=authentication_string,
-        )
+    ## when user clicks on action button
+    if st.button(label="Valider") == True:
+
+        ### display processing message
+        with st.status(label="Prédiction en cours...") as status:
+
+            #### send input data and authentication string to `prediction` microservice via api gateway
+            response = requests.get(
+                url="http://gateway:8001/prediction/test",
+                headers=authentication_string,
+            )
+
+            #### display complete message
+            status.update(label="Prédiction terminée.", state="complete")
 
         ### display `prediction` microservice response
         if "non" in response.text:
@@ -36,10 +42,7 @@ def prediction_test():
 def prediction_call():
 
     ## display page text
-    st.markdown(
-        "<h1 id='features' style='text-align: center;'>Effectuer une prédiction réelle</h1>",
-        unsafe_allow_html=True,
-    )
+    st.title(body="Effectuer une prédiction réelle")
 
     ## get input data for fiche baac, rubrique caractéristiques
     st.header(body="Caractéristiques")
@@ -204,14 +207,20 @@ def prediction_call():
     authentication_string = st.session_state["authentication_string"]
 
     ## when user clicks on action button
-    if st.button("Valider") == True:
+    if st.button(label="Valider") == True:
 
-        ### send input data and authentication string to `prediction` microservice via api gateway
-        response = requests.post(
-            url="http://gateway:8001/prediction/call",
-            json=input_data_pred_call,
-            headers=authentication_string,
-        )
+        ### display processing message
+        with st.status(label="Prédiction en cours...") as status:
+
+            #### send input data and authentication string to `prediction` microservice via api gateway
+            response = requests.post(
+                url="http://gateway:8001/prediction/call",
+                json=input_data_pred_call,
+                headers=authentication_string,
+            )
+
+            #### display complete message
+            status.update(label="Prédiction terminée.", state="complete")
 
         ### display `prediction` microservice response
         if "non" in response.text:
