@@ -62,7 +62,7 @@ async def run(year_range: YearRange):
         file.write(log_json + "\n")
 
     ## define result
-    result = "Data downloaded and prepared."
+    result = "Données téléchargées et préparées."
 
     ## return result as json response
     return JSONResponse(content=result)

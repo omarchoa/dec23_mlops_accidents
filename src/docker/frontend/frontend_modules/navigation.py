@@ -1,5 +1,6 @@
 # imports
 import streamlit as st
+from frontend_modules.data_download_prep import data_download_prep_run
 from frontend_modules.home import home
 from frontend_modules.prediction import prediction_call, prediction_test
 from frontend_modules.scoring import scoring_label_prediction
@@ -35,6 +36,10 @@ def button_actions():
     ## users remove
     if st.session_state["page"] == "users_remove":
         users_remove()
+
+    ## data download prep run
+    if st.session_state["page"] == "data_download_prep_run":
+        data_download_prep_run()
 
     ## prediction test
     if st.session_state["page"] == "prediction_test":
