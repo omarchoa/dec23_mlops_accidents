@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-
 # root path
 if os.environ.get("CONTAINERIZED") == "yes":
     ROOT = "/home/shield"
@@ -34,8 +33,9 @@ MODEL_TRAINED_NEW = Path(MODEL_SAVES, "new_trained_model.joblib")
 
 # script paths
 SCRIPTS = Path(ROOT, "src")
+SCRIPTS_DOCKER = Path(SCRIPTS, "docker")
 SCRIPTS_MODELS = Path(SCRIPTS, "models")
-SCRIPTS_MODELS_TRAIN = Path(SCRIPTS_MODELS, "train_model.py")
+SCRIPTS_MODELS_TRAIN = Path(SCRIPTS_DOCKER, "training", "training.py")
 SCRIPTS_MODELS_PREDICT = Path(SCRIPTS_MODELS, "predict_model.py")
 SCRIPTS_SCORING = Path(SCRIPTS, "scoring")
 SCRIPTS_SCORING_LABEL_PREDICTION = Path(SCRIPTS_SCORING, "label_prediction.py")
