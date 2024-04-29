@@ -479,12 +479,12 @@ def main():
     if "authenticated" not in st.session_state:
         st.session_state["authenticated"] = False
 
-    ## if user has been authenticated, grant access to main part of app
+    ## if user has been authenticated, grant access to corresponding content
     if st.session_state["authenticated"] == True:
         main_authenticated()
     ## else, show login page
     else:
-        show_login_page()
+        login()
 
 
 # >>>>>>>> SCRIPT EXECUTION <<<<<<<<
