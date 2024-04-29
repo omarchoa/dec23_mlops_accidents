@@ -1,76 +1,11 @@
 # >>>>>>>> IMPORTS <<<<<<<<
 
 
-from io import StringIO
-
-import pandas as pd
-import plotly.express as px
-import requests
 import streamlit as st
 from frontend_modules.home import home
 from frontend_modules.prediction import predict
+from frontend_modules.scoring import label_prediction, plot_f1_scores
 from frontend_modules.users import authorize, login
-
-
-def show_feedback_features():
-    st.markdown(
-        "<h1 id='features' style='text-align: center;'>Rectifier un accident</h1>",
-        unsafe_allow_html=True,
-    )
-
-    # Champ pour entrer la référence de l'accident
-    accident_reference = st.text_input("Référence de l'accident")
-
-    # Sélection de la gravité de l'accident
-    accident_gravity = st.radio("Gravité de l'accident", ("Grave", "Non grave"))
-
-    # Bouton pour soumettre la correction
-    if st.button("Soumettre la correction"):
-        ## Convertir les données d'entrée au format attendu par le microservice `scoring`
-        y_true = 1 if accident_gravity == "Grave" else 0
-        input_data_label_pred = {"request_id": accident_reference, "y_true": y_true}
-
-        ## Appeler le microservice `scoring` en lui passant les données d'entrée et la chaîne d'authentification
-        response = requests.post(
-            url="http://gateway:8001/scoring/label-prediction",
-            json=input_data_label_pred,
-            headers=st.session_state["authentication_string"],
-        )
-
-        ## Afficher la réponse du microservice `scoring`
-        if "Merci" in response.text:
-            st.success(response.text)
-        elif "Veuillez" in response.text:
-            st.error(response.text)
-
-
-def show_graph():
-    st.markdown(
-        "<h1 id='graph' style='text-align: center;'>Graphique de Prédiction</h1>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<p style='text-align:left;'>Afficher un graphique où chaque nouvelle prédiction ajoute un point à une courbe illustrant l'amélioration des performances au fil du temps.</p>",
-        unsafe_allow_html=True,
-    )
-    # Appeler le microservice `scoring` en lui passant la chaîne d'authentification
-    response = requests.get(
-        url="http://gateway:8001/scoring/get-f1-scores",
-        headers=st.session_state["authentication_string"],
-    )
-
-    # Convertir la réponse en DataFrame
-    response_stream = response.json()
-    data_string = StringIO(response_stream)
-    df = pd.read_table(filepath_or_buffer=data_string, sep=";")
-    df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s", origin="1970-01-01")
-    df.set_index(keys="timestamp", inplace=True)
-
-    # Afficher la courbe en utilisant plotly
-    fig = px.line(
-        df, x=df.index, y="f1-score", labels={"x": "Timestamp", "y": "F1-score"}
-    )
-    st.plotly_chart(fig)
 
 
 def main_authenticated():
@@ -117,9 +52,9 @@ def main_authenticated():
     elif selected_page == "Ajouter un accident":
         predict()
     elif selected_page == "Rectifier un accident":
-        show_feedback_features()
+        label_prediction()
     elif selected_page == "Graphique":
-        show_graph()
+        plot_f1_scores()
 
     # Afficher le bouton de déconnexion dans la barre latérale
     if st.sidebar.button("Se déconnecter"):
