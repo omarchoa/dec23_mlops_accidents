@@ -171,43 +171,43 @@ def call():
 
     st.write("")
 
-    ## convert input data to format expected by api gateway and `prediction` microservice
-    input_data_pred_call = {
-        "place": int(place_occupée),
-        "catu": int(dicts.catu[categorie_usager]),
-        "sexe": int(dicts.sexe[sexe_usager]),
-        "secu1": float(dicts.secu1[equipement_securite]),
-        "year_acc": int(jour_accident.year),
-        "victim_age": int(age_victime),
-        "catv": int(dicts.catv[categorie_vehicule]),
-        "obsm": int(dicts.obsm[obstacle_mobile]),
-        "motor": int(dicts.motor[type_motorisation]),
-        "catr": int(dicts.catr[categorie_route]),
-        "circ": int(dicts.circ[regime_circulation]),
-        "surf": int(dicts.surf[etat_surface]),
-        "situ": int(dicts.situ[situation_accident]),
-        "vma": int(vitesse_max_autorisee),
-        "jour": int(jour_accident.day),
-        "mois": int(jour_accident.month),
-        "lum": int(dicts.lum[lumiere]),
-        "dep": int(departement),
-        "com": int(commune),
-        "agg_": int(dicts.agg_[localisation]),
-        "inter": int(dicts.inter[intersection]),
-        "atm": int(dicts.atm[conditions_atmospheriques]),
-        "col": int(dicts.col[type_collision]),
-        "lat": float(latitude),
-        "long": float(longitude),
-        "hour": int(heure_accident),
-        "nb_victim": int(nombre_victimes),
-        "nb_vehicules": int(nombre_vehicules),
-    }
-
-    ## get authentication string from session state
-    authentication_string = st.session_state["authentication_string"]
-
     ## when user clicks on action button
     if st.button(label="Valider") == True:
+
+        ## convert input data to format expected by api gateway and `prediction` microservice
+        input_data_pred_call = {
+            "place": int(place_occupée),
+            "catu": int(dicts.catu[categorie_usager]),
+            "sexe": int(dicts.sexe[sexe_usager]),
+            "secu1": float(dicts.secu1[equipement_securite]),
+            "year_acc": int(jour_accident.year),
+            "victim_age": int(age_victime),
+            "catv": int(dicts.catv[categorie_vehicule]),
+            "obsm": int(dicts.obsm[obstacle_mobile]),
+            "motor": int(dicts.motor[type_motorisation]),
+            "catr": int(dicts.catr[categorie_route]),
+            "circ": int(dicts.circ[regime_circulation]),
+            "surf": int(dicts.surf[etat_surface]),
+            "situ": int(dicts.situ[situation_accident]),
+            "vma": int(vitesse_max_autorisee),
+            "jour": int(jour_accident.day),
+            "mois": int(jour_accident.month),
+            "lum": int(dicts.lum[lumiere]),
+            "dep": int(departement),
+            "com": int(commune),
+            "agg_": int(dicts.agg_[localisation]),
+            "inter": int(dicts.inter[intersection]),
+            "atm": int(dicts.atm[conditions_atmospheriques]),
+            "col": int(dicts.col[type_collision]),
+            "lat": float(latitude),
+            "long": float(longitude),
+            "hour": int(heure_accident),
+            "nb_victim": int(nombre_victimes),
+            "nb_vehicules": int(nombre_vehicules),
+        }
+
+        ## get authentication string from session state
+        authentication_string = st.session_state["authentication_string"]
 
         ### display processing message
         with st.status(label="Prédiction en cours...") as status:
