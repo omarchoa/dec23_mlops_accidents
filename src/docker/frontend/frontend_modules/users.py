@@ -64,7 +64,7 @@ def login():
 
 
 # define users all function
-def users_all():
+def all():
 
     ## display page title
     st.title("Visualiser tous les utilisateurs")
@@ -93,7 +93,7 @@ def users_all():
 
 
 # define users register function
-def users_register():
+def register():
 
     ## display page title
     st.title("Ajouter un utilisateur")
@@ -136,7 +136,7 @@ def users_register():
 
 
 # define users remove function
-def users_remove():
+def remove():
 
     ## display page title
     st.title("Supprimer un utilisateur")

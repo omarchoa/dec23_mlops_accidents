@@ -4,7 +4,7 @@ import streamlit as st
 
 
 # define training train function
-def training_train():
+def train():
 
     ## display page title
     st.title(body="Entraîner le modèle")

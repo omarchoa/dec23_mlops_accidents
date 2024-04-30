@@ -8,7 +8,7 @@ import streamlit as st
 
 
 # define scoring label prediction function
-def scoring_label_prediction():
+def label_prediction():
 
     ## display page title
     st.title("Valider ou corriger une prédiction")
@@ -41,18 +41,8 @@ def scoring_label_prediction():
             st.error(response.text)
 
 
-# define scoring plot f1 scores function
-def scoring_plot_f1_scores():
-
-    ## display plot f1 scores page text
-    st.markdown(
-        "<h1 id='graph' style='text-align: center;'>Graphique de Prédiction</h1>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        "<p style='text-align:left;'>Afficher un graphique où chaque nouvelle prédiction ajoute un point à une courbe illustrant l'amélioration des performances au fil du temps.</p>",
-        unsafe_allow_html=True,
-    )
+# define scoring get f1 scores helper function
+def get_f1_scores_helper():
 
     ## get authentication string from session state
     authentication_string = st.session_state["authentication_string"]
@@ -70,8 +60,58 @@ def scoring_plot_f1_scores():
     df["timestamp"] = pd.to_datetime(df["timestamp"], unit="s", origin="1970-01-01")
     df.set_index(keys="timestamp", inplace=True)
 
+    ## return dataframe
+    return df
+
+
+# define scoring get latest f1 score function
+def get_latest_f1_score():
+
+    ## display page title
+    st.title(body="Récupérer le dernier F1 score")
+
+    ## get authentication string from session state
+    authentication_string = st.session_state["authentication_string"]
+
+    ## send authentication string to `scoring` microservice via api gateway
+    response = requests.get(
+        url="http://gateway:8001/scoring/get-latest-f1-score",
+        headers=authentication_string,
+    )
+
+    ## convert `scoring` microservice response to pandas dataframe
+    response_stream = response.json()
+    data_string = StringIO(response_stream)
+    st.write(data_string.read())
+
+
+# define scoring get f1 scores function
+def get_f1_scores():
+
+    ## display page title
+    st.title(body="Récupérer tous les F1 scores")
+
+    ## get f1 scores dataframe
+    df = get_f1_scores_helper()
+
+    ## display dataframe
+    st.dataframe(df)
+
+
+# define scoring plot f1 scores function
+def plot_f1_scores():
+
+    ## display page title
+    st.title(body="Visualiser l'évolution des F1 scores")
+
+    ## get f1 scores dataframe
+    df = get_f1_scores_helper()
+
     ## plot dataframe data as plotly line chart
     fig = px.line(
-        df, x=df.index, y="f1-score", labels={"x": "Timestamp", "y": "F1-score"}
+        df,
+        x=df.index,
+        y="f1-score",
+        labels={"timestamp": "Timestamp", "f1-score": "F1-score"},
     )
     st.plotly_chart(fig)

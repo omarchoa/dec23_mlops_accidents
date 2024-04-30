@@ -4,7 +4,7 @@ import streamlit as st
 
 
 # define data download prep run function
-def data_download_prep_run():
+def run():
 
     ## display page title
     st.title(body="Télécharger et préparer des données")

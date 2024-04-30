@@ -5,7 +5,7 @@ import streamlit as st
 
 
 # define prediction test function
-def prediction_test():
+def test():
 
     ## display page text
     st.title(body="Effectuer une prédiction test")
@@ -39,7 +39,7 @@ def prediction_test():
 
 
 # define prediction call function
-def prediction_call():
+def call():
 
     ## display page text
     st.title(body="Effectuer une prédiction réelle")
