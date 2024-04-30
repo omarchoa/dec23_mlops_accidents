@@ -57,16 +57,6 @@ The repository is structured as follows:
 │    │
 │    └── workflows/                     <- GitHub workflow files.
 │
-├── data/
-│    │
-│    ├── cleaned/ (in .gitignore)       <- Intermediate data that has been transformed.
-│    │
-│    ├── preprocessed/ (in .gitignore)  <- The final, canonical data sets for modeling.
-│    │
-│    ├── raw/ (in .gitignore)           <- The original, immutable data dump.
-│    │
-│    └── sample/                        <- Sample data for testing and debugging.
-│
 ├── models/ (contents in .gitignore)    <- Trained and serialized models, model predictions,
 │                                          or model summaries.
 │
