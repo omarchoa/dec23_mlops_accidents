@@ -10,4 +10,7 @@ COPY data-download-prep_api.py .
 
 COPY containerdata.py .
 
+COPY sample_features.json \
+    /home/shield/data-download-prep/sample/
+
 CMD ["uvicorn", "data-download-prep_api:api", "--host", "0.0.0.0", "--port", "8003"]

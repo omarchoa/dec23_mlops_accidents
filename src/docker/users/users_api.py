@@ -15,7 +15,7 @@ class NewUser(BaseModel):
 
 # define input data model for endpoint /remove
 class OldUser(BaseModel):
-    user: str
+    username: str
 
 
 # define database connection
@@ -70,7 +70,7 @@ async def register(new_user: NewUser):
             )
         )
         connection.execute(text("COMMIT;"))
-    result = "User added."
+    result = "Utilisateur ajouté."
     return JSONResponse(content=result)
 
 
@@ -81,8 +81,8 @@ async def remove(old_user: OldUser):
 
     with mariadb_engine.connect() as connection:
         connection.execute(
-            text(f'DELETE FROM users_table WHERE login = "{old_user.user}";')
+            text(f'DELETE FROM users_table WHERE login = "{old_user.username}";')
         )
         connection.execute(text("COMMIT;"))
-    result = "User removed."
+    result = "Utilisateur supprimé."
     return JSONResponse(content=result)

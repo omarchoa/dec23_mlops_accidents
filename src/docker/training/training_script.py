@@ -12,7 +12,6 @@ from sklearn import ensemble
 
 from config import paths
 
-
 # load data
 X_train = pd.read_csv(paths.X_TRAIN)
 X_test = pd.read_csv(paths.X_TEST)
@@ -54,4 +53,4 @@ with open(paths.LOGS_TRAIN, "a") as file:
 
 # save model
 joblib.dump(model, paths.MODEL_TRAINED)
-print("Model trained and saved successfully.")
+print("Modèle entraîné et sauvegardé.")

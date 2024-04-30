@@ -7,7 +7,7 @@ from config import paths
 
 header_admin = {"identification": "admin:4dmin"}
 payload_new_user = {"username": "antoine", "password": "jussieu", "rights": 0}
-payload_old_user = {"user": "antoine"}
+payload_old_user = {"username": "antoine"}
 payload_year_range = {"start_year": 2021, "end_year": 2021}
 payload_input_data_pred_call = {
     "place": 10,

@@ -32,6 +32,6 @@ for record in preds_unlabeled:
 
 # print response
 if record_exists == "yes":
-    print("Enregistrement mis à jour. Merci pour votre retour.")
+    print("Prédiction mise à jour. Merci pour votre retour.")
 else:
-    print("Enregistrement non trouvé. Veuillez fournir une référence valable.")
+    print("Prédiction non trouvée. Veuillez fournir une référence valable.")

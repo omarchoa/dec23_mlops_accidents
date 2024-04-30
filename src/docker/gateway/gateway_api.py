@@ -20,7 +20,7 @@ class NewUser(BaseModel):
 
 ## define input data model for endpoint /users/remove
 class OldUser(BaseModel):
-    user: str
+    username: str
 
 
 ## define input data model for endpoint /data-download-prep/run
@@ -238,7 +238,10 @@ async def training_train(identification=Header(None)):
     end = datetime.datetime.now()
 
     ## save train information into csv file
-    log(f"{start.strftime('%Y-%m-%d %H:%M:%S')}: {user}, training took {end - start}s", "training.csv")
+    log(
+        f"{start.strftime('%Y-%m-%d %H:%M:%S')}: {user}, training took {end - start}s",
+        "training.csv",
+    )
 
     return return_request(response)
 
