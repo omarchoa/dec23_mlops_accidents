@@ -30,7 +30,7 @@ def run():
             label="Téléchargement et préparation des données en cours..."
         ) as status:
 
-            #### send input data to `data-download-prep` microservice via api gateway
+            #### send input data and authentication string to `data-download-prep` microservice via api gateway
             response = requests.post(
                 url="http://gateway:8001/data-download-prep/run",
                 json=year_range,

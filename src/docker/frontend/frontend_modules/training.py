@@ -21,7 +21,7 @@ def train():
         ### display processing message
         with st.status(label="Entraînement du modèle en cours...") as status:
 
-            #### send input data to `training` microservice via api gateway
+            #### send authentication string to `training` microservice via api gateway
             response = requests.get(
                 url="http://gateway:8001/training/train",
                 headers=authentication_string,

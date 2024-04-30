@@ -22,7 +22,7 @@ def test():
         ### display processing message
         with st.status(label="Prédiction en cours...") as status:
 
-            #### send input data and authentication string to `prediction` microservice via api gateway
+            #### send authentication string to `prediction` microservice via api gateway
             response = requests.get(
                 url="http://gateway:8001/prediction/test",
                 headers=authentication_string,
