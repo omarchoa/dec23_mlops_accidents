@@ -10,14 +10,11 @@ import streamlit as st
 # define scoring label prediction function
 def scoring_label_prediction():
 
-    ## display label prediction page text
-    st.markdown(
-        "<h1 id='features' style='text-align: center;'>Valider ou corriger une prédiction</h1>",
-        unsafe_allow_html=True,
-    )
+    ## display page title
+    st.title("Valider ou corriger une prédiction")
 
     ## get input data
-    accident_reference = st.text_input("Référence de l'accident")
+    accident_reference = st.text_input(label="Référence de la prédiction")
     accident_gravity = st.radio("Gravité de l'accident", ("Grave", "Non grave"))
 
     ## convert input data to format expected by api gateway and `scoring` microservice
@@ -28,7 +25,7 @@ def scoring_label_prediction():
     authentication_string = st.session_state["authentication_string"]
 
     ## when user clicks on action button
-    if st.button("Soumettre la correction") == True:
+    if st.button("Envoyer") == True:
 
         ### send input data and authentication string to `scoring` microservice via api gateway
         response = requests.post(
