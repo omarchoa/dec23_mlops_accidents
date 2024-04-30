@@ -1,6 +1,6 @@
 # imports
 import streamlit as st
-from frontend_modules.navigation import button_actions
+from frontend_modules import navigation
 
 
 # define admin function
@@ -61,7 +61,7 @@ def admin():
         st.session_state["page"] = "scoring_plot_f1_scores"
 
     ## execute button actions
-    button_actions()
+    navigation.button_actions()
 
 
 # define non admin function
@@ -91,4 +91,4 @@ def non_admin():
         st.session_state["page"] = "scoring_label_prediction"
 
     ## execute button actions
-    button_actions()
+    navigation.button_actions()

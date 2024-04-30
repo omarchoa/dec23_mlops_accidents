@@ -1,7 +1,7 @@
 # imports
-import frontend_modules.prediction_dictionaries as dicts
 import requests
 import streamlit as st
+from frontend_modules import prediction_dictionaries as dicts
 
 
 # define prediction test function

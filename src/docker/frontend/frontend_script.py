@@ -1,7 +1,6 @@
 # imports
 import streamlit as st
-from frontend_modules.layouts import admin, non_admin
-from frontend_modules.users import login
+from frontend_modules import layouts, users
 
 
 # define main function
@@ -14,12 +13,12 @@ def main():
     ## if user has been authenticated, grant access to corresponding content
     if st.session_state["authenticated"] == True:
         if st.session_state["admin"] == 2:
-            admin()
+            layouts.admin()
         else:
-            non_admin()
+            layouts.non_admin()
     ## else, show login page
     else:
-        login()
+        users.login()
 
 
 # if file is executed as script, run main function
