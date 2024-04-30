@@ -41,6 +41,37 @@ def label_prediction():
             st.error(response.text)
 
 
+# define scoring update f1 score function
+def update_f1_score():
+
+    ## display page title
+    st.title("Mettre à jour le F1 score")
+
+    ## get authentication string from session state
+    authentication_string = st.session_state["authentication_string"]
+
+    ## display action message
+    st.write("Cliquez sur le bouton ci-dessous pour mettre à jour le F1 score.")
+
+    ## when user clicks on action button
+    if st.button(label="Valider") == True:
+
+        ### display processing message
+        with st.status(label="Mise à jour du F1 score en cours...") as status:
+
+            #### send authentication string to `scoring` microservice via api gateway
+            response = requests.get(
+                url="http://gateway:8001/scoring/update-f1-score",
+                headers=authentication_string,
+            )
+
+            #### display complete message
+            status.update(label="Mise à jour du F1 score terminée.", state="complete")
+
+        ### display `scoring` microservice response
+        st.success(body=f"F1 score {response.text} enregistré avec succès.")
+
+
 # define scoring get f1 scores helper function
 def get_f1_scores_helper():
 
@@ -70,19 +101,16 @@ def get_latest_f1_score():
     ## display page title
     st.title(body="Récupérer le dernier F1 score")
 
-    ## get authentication string from session state
-    authentication_string = st.session_state["authentication_string"]
+    ## get f1 scores dataframe
+    df = get_f1_scores_helper()
 
-    ## send authentication string to `scoring` microservice via api gateway
-    response = requests.get(
-        url="http://gateway:8001/scoring/get-latest-f1-score",
-        headers=authentication_string,
-    )
+    ## get last 2 f1 scores
+    latest_f1_score = df["f1-score"].iloc[-1]
+    second_latest_f1_score = df["f1-score"].iloc[-2]
+    delta = latest_f1_score - second_latest_f1_score
 
-    ## convert `scoring` microservice response to pandas dataframe
-    response_stream = response.json()
-    data_string = StringIO(response_stream)
-    st.write(data_string.read())
+    ## display latest f1 score
+    st.metric(label="F1 score", value=latest_f1_score, delta=delta)
 
 
 # define scoring get f1 scores function
@@ -112,6 +140,6 @@ def plot_f1_scores():
         df,
         x=df.index,
         y="f1-score",
-        labels={"timestamp": "Timestamp", "f1-score": "F1-score"},
+        labels={"timestamp": "Timestamp", "f1-score": "F1 score"},
     )
     st.plotly_chart(fig)

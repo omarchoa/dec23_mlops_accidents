@@ -60,6 +60,14 @@ def button_actions():
     if st.session_state["page"] == "scoring_label_prediction":
         scoring.label_prediction()
 
+    ## scoring update f1 score
+    if st.session_state["page"] == "scoring_update_f1_score":
+        scoring.update_f1_score()
+
+    ## scoring get latest f1 score
+    if st.session_state["page"] == "scoring_get_latest_f1_score":
+        scoring.get_latest_f1_score()
+
     ## scoring get f1 scores
     if st.session_state["page"] == "scoring_get_f1_scores":
         scoring.get_f1_scores()
