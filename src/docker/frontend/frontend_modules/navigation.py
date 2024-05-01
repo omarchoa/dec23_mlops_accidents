@@ -5,9 +5,9 @@ from frontend_modules import (
     home,
     prediction,
     scoring,
-    status,
     training,
     users,
+    utilities,
 )
 
 
@@ -18,15 +18,19 @@ def button_actions():
     if st.session_state["page"] == "home":
         home.home()
 
-    ## status
-    if st.session_state["page"] == "status":
-        status.status()
-
     ## logout
     if st.session_state["page"] == "logout":
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         st.rerun()
+
+    ## status
+    if st.session_state["page"] == "status":
+        utilities.status()
+
+    ## logs
+    if st.session_state["page"] == "logs":
+        utilities.logs()
 
     ## users all
     if st.session_state["page"] == "users_all":

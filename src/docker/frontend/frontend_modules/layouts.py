@@ -14,10 +14,15 @@ def admin():
     st.sidebar.header(body="Accueil")
     if st.sidebar.button(label="Accueil"):
         st.session_state["page"] = "home"
-    if st.sidebar.button(label="État du système"):
-        st.session_state["page"] = "status"
     if st.sidebar.button(label="Déconnexion"):
         st.session_state["page"] = "logout"
+
+    ## display utilities section
+    st.sidebar.header(body="Utilitaires")
+    if st.sidebar.button(label="État du système"):
+        st.session_state["page"] = "status"
+    if st.sidebar.button(label="Journaux"):
+        st.session_state["page"] = "logs"
 
     ## display users section
     st.sidebar.header(body="Utilisateurs")
@@ -51,12 +56,8 @@ def admin():
     st.sidebar.header(body="Évaluation")
     if st.sidebar.button(label="Valider ou corriger une prédiction"):
         st.session_state["page"] = "scoring_label_prediction"
-    ### if st.sidebar.button(label="Mettre à jour le F1 score"):
-    ###     st.session_state["page"] = "scoring_update_f1_score"
     if st.sidebar.button(label="Récupérer le dernier F1 score"):
         st.session_state["page"] = "scoring_get_latest_f1_score"
-    if st.sidebar.button(label="Récupérer tous les F1 scores"):
-        st.session_state["page"] = "scoring_get_f1_scores"
     if st.sidebar.button(label="Visualiser l'évolution des F1 scores"):
         st.session_state["page"] = "scoring_plot_f1_scores"
 
