@@ -76,7 +76,7 @@ async def update_f1_score():
         ## save f1 score from subprocess output
         f1_score = float(str(result.stdout).strip())
     except:
-        f1_score =  0.101010101  # error indication
+        f1_score = 0.101010101  # error indication
 
     ## save f1 score to `database` microservice
     with mariadb_engine.connect() as connection:
@@ -98,7 +98,9 @@ async def update_f1_score():
 async def get_f1_scores():
     ## get f1 scores from `database` microservice
     with mariadb_engine.connect() as connection:
-        results = connection.execute(text("SELECT * FROM f1_score_table ORDER BY time_stamp ASC;"))
+        results = connection.execute(
+            text("SELECT * FROM f1_score_table ORDER BY time_stamp ASC;")
+        )
         f1_score_list = [f"{time.timestamp()};{score}" for time, score in results]
         f1_score_list.insert(0, "timestamp;f1-score")
         f1_scores = "\n".join(f1_score_list)
@@ -116,7 +118,11 @@ async def get_f1_scores():
 async def get_latest_f1_score():
     ## get latest f1-score from `database` microservice
     with mariadb_engine.connect() as connection:
-        results = connection.execute(text("SELECT f1_score FROM f1_score_table ORDER BY time_stamp DESC LIMIT 1;"))
+        results = connection.execute(
+            text(
+                "SELECT f1_score FROM f1_score_table ORDER BY time_stamp DESC LIMIT 1;"
+            )
+        )
         for latest_f1_score in results:
             break
 
