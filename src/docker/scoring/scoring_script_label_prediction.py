@@ -12,6 +12,9 @@ with open(input, "r") as file:
 # load unlabeled predictions from logs
 with open(paths.LOGS_PREDS_UNLABELED, "r") as file:
     preds_unlabeled = [json.loads(line) for line in file]
+with open(paths.LOGS_PREDS_TEST, "r") as file:
+    preds_test = [json.loads(line) for line in file]
+preds_unlabeled.extend(preds_test)
 
 # label corresponding prediction
 record_exists = "no"
