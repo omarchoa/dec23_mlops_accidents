@@ -51,8 +51,8 @@ def admin():
     st.sidebar.header(body="Évaluation")
     if st.sidebar.button(label="Valider ou corriger une prédiction"):
         st.session_state["page"] = "scoring_label_prediction"
-    if st.sidebar.button(label="Mettre à jour le F1 score"):
-        st.session_state["page"] = "scoring_update_f1_score"
+    ### if st.sidebar.button(label="Mettre à jour le F1 score"):
+    ###     st.session_state["page"] = "scoring_update_f1_score"
     if st.sidebar.button(label="Récupérer le dernier F1 score"):
         st.session_state["page"] = "scoring_get_latest_f1_score"
     if st.sidebar.button(label="Récupérer tous les F1 scores"):
