@@ -1,3 +1,5 @@
+import pandas as pd
+
 catu = {
     "Conducteur": 1,
     "Passager": 2,
@@ -139,6 +141,35 @@ lum = {
     "Nuit avec éclairage public non allumé": 4,
     "Nuit avec éclairage public allumé": 5,
 }
+
+# départements
+columns = ["DEP", "LIBELLE"]
+df = pd.read_csv(
+    filepath_or_buffer="/home/shield/frontend/frontend_modules/codes_insee_departements_2023.csv",
+    usecols=columns,
+)
+dep = {
+    key: value
+    for line in df.set_index("DEP").T.to_dict("records")
+    for key, value in line.items()
+}
+for key in dep:
+    dep[key] = key + " - " + dep[key]
+corse = {"2A": "201", "2B": "202"}
+
+# communes
+columns = ["COM", "LIBELLE"]
+df = pd.read_csv(
+    filepath_or_buffer="/home/shield/frontend/frontend_modules/codes_insee_communes_2023.csv",
+    usecols=columns,
+)
+com = {
+    key: value
+    for line in df.set_index("COM").T.to_dict("records")
+    for key, value in line.items()
+}
+for key in com:
+    com[key] = key + " - " + com[key]
 
 agg_ = {
     "Hors agglomération": 1,

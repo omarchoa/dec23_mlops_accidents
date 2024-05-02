@@ -62,9 +62,18 @@ def call():
     lumiere = st.selectbox(
         "Lumière",
         options=dicts.lum.keys(),
+        help="Conditions d’éclairage dans lesquelles l'accident s'est produit.",
     )
-    departement = st.text_input("Département (Code INSEE)")
-    commune = st.text_input("Commune (Code INSEE)")
+    departement = st.selectbox(
+        "Département",
+        options=dicts.dep.values(),
+        placeholder="Sélectionnez un département",
+    )
+    commune = st.selectbox(
+        "Commune",
+        options=[com for com in dicts.com.values() if com[:2] == departement[:2]],
+        placeholder="Sélectionnez une commune",
+    )
     localisation = st.selectbox(
         "Localisation",
         options=dicts.agg_.keys(),
@@ -81,13 +90,13 @@ def call():
         "Type de collision",
         options=dicts.col.keys(),
     )
-    latitude = st.slider(
+    latitude = st.number_input(
         "Latitude",
         min_value=-90.0,
         max_value=90.0,
         step=0.001,
     )
-    longitude = st.slider(
+    longitude = st.number_input(
         "Longitude",
         min_value=-180.0,
         max_value=180.0,
@@ -133,7 +142,12 @@ def call():
         "Type de motorisation du véhicule",
         options=dicts.motor.keys(),
     )
-    nombre_vehicules = st.text_input("Nombre de véhicules impliqués")
+    nombre_vehicules = st.number_input(
+        "Nombre de véhicules impliqués",
+        min_value=0,
+        max_value=100,
+        step=1,
+    )
 
     ## get input data for fiche baac, rubrique usagers
     st.header(body="Usagers")
@@ -174,6 +188,10 @@ def call():
     ## when user clicks on action button
     if st.button(label="Valider") == True:
 
+        ## replace corsica codes
+        if departement in dicts.corse.keys():
+            departement = dicts.corse[departement]
+
         ## convert input data to format expected by api gateway and `prediction` microservice
         input_data_pred_call = {
             "place": int(place_occupée),
@@ -193,8 +211,8 @@ def call():
             "jour": int(jour_accident.day),
             "mois": int(jour_accident.month),
             "lum": int(dicts.lum[lumiere]),
-            "dep": int(departement),
-            "com": int(commune),
+            "dep": int(departement.split(" ")[0]),
+            "com": int(commune.split(" ")[0]),
             "agg_": int(dicts.agg_[localisation]),
             "inter": int(dicts.inter[intersection]),
             "atm": int(dicts.atm[conditions_atmospheriques]),
