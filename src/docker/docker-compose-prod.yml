@@ -1,26 +1,8 @@
 services:
 
-  # dummy microservice (dev tool)
-  dummy:
-    pull_policy: always ## always pull the image from Docker Hub
-    image: ${DOCKER_HUB_REPO}:dummy
-    container_name: dummy
-    networks:
-      - shield
-    volumes:
-      - type: volume
-        source: data-download-prep
-        target: /home/shield/data-download-prep
-      - type: volume
-        source: logs
-        target: /home/shield/logs
-      - type: volume
-        source: models
-        target: /home/shield/models
-
   # database microservice
   database:
-    pull_policy: always
+    pull_policy: always ## always pull the image from Docker Hub
     image: ${DOCKER_HUB_REPO}:database
     container_name: database
     volumes:
@@ -33,23 +15,22 @@ services:
   # api gateway
   gateway:
     depends_on:
-      dummy:
+      training:
         condition: service_started
     pull_policy: always
     image: ${DOCKER_HUB_REPO}:gateway
     container_name: gateway
     networks:
       - shield
-    ports:
-        - target: 8001
-          published: "8001"
+    volumes:
+      - type: bind
+        source: ~/logs
+        target: /logs
 
   # users microservice
   users:
     depends_on:
       database:
-        condition: service_started
-      gateway:
         condition: service_started
     pull_policy: always
     image: ${DOCKER_HUB_REPO}:users
@@ -60,7 +41,7 @@ services:
   # data-download-prep microservice
   data-download-prep:
     depends_on:
-      gateway:
+      users:
         condition: service_started
     pull_policy: always
     image: ${DOCKER_HUB_REPO}:data-download-prep
@@ -78,7 +59,7 @@ services:
   # training microservice
   training:
     depends_on:
-      gateway:
+      data-download-prep:
         condition: service_started
     pull_policy: always
     image: ${DOCKER_HUB_REPO}:training
@@ -150,6 +131,32 @@ services:
     container_name: testing
     networks:
       - shield
+    volumes:
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+        read_only: true
+
+# initialization microservice
+  initialization:
+    depends_on:
+      gateway:
+        condition: service_started
+    pull_policy: always
+    image: ${DOCKER_HUB_REPO}:initialization
+    container_name: initialization
+    networks:
+      - shield
+    volumes:
+      - type: volume
+        source: data-download-prep
+        target: /home/shield/data-download-prep
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+      - type: volume
+        source: models
+        target: /home/shield/models
 
   # frontend app
   frontend:
@@ -161,6 +168,15 @@ services:
     container_name: frontend
     networks:
       - shield
+    volumes:
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+        read_only: true
+      - type: bind
+        source: ~/logs
+        target: /home/shield/logs_gateway
+        read_only: true
     ports:
         - target: 8501
           published: "8501"
