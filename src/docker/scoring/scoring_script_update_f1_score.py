@@ -7,7 +7,6 @@ from sklearn.metrics import f1_score
 
 from config import paths
 
-
 # load model
 model = joblib.load(paths.MODEL_TRAINED)
 
@@ -55,15 +54,5 @@ y_true = y_test_combined
 # compute new f1 score macro average
 f1_score_macro_average = f1_score(y_true=y_true, y_pred=y_pred, average="macro")
 
-# prepare log data for export
-log_dict = {
-    "request_id": preds_labeled[-1]["request_id"],
-    "f1_score_macro_average": f1_score_macro_average,
-}
-log_json = json.dumps(obj=log_dict)
-
-# export log data to log file
-with open(paths.LOGS_F1_SCORES, "a") as file:
-    file.write(log_json + "\n")
-
+# print new f1 score macro average
 print(f1_score_macro_average)

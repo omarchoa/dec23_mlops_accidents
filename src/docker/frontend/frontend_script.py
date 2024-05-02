@@ -2,6 +2,12 @@
 import streamlit as st
 from frontend_modules import layouts, users
 
+## configure page
+st.set_page_config(
+    page_title="SHIELD",
+    page_icon=":shield:",
+)
+
 
 # define main function
 def main():
@@ -21,6 +27,8 @@ def main():
         users.login()
 
 
-# if file is executed as script, run main function
+# if file is executed as script
 if __name__ == "__main__":
+
+    ## run main function
     main()

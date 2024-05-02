@@ -24,7 +24,6 @@ LOGS_TRAIN = Path(LOGS, "train.jsonl")
 LOGS_PREDS_TEST = Path(LOGS, "preds_test.jsonl")
 LOGS_PREDS_UNLABELED = Path(LOGS, "preds_call.jsonl")
 LOGS_PREDS_LABELED = Path(LOGS, "preds_labeled.jsonl")
-LOGS_F1_SCORES = Path(LOGS, "f1_scores.jsonl")
 
 # model paths
 MODEL_SAVES = Path(ROOT, "models")

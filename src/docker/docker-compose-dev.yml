@@ -14,9 +14,6 @@ services:
         target: /var/lib/mysql
     networks:
       - shield
-    ports:
-        - target: 3306
-          published: "3306"
 
   # api gateway
   gateway:
@@ -31,9 +28,6 @@ services:
     container_name: gateway
     networks:
       - shield
-    ports:
-        - target: 8001
-          published: "8001"
     volumes:
       - type: bind
         source: ~/logs
@@ -204,6 +198,15 @@ services:
     container_name: frontend
     networks:
       - shield
+    volumes:
+      - type: volume
+        source: logs
+        target: /home/shield/logs
+        read_only: true
+      - type: bind
+        source: ~/logs
+        target: /home/shield/logs_gateway
+        read_only: true
     ports:
         - target: 8501
           published: "8501"

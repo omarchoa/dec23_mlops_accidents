@@ -76,11 +76,11 @@ if __name__ == "__main__":
 
     # define response
     if priority == 1:
-        severity = "Accident grave."
+        intervention = "Intervention prioritaire. "
     else:
-        severity = "Accident non grave."
+        intervention = "Intervention non prioritaire. "
     reference = "Référence : " + log_dict["request_id"] + "."
-    response = severity + " " + reference
+    response = intervention + reference
 
     # print response
     print(response)

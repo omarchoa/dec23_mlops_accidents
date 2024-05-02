@@ -1,3 +1,36 @@
+import pandas as pd
+
+field_names = {
+    "place": "Place occupée dans le véhicule par l'usager au moment de l'accident",
+    "catu": "Catégorie d'usager",
+    "sexe": "Sexe de l'usager",
+    "secu1": "Équipement de sécurité présent et utilisé",
+    "year_acc": "Année de l'accident",
+    "victim_age": "Âge de l'usager",
+    "catv": "Catégorie du véhicule",
+    "obsm": "Obstacle mobile heurté",
+    "motor": "Type de motorisation du véhicule",
+    "catr": "Catégorie de route",
+    "circ": "Régime de circulation",
+    "surf": "État de la surface",
+    "situ": "Situation de l'accident",
+    "vma": "Vitesse maximale autorisée sur le lieu et au moment de l’accident",
+    "jour": "Jour de l'accident",
+    "mois": "Mois de l'accident",
+    "lum": "Conditions d’éclairage dans lesquelles l'accident s'est produit",
+    "dep": "Département",
+    "com": "Commune",
+    "agg_": "Localisation",
+    "inter": "Intersection",
+    "atm": "Conditions atmosphériques",
+    "col": "Type de collision",
+    "lat": "Latitude",
+    "long": "Longitude",
+    "hour": "Heure de l'accident",
+    "nb_victim": "Nombre d'usagers impliqués",
+    "nb_vehicules": "Nombre de véhicules impliqués",
+}
+
 catu = {
     "Conducteur": 1,
     "Passager": 2,
@@ -139,6 +172,27 @@ lum = {
     "Nuit avec éclairage public non allumé": 4,
     "Nuit avec éclairage public allumé": 5,
 }
+
+# départements
+columns = ["DEP", "LIBELLE"]
+df = pd.read_csv(
+    filepath_or_buffer="/home/shield/frontend/frontend_modules/codes_insee_departements_2023.csv",
+    usecols=columns,
+)
+dep = {item["DEP"]: item["LIBELLE"] for item in df.to_dict(orient="records")}
+for key in dep:
+    dep[key] = key + " - " + dep[key]
+corse = {"2A": "201", "2B": "202"}
+
+# communes
+columns = ["COM", "LIBELLE"]
+df = pd.read_csv(
+    filepath_or_buffer="/home/shield/frontend/frontend_modules/codes_insee_communes_2023.csv",
+    usecols=columns,
+)
+com = {item["COM"]: item["LIBELLE"] for item in df.to_dict(orient="records")}
+for key in com:
+    com[key] = key + " - " + com[key]
 
 agg_ = {
     "Hors agglomération": 1,

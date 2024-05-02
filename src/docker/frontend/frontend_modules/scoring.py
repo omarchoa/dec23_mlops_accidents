@@ -14,12 +14,14 @@ def label_prediction():
     st.title("Valider ou corriger une prédiction")
 
     ## get input data
-    accident_reference = st.text_input(label="Référence de la prédiction")
-    accident_gravity = st.radio("Gravité de l'accident", ("Grave", "Non grave"))
+    reference = st.text_input(label="Référence de la prédiction")
+    priority = st.radio(
+        "Caractère de l'intervention", ("Prioritaire", "Non prioritaire")
+    )
 
     ## convert input data to format expected by api gateway and `scoring` microservice
-    y_true = 1 if accident_gravity == "Grave" else 0
-    input_data_label_pred = {"request_id": accident_reference, "y_true": y_true}
+    y_true = 1 if priority == "Prioritaire" else 0
+    input_data_label_pred = {"request_id": reference, "y_true": y_true}
 
     ## get authentication string from session state
     authentication_string = st.session_state["authentication_string"]
@@ -27,18 +29,32 @@ def label_prediction():
     ## when user clicks on action button
     if st.button("Envoyer") == True:
 
-        ### send input data and authentication string to `scoring` microservice via api gateway
-        response = requests.post(
-            url="http://gateway:8001/scoring/label-prediction",
-            json=input_data_label_pred,
-            headers=authentication_string,
-        )
+        ### display processing message
+        with st.status(label="Mise à jour de la prédiction en cours...") as status:
 
-        ### display `scoring` microservice response
-        if "Merci" in response.text:
-            st.success(response.text)
-        elif "Veuillez" in response.text:
-            st.error(response.text)
+            #### send input data and authentication string to `scoring` microservice, /label-prediction endpoint via api gateway
+            response_label_prediction = requests.post(
+                url="http://gateway:8001/scoring/label-prediction",
+                json=input_data_label_pred,
+                headers=authentication_string,
+            )
+
+            #### send authentication string to `scoring` microservice, /update-f1-score endpoint via api gateway
+            response_update_f1_score = requests.get(
+                url="http://gateway:8001/scoring/update-f1-score",
+                headers=authentication_string,
+            )
+
+            #### display complete message
+            status.update(
+                label="Mise à jour de la prédiction terminée.", state="complete"
+            )
+
+        ### display `scoring` microservice, /label-prediction endpoint response
+        if "Merci" in response_label_prediction.text:
+            st.success(response_label_prediction.text)
+        elif "Veuillez" in response_label_prediction.text:
+            st.error(response_label_prediction.text)
 
 
 # define scoring update f1 score function
