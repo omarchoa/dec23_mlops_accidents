@@ -37,7 +37,7 @@ def status():
 
 
 def logs():
-    st.title("Journalisation")
+    st.title("Journaux")
 
     log_file_directory_01 = "/home/shield/logs/"
     log_file_directory_02 = "/home/shield/logs_gateway/"
@@ -59,7 +59,10 @@ def logs():
     with tab1:
         log_file = log_file_directory_01 + log_file_name_list[0] + ".jsonl"
         df = pd.read_json(log_file, lines=True)
-        df["request_id"] = df["request_id"].astype(str)
+        columns = ["request_id", "start_year", "end_year"]
+        for column in columns:
+            df[column] = df[column].astype(str)
+            df.style.format({column: lambda x: x.replace(",", "")})
         st.dataframe(df)
 
     # train.jsonl
@@ -89,7 +92,11 @@ def logs():
             df = df.drop(columns=["input_features"])
             df = df.join(df_input_features.add_prefix("input_feat_"))
 
-            df["request_id"] = df["request_id"].astype(str)
+            columns = ["request_id", "input_feat_year_acc", "input_feat_com"]
+            for column in columns:
+                df[column] = df[column].astype(str)
+                df.style.format({column: lambda x: x.replace(",", "")})
+
             st.dataframe(df)
 
     # f1 scores
