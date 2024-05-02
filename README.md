@@ -15,7 +15,7 @@
 - Michael **Deroche** ([@miklderoche](https://github.com/miklderoche))
 - Alexandre **Winger** ([@alexandrewinger](https://github.com/alexandrewinger))
 
-**SHIELD** constitutes our final project for the [DataScientest Machine Learning Engineer Program](https://datascientest.com/en/machine-learning-engineer-course).
+**SHIELD** constitutes our final project for the [DataScientest MLOps Program](https://datascientest.com/en/ml-ops-course).
 
 
 ## 🏛️ App Architecture
@@ -112,17 +112,18 @@ The repository is structured as follows:
 │    └── script/                        <- Tools and utilities for app setup and automation.
 ```
 
+---
 
 ## 🎬 Getting Started for Developers
 
 These instructions are divided into three sections:
-- [🐳 Set up the Docker environment](#-set-up-the-docker-environment)
-- [🗃️ Set up the app](#%EF%B8%8F-set-up-the-app)
-- [⚙️ Use the app](#%EF%B8%8F-use-the-app)
+- [🐳 Configure the Docker environment](#-configure-the-docker-environment)
+- [🛠️ Configure the app backend](#%EF%B8%8F-configure-the-app-backend)
+- [🖥️ Explore the Streamlit frontend](#%EF%B8%8F-explore-the-streamlit-frontend)
 
 ---
 
-### 🐳 **Set up the Docker environment**
+### 🐳 **Configure the Docker environment**
 
 #### 1. Get Docker
 
@@ -148,23 +149,13 @@ docker login -u <username> -p <password>
 
 _Example:_ [`fabricecharraud/shield`](https://hub.docker.com/r/fabricecharraud/shield)
 
-#### 5. Add the Docker Hub repository's name to your execution environment
-
-In the `src/docker` directory, open the `.env` file and replace the double-quoted string with the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
-
-_Example:_
-
-```text
-DOCKER_HUB_REPO="fabricecharraud/shield"
-```
-
 [Back to instruction menu](#-getting-started-for-developers)
 
 ---
 
-### 🗃️ **Set up the app**
+### 🛠️ **Configure the app backend**
 
-#### 6. Clone the app's GitHub repository
+#### 5. Clone the app's GitHub repository
 
 [Instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) for a wide variety of methods are available in the official GitHub documentation, the simplest being the execution of the following command:
 
@@ -172,7 +163,7 @@ DOCKER_HUB_REPO="fabricecharraud/shield"
 git clone https://github.com/omarchoa/dec23_mlops_accidents.git
 ```
 
-#### 7. Set up a Python virtual environment
+#### 6. Set up a Python virtual environment
 
 Using Python's `venv` module, with `sword` as the virtual environment name, run the following commands:
 
@@ -182,15 +173,15 @@ chmod +x ./sword/bin/activate
 source ./sword/bin/activate
 ```
 
-#### 8. Install the app's global dependencies
+#### 7. Install the app's global dependencies
 
-From the directory into which you cloned the GitHub repository in [Step 6](#6-clone-the-apps-github-repository), run the following command:
+From the directory into which you cloned the GitHub repository in [Step 5](#5-clone-the-apps-github-repository), run the following command:
 
 ```shell
 pip install -r requirements.txt
 ```
 
-#### 9. Create the app's directory dependencies
+#### 8. Create the app's directory dependencies
 
 Run the following command:
 
@@ -199,9 +190,19 @@ mkdir ~/mariadb_data
 mkdir ~/logs
 ```
 
+#### 9. Add the Docker Hub repository's name to your execution environment
+
+In the `src/docker` directory, open the `.env` file and replace the double-quoted string with the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
+
+_Example:_
+
+```text
+DOCKER_HUB_REPO="fabricecharraud/shield"
+```
+
 #### 10. Build the Docker container images and launch the app
 
-Using the same terminal window as in [Step 5](#5-add-the-docker-hub-repositorys-name-to-your-execution-environment), go to the directory into which you cloned the GitHub repository in [Step 6](#6-clone-the-apps-github-repository) and run the following command:
+Go to the directory into which you cloned the GitHub repository in [Step 5](#5-clone-the-apps-github-repository) and run the following command:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml up
@@ -211,7 +212,7 @@ docker-compose -f ./src/docker/docker-compose-dev.yml up
 
 To upload the Docker container images to the Docker Hub repository created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app):
 - Open a new terminal window.
-- Go to the directory into which you cloned the GitHub repository in [Step 6](#6-clone-the-apps-github-repository).
+- Go to the directory into which you cloned the GitHub repository in [Step 5](#5-clone-the-apps-github-repository).
 - Run the following command:
 
 ```shell
@@ -222,30 +223,36 @@ python ./src/script/push_images.py
 
 ---
 
-### ⚙️ **Use the app**
+### 🖥️ **Explore the Streamlit frontend**
 
-#### 12. Check service status
+#### 12. Log in to the app
 
-To ping the API gateway, run the following command:
+Point your web browser to [`http://localhost:8501/`](http://localhost:8501/).
 
-```shell
-curl -X GET i http://0.0.0.0:8001/gateway/status/
-```
+You should see the following page:
 
-You should receive the following response:
+![SHIELD frontend login page](/reports/figures/frontend_login.png)
 
-```text
-"The API gateway is up."
-```
+Use either of the following credential sets to log in:
 
-#### 13. Try out the microservice features
+| User type | _Nom d'utilisateur_ (username) | _Mot de passe_ (password) |
+| --- | --- | --- |
+| Standard | `fdo` | `c0ps` |
+| Administrator | `admin` | `4dmin` |
 
-The full, interactive list of endpoints is accessible via the API gateway's Swagger UI at [`http://0.0.0.0:8001/docs`](http://0.0.0.0:8001/docs) or [`http://localhost:8001/docs`](http://localhost:8001/docs).
+#### 13. Try out the app features
 
-> [!IMPORTANT]
-> Certain endpoints require **user authentication**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `fdo:c0ps`.
->
-> Other endpoints additionally require **administrator authorization**. These can be accessed by passing the following string to the `Identification` field when executing the endpoints: `admin:4dmin`.
+To test the **basic** feature set, log in as a **standard user**.
+
+You should land on the following page:
+
+![SHIELD frontend landing page - standard](/reports/figures/frontend_std.png)
+
+To test the **full** feature set, log in as an **administrator**.
+
+You should land on the following page:
+
+![SHIELD frontend landing page - administrator](/reports/figures/frontend_admin.png)
 
 #### 14. Stop the app
 
@@ -267,4 +274,5 @@ To shut down the app, run the same command that you used in [Step 10](#10-build-
 docker-compose -f ./src/docker/docker-compose-dev.yml down
 ```
 
-[Back to instruction menu](#-getting-started-for-developers)
+[Back to instruction menu](#-getting-started-for-developers) \
+[Back to top](#%EF%B8%8F-shield)
