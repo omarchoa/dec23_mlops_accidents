@@ -14,12 +14,14 @@ def label_prediction():
     st.title("Valider ou corriger une prédiction")
 
     ## get input data
-    accident_reference = st.text_input(label="Référence de la prédiction")
-    accident_gravity = st.radio("Gravité de l'accident", ("Grave", "Non grave"))
+    reference = st.text_input(label="Référence de la prédiction")
+    priority = st.radio(
+        "Caractère de l'intervention", ("Prioritaire", "Non prioritaire")
+    )
 
     ## convert input data to format expected by api gateway and `scoring` microservice
-    y_true = 1 if accident_gravity == "Grave" else 0
-    input_data_label_pred = {"request_id": accident_reference, "y_true": y_true}
+    y_true = 1 if priority == "Prioritaire" else 0
+    input_data_label_pred = {"request_id": reference, "y_true": y_true}
 
     ## get authentication string from session state
     authentication_string = st.session_state["authentication_string"]

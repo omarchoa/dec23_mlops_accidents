@@ -46,58 +46,53 @@ def call():
 
     ## get input data for fiche baac, rubrique caractéristiques
     st.header(body="Caractéristiques")
-    jour_accident = st.date_input(
-        "Jour de l'accident",
-        value=None,
-        min_value=None,
-        max_value=None,
-        key=None,
+    date_accident = st.date_input(
+        label="Date de l'accident",
+        value="today",
     )
-    heure_accident = st.slider(
-        "Heure de l'accident",
-        min_value=0,
-        max_value=23,
-        step=1,
+    heure_accident = st.time_input(
+        label="Heure de l'accident",
+        value="now",
+        step=3600,
     )
     lumiere = st.selectbox(
-        "Lumière",
+        label="Conditions d’éclairage dans lesquelles l'accident s'est produit",
         options=dicts.lum.keys(),
-        help="Conditions d’éclairage dans lesquelles l'accident s'est produit.",
     )
     departement = st.selectbox(
-        "Département",
+        label="Département",
         options=dicts.dep.values(),
         placeholder="Sélectionnez un département",
     )
     commune = st.selectbox(
-        "Commune",
+        label="Commune",
         options=[com for com in dicts.com.values() if com[:2] == departement[:2]],
         placeholder="Sélectionnez une commune",
     )
     localisation = st.selectbox(
-        "Localisation",
+        label="Localisation",
         options=dicts.agg_.keys(),
     )
     intersection = st.selectbox(
-        "Intersection",
+        label="Intersection",
         options=dicts.inter.keys(),
     )
     conditions_atmospheriques = st.selectbox(
-        "Conditions atmosphériques",
+        label="Conditions atmosphériques",
         options=dicts.atm.keys(),
     )
     type_collision = st.selectbox(
-        "Type de collision",
+        label="Type de collision",
         options=dicts.col.keys(),
     )
     latitude = st.number_input(
-        "Latitude",
+        label="Latitude",
         min_value=-90.0,
         max_value=90.0,
         step=0.001,
     )
     longitude = st.number_input(
-        "Longitude",
+        label="Longitude",
         min_value=-180.0,
         max_value=180.0,
         step=0.001,
@@ -106,23 +101,23 @@ def call():
     ## get input data for fiche baac, rubrique lieux
     st.header(body="Lieux")
     categorie_route = st.selectbox(
-        "Catégorie de route",
+        label="Catégorie de route",
         options=dicts.catr.keys(),
     )
     regime_circulation = st.selectbox(
-        "Régime de circulation",
+        label="Régime de circulation",
         options=dicts.circ.keys(),
     )
     etat_surface = st.selectbox(
-        "État de la surface",
+        label="État de la surface",
         options=dicts.surf.keys(),
     )
     situation_accident = st.selectbox(
-        "Situation de l’accident",
+        label="Situation de l’accident",
         options=dicts.situ.keys(),
     )
-    vitesse_max_autorisee = st.slider(
-        "Vitesse maximale autorisée",
+    vitesse_max_autorisee = st.number_input(
+        label="Vitesse maximale autorisée sur le lieu et au moment de l’accident",
         min_value=0,
         max_value=300,
         step=1,
@@ -131,19 +126,19 @@ def call():
     ## get input data for fiche baac, rubrique véhicules
     st.header(body="Véhicules")
     categorie_vehicule = st.selectbox(
-        "Catégorie du véhicule",
+        label="Catégorie du véhicule",
         options=dicts.catv.keys(),
     )
     obstacle_mobile = st.selectbox(
-        "Obstacle mobile heurté",
+        label="Obstacle mobile heurté",
         options=dicts.obsm.keys(),
     )
     type_motorisation = st.selectbox(
-        "Type de motorisation du véhicule",
+        label="Type de motorisation du véhicule",
         options=dicts.motor.keys(),
     )
     nombre_vehicules = st.number_input(
-        "Nombre de véhicules impliqués",
+        label="Nombre de véhicules impliqués",
         min_value=0,
         max_value=100,
         step=1,
@@ -151,33 +146,38 @@ def call():
 
     ## get input data for fiche baac, rubrique usagers
     st.header(body="Usagers")
-    place_occupée = st.slider(
-        "Place occupée dans le véhicule",
+    place_occupee = st.slider(
+        label="Place occupée dans le véhicule par l'usager au moment de l'accident",
         min_value=0,
         max_value=10,
         step=1,
-        help="10 – Piéton (non applicable)",
+        help="Le détail est donné par l’illustration ci-dessous. Pour un piéton, sélectionnez « 10 ».",
+    )
+    st.image(
+        image="/home/shield/frontend/frontend_images/place_occupee.png",
+        # caption="Illustration des places occupées dans un véhicule",
+        use_column_width=True,
     )
     categorie_usager = st.selectbox(
-        "Catégorie d'usager",
+        label="Catégorie d'usager",
         options=dicts.catu.keys(),
     )
     sexe_usager = st.selectbox(
-        "Sexe de l'usager",
+        label="Sexe de l'usager",
         options=dicts.sexe.keys(),
     )
-    age_victime = st.slider(
-        "Âge de la ou des victimes",
+    age_usager = st.number_input(
+        label="Âge de l'usager",
         min_value=0,
         max_value=100,
         step=1,
     )
     equipement_securite = st.selectbox(
-        "Équipement de sécurité",
+        label="Équipement de sécurité présent et utilisé",
         options=dicts.secu1.keys(),
     )
-    nombre_victimes = st.slider(
-        "Nombre de victimes",
+    nombre_usagers = st.number_input(
+        label="Nombre d'usagers impliqués",
         min_value=0,
         max_value=25,
         step=1,
@@ -194,12 +194,12 @@ def call():
 
         ## convert input data to format expected by api gateway and `prediction` microservice
         input_data_pred_call = {
-            "place": int(place_occupée),
+            "place": int(place_occupee),
             "catu": int(dicts.catu[categorie_usager]),
             "sexe": int(dicts.sexe[sexe_usager]),
             "secu1": float(dicts.secu1[equipement_securite]),
-            "year_acc": int(jour_accident.year),
-            "victim_age": int(age_victime),
+            "year_acc": int(date_accident.year),
+            "victim_age": int(age_usager),
             "catv": int(dicts.catv[categorie_vehicule]),
             "obsm": int(dicts.obsm[obstacle_mobile]),
             "motor": int(dicts.motor[type_motorisation]),
@@ -208,8 +208,8 @@ def call():
             "surf": int(dicts.surf[etat_surface]),
             "situ": int(dicts.situ[situation_accident]),
             "vma": int(vitesse_max_autorisee),
-            "jour": int(jour_accident.day),
-            "mois": int(jour_accident.month),
+            "jour": int(date_accident.day),
+            "mois": int(date_accident.month),
             "lum": int(dicts.lum[lumiere]),
             "dep": int(departement.split(" ")[0]),
             "com": int(commune.split(" ")[0]),
@@ -219,8 +219,8 @@ def call():
             "col": int(dicts.col[type_collision]),
             "lat": float(latitude),
             "long": float(longitude),
-            "hour": int(heure_accident),
-            "nb_victim": int(nombre_victimes),
+            "hour": int(heure_accident.hour),
+            "nb_victim": int(nombre_usagers),
             "nb_vehicules": int(nombre_vehicules),
         }
 
