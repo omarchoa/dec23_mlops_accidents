@@ -117,3 +117,12 @@ def logs():
         with open(log_file, "r") as file:
             file_content = file.read()
         st.code(file_content, language="csv")
+
+
+def logs_feature_importances(model: str = None):
+    log_file = "/home/shield/logs/train.jsonl"
+    df = pd.read_json(log_file, lines=True)
+    df_feature_importances = pd.json_normalize(df["feature_importances"])
+    if model == "current":
+        df_feature_importances = df_feature_importances.iloc[-1]
+    return df_feature_importances
