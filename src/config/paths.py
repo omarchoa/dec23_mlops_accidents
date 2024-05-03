@@ -22,7 +22,7 @@ SAMPLE_FEATURES = Path(DATA_SAMPLE, "sample_features.json")
 LOGS = Path(ROOT, "logs")
 LOGS_TRAIN = Path(LOGS, "train.jsonl")
 LOGS_PREDS_TEST = Path(LOGS, "preds_test.jsonl")
-LOGS_PREDS_UNLABELED = Path(LOGS, "preds_call.jsonl")
+LOGS_PREDS_CALL = Path(LOGS, "preds_call.jsonl")
 LOGS_PREDS_LABELED = Path(LOGS, "preds_labeled.jsonl")
 
 # model paths
@@ -33,6 +33,7 @@ MODEL_TRAINED = Path(MODEL_SAVES, "trained_model.joblib")
 SCRIPTS = Path(ROOT, "src")
 SCRIPTS_DOCKER = Path(SCRIPTS, "docker")
 SCRIPTS_MODELS_TRAIN = Path(SCRIPTS_DOCKER, "training", "training_script.py")
+SCRIPTS_MODELS_RETRAIN = Path(SCRIPTS_DOCKER, "training", "retraining_script.py")
 SCRIPTS_MODELS_PREDICT = Path(SCRIPTS_DOCKER, "prediction", "prediction_script.py")
 SCRIPTS_SCORING_LABEL_PREDICTION = Path(
     SCRIPTS_DOCKER, "scoring", "scoring_script_label_prediction.py"

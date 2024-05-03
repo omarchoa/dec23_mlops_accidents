@@ -70,7 +70,7 @@ if __name__ == "__main__":
     if os.environ.get("ENDPOINT") == "/test":
         log_path = paths.LOGS_PREDS_TEST
     elif os.environ.get("ENDPOINT") == "/call":
-        log_path = paths.LOGS_PREDS_UNLABELED
+        log_path = paths.LOGS_PREDS_CALL
     with open(log_path, "a") as file:
         file.write(log_json + "\n")
 
