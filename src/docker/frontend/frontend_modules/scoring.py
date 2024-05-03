@@ -33,14 +33,14 @@ def label_prediction():
         with st.status(label="Mise à jour de la prédiction en cours...") as status:
 
             #### send input data and authentication string to `scoring` microservice, /label-prediction endpoint via api gateway
-            response_label_prediction = requests.post(
+            response = requests.post(
                 url="http://gateway:8001/scoring/label-prediction",
                 json=input_data_label_pred,
                 headers=authentication_string,
             )
 
             #### send authentication string to `scoring` microservice, /update-f1-score endpoint via api gateway
-            response_update_f1_score = requests.get(
+            requests.get(
                 url="http://gateway:8001/scoring/update-f1-score",
                 headers=authentication_string,
             )
@@ -51,10 +51,10 @@ def label_prediction():
             )
 
         ### display `scoring` microservice, /label-prediction endpoint response
-        if "Merci" in response_label_prediction.text:
-            st.success(response_label_prediction.text)
-        elif "Veuillez" in response_label_prediction.text:
-            st.error(response_label_prediction.text)
+        if "Merci" in response.text:
+            st.success(response.text)
+        elif "Veuillez" in response.text:
+            st.error(response.text)
 
 
 # define scoring update f1 score function
@@ -120,10 +120,13 @@ def get_latest_f1_score():
     ## get f1 scores dataframe
     df = get_f1_scores_helper()
 
-    ## get last 2 f1 scores
+    ## compute delta between latest and second latest f1 scores
     latest_f1_score = df["f1-score"].iloc[-1]
-    second_latest_f1_score = df["f1-score"].iloc[-2]
-    delta = latest_f1_score - second_latest_f1_score
+    if df.shape[0] == 1:
+        delta = 0
+    else:
+        second_latest_f1_score = df["f1-score"].iloc[-2]
+        delta = latest_f1_score - second_latest_f1_score
 
     ## display latest f1 score
     st.metric(label="F1 score", value=latest_f1_score, delta=delta)

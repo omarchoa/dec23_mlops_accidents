@@ -17,3 +17,9 @@ curl -X 'GET' \
   'http://gateway:8001/training/train' \
   -H 'accept: application/json' \
   -H 'identification: robot:Autom@t'
+
+# save initial f1 score
+curl -X 'GET' \
+  'http://gateway:8001/scoring/update-f1-score' \
+  -H 'accept: application/json' \
+  -H 'identification: robot:Autom@t'

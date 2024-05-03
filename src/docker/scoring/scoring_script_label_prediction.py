@@ -1,5 +1,6 @@
 # imports
 import json
+import os
 import sys
 
 from config import paths
@@ -10,18 +11,26 @@ with open(input, "r") as file:
     pred_label = json.load(file)
 
 # load unlabeled predictions from logs
-with open(paths.LOGS_PREDS_UNLABELED, "r") as file:
-    preds_unlabeled = [json.loads(line) for line in file]
-with open(paths.LOGS_PREDS_TEST, "r") as file:
-    preds_test = [json.loads(line) for line in file]
-preds_unlabeled.extend(preds_test)
+if os.path.exists(paths.LOGS_PREDS_TEST):
+    with open(paths.LOGS_PREDS_TEST, "r") as file:
+        preds_test = [json.loads(line) for line in file]
+else:
+    preds_test = []
+
+if os.path.exists(paths.LOGS_PREDS_CALL):
+    with open(paths.LOGS_PREDS_CALL, "r") as file:
+        preds_call = [json.loads(line) for line in file]
+else:
+    preds_call = []
+
+preds_unlabeled = preds_test + preds_call
 
 # label corresponding prediction
 record_exists = "no"
 record_to_update = {}
 for record in preds_unlabeled:
     ## pull up record corresponding to input request_id
-    if int(record["request_id"]) == pred_label["request_id"]:
+    if str(record["request_id"]) == str(pred_label["request_id"]):
         record_exists = "yes"
         record_to_update = record
 
