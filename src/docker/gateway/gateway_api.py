@@ -1,7 +1,6 @@
 # >>>>>>>> IMPORTS <<<<<<<<
 
 import datetime
-import os
 
 import requests
 from fastapi import FastAPI, Header, HTTPException
@@ -228,21 +227,28 @@ async def training_status():
 @api.get(path="/training/train", tags=["MICROSERVICES - Training"], name="train model")
 async def training_train(identification=Header(None)):
     user = verify_rights(identification, 1)  # 1 for robot and administrator
-
-    ## get current timestamp
     start = datetime.datetime.now()
-
     response = requests.get(url="http://training:8004/train")
-
-    ## get current timestamp
     end = datetime.datetime.now()
-
-    ## save train information into csv file
     log(
         f"{start.strftime('%Y-%m-%d %H:%M:%S')}: {user}, training took {end - start}s",
         "training.csv",
     )
+    return return_request(response)
 
+
+@api.get(
+    path="/training/retrain", tags=["MICROSERVICES - Training"], name="retrain model"
+)
+async def training_retrain(identification=Header(None)):
+    user = verify_rights(identification, 1)  # 1 for robot and administrator
+    start = datetime.datetime.now()
+    response = requests.get(url="http://training:8004/retrain")
+    end = datetime.datetime.now()
+    log(
+        f"{start.strftime('%Y-%m-%d %H:%M:%S')}: {user}, retraining took {end - start}s",
+        "training.csv",
+    )
     return return_request(response)
 
 
