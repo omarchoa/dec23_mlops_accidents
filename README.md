@@ -157,7 +157,7 @@ _Example:_ [`fabricecharraud/shield`](https://hub.docker.com/r/fabricecharraud/s
 
 #### 5. Clone the app's GitHub repository
 
-[Instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) for a wide variety of methods are available in the official GitHub documentation, the simplest being the execution of the following command:
+[Instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) for a wide variety of methods are available in the official GitHub documentation, the simplest being the execution of the following command in the directory of your choice:
 
 ```shell
 git clone https://github.com/omarchoa/dec23_mlops_accidents.git
@@ -175,7 +175,7 @@ source ./sword/bin/activate
 
 #### 7. Install the app's global dependencies
 
-From the directory into which you cloned the GitHub repository in [Step 5](#5-clone-the-apps-github-repository), run the following command:
+Run the following command:
 
 ```shell
 pip install -r requirements.txt
@@ -192,7 +192,7 @@ mkdir ~/logs
 
 #### 9. Add the Docker Hub repository's name to your execution environment
 
-In the `src/docker` directory, open the `.env` file and replace the double-quoted string with the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
+In the `src/docker` subdirectory, open the `.env` file and replace the double-quoted string with the name of the Docker Hub repository that you created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app).
 
 _Example:_
 
@@ -202,7 +202,7 @@ DOCKER_HUB_REPO="fabricecharraud/shield"
 
 #### 10. Build the Docker container images and launch the app
 
-Go to the directory into which you cloned the GitHub repository in [Step 5](#5-clone-the-apps-github-repository) and run the following command:
+Go back to the directory into which you cloned the GitHub repository in [Step 5](#5-clone-the-apps-github-repository) and run the following command:
 
 ```shell
 docker-compose -f ./src/docker/docker-compose-dev.yml up
@@ -210,13 +210,10 @@ docker-compose -f ./src/docker/docker-compose-dev.yml up
 
 #### 11. Push the Docker container images to Docker Hub
 
-To upload the Docker container images to the Docker Hub repository created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app):
-- Open a new terminal window.
-- Go to the directory into which you cloned the GitHub repository in [Step 5](#5-clone-the-apps-github-repository).
-- Run the following command:
+To upload the Docker container images to the Docker Hub repository created in [Step 4](#4-create-a-docker-hub-repository-to-host-your-version-of-the-app), run the following command:
 
 ```shell
-python ./src/script/push_images.py
+docker-compose -f ./src/docker/docker-compose-dev.yml push
 ```
 
 [Back to instruction menu](#-getting-started-for-developers)
