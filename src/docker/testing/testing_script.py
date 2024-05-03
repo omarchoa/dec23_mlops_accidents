@@ -58,6 +58,14 @@ def test_users_status():
     print(message)
 
 
+def test_users_all():
+    time.sleep(delay)
+    response = requests.get(url="http://gateway:8001/users/all")
+    assert response.status_code == 200
+    message = "Test /users/all: PASSED"
+    print(message)
+
+
 def test_users_register():
     time.sleep(delay)
     response = requests.post(
@@ -120,6 +128,16 @@ def test_training_train():
     print(message)
 
 
+def test_training_retrain():
+    time.sleep(delay)
+    response = requests.get(
+        url="http://gateway:8001/training/retrain", headers=header_admin
+    )
+    assert response.status_code == 200
+    message = "Test /training/retrain: PASSED"
+    print(message)
+
+
 def test_prediction_status():
     time.sleep(delay)
     response = requests.get(url="http://gateway:8001/prediction/status")
@@ -162,7 +180,7 @@ def test_scoring_status():
 def test_scoring_label_prediction():
     time.sleep(delay)
 
-    with open(paths.LOGS_PREDS_UNLABELED, "r") as file:
+    with open(paths.LOGS_PREDS_CALL, "r") as file:
         line_string = file.readline().strip("\n")
         line_json = json.loads(line_string)
 
@@ -203,6 +221,17 @@ def test_scoring_get_f1_scores():
     )
     assert response.status_code == 200
     message = "Test /scoring/update_f1_score: PASSED"
+    print(message)
+
+
+def test_scoring_get_latest_f1_score():
+    time.sleep(delay)
+    response = requests.get(
+        url="http://gateway:8001/scoring/get-latest-f1-score",
+        headers=header_admin,
+    )
+    assert response.status_code == 200
+    message = "Test /scoring/get_latest_f1_score: PASSED"
     print(message)
 
 
