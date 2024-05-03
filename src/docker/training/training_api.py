@@ -6,7 +6,6 @@ from fastapi.responses import JSONResponse
 
 from config import paths
 
-
 # create fastapi instance
 api = FastAPI(title="SHIELD Microservice API - Training")
 
@@ -19,7 +18,7 @@ async def status():
 
 
 # endpoint - train
-@api.get(path="/train", tags=["PROCESS"], name="train model")
+@api.get(path="/train", tags=["PROCESSES"], name="train model")
 async def train():
     ## define shell command
     command = "python {script}".format(script=paths.SCRIPTS_MODELS_TRAIN)
@@ -28,4 +27,18 @@ async def train():
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
     ## return formatted result as json response
+    return JSONResponse(content=str(result.stdout).strip())
+
+
+# endpoint - retrain
+@api.get(path="/retrain", tags=["PROCESSES"], name="retrain model")
+async def retrain():
+    ## define shell command
+    command = "python {script}".format(script=paths.SCRIPTS_MODELS_RETRAIN)
+
+    ## run shell command and save output to result
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+
+    ## return formatted result as json response
+    # return JSONResponse(content=str(result.stdout).strip())
     return JSONResponse(content=str(result.stdout).strip())
