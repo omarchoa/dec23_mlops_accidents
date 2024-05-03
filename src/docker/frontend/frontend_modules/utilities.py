@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import requests
 import streamlit as st
@@ -57,27 +59,37 @@ def logs():
 
     # data-download-prep.jsonl
     with tab1:
+
         log_file = log_file_directory_01 + log_file_name_list[0] + ".jsonl"
-        df = pd.read_json(log_file, lines=True)
-        columns = ["request_id", "start_year", "end_year"]
-        for column in columns:
-            df[column] = df[column].astype(str)
-            df.style.format({column: lambda x: x.replace(",", "")})
-        st.dataframe(df)
+
+        if os.path.exists(log_file):
+            df = pd.read_json(log_file, lines=True)
+            columns = ["request_id", "start_year", "end_year"]
+            for column in columns:
+                df[column] = df[column].astype(str)
+                df.style.format({column: lambda x: x.replace(",", "")})
+            st.dataframe(df)
+        else:
+            st.info("Aucun journal disponible.")
 
     # train.jsonl
     with tab2:
+
         log_file = log_file_directory_01 + log_file_name_list[1] + ".jsonl"
-        df = pd.read_json(log_file, lines=True)
 
-        df_estimator_parameters = pd.json_normalize(df["estimator_parameters"])
-        df_feature_importances = pd.json_normalize(df["feature_importances"])
-        df = df.drop(columns=["estimator_parameters", "feature_importances"])
-        df = df.join(df_estimator_parameters.add_prefix("estim_param_"))
-        df = df.join(df_feature_importances.add_prefix("feat_impt_"))
+        if os.path.exists(log_file):
+            df = pd.read_json(log_file, lines=True)
 
-        df["request_id"] = df["request_id"].astype(str)
-        st.dataframe(df)
+            df_estimator_parameters = pd.json_normalize(df["estimator_parameters"])
+            df_feature_importances = pd.json_normalize(df["feature_importances"])
+            df = df.drop(columns=["estimator_parameters", "feature_importances"])
+            df = df.join(df_estimator_parameters.add_prefix("estim_param_"))
+            df = df.join(df_feature_importances.add_prefix("feat_impt_"))
+
+            df["request_id"] = df["request_id"].astype(str)
+            st.dataframe(df)
+        else:
+            st.info("Aucun journal disponible.")
 
     # preds_*.jsonl
     tabs = [tab3, tab4, tab5]
@@ -86,37 +98,53 @@ def logs():
     ]
     for tab, log_file in zip(tabs, log_files):
         with tab:
-            df = pd.read_json(log_file, lines=True)
+            if os.path.exists(log_file):
+                df = pd.read_json(log_file, lines=True)
 
-            df_input_features = pd.json_normalize(df["input_features"])
-            df = df.drop(columns=["input_features"])
-            df = df.join(df_input_features.add_prefix("input_feat_"))
+                df_input_features = pd.json_normalize(df["input_features"])
+                df = df.drop(columns=["input_features"])
+                df = df.join(df_input_features.add_prefix("input_feat_"))
 
-            columns = ["request_id", "input_feat_year_acc", "input_feat_com"]
-            for column in columns:
-                df[column] = df[column].astype(str)
-                df.style.format({column: lambda x: x.replace(",", "")})
+                columns = ["request_id", "input_feat_year_acc", "input_feat_com"]
+                for column in columns:
+                    df[column] = df[column].astype(str)
+                    df.style.format({column: lambda x: x.replace(",", "")})
 
-            st.dataframe(df)
+                st.dataframe(df)
+            else:
+                st.info("Aucun journal disponible.")
 
     # f1 scores
     with tab6:
         df = scoring.get_f1_scores_helper()
-        st.dataframe(df)
+        if df.empty:
+            st.info("Aucun journal disponible.")
+        else:
+            st.dataframe(df)
 
     # crontab.csv
     with tab7:
+
         log_file = log_file_directory_02 + log_file_name_list[6] + ".csv"
-        with open(log_file, "r") as file:
-            file_content = file.read()
-        st.code(file_content, language="csv")
+
+        if os.path.exists(log_file):
+            with open(log_file, "r") as file:
+                file_content = file.read()
+            st.code(file_content, language="csv")
+        else:
+            st.info("Aucun journal disponible.")
 
     # training.csv
     with tab8:
+
         log_file = log_file_directory_02 + "training" + ".csv"
-        with open(log_file, "r") as file:
-            file_content = file.read()
-        st.code(file_content, language="csv")
+
+        if os.path.exists(log_file):
+            with open(log_file, "r") as file:
+                file_content = file.read()
+            st.code(file_content, language="csv")
+        else:
+            st.info("Aucun journal disponible.")
 
 
 def logs_feature_importances(model: str = None):
