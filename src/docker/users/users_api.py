@@ -27,16 +27,6 @@ mariadb_engine = create_engine(
 )  # echo is for debug mode
 
 
-# define function to get all users from database
-def get_users_db():
-    with mariadb_engine.connect() as connection:
-        results = connection.execute(text("SELECT * FROM users_table;"))
-        users_db = {
-            login: {"pwd": pwd, "admin": admin} for login, pwd, admin in results
-        }
-    return users_db
-
-
 # create fastapi instance
 api = FastAPI(title="SHIELD Microservice API - Users")
 
@@ -55,7 +45,13 @@ async def status():
     name="get all users",
 )
 async def all():
-    return get_users_db()
+# define function to get all users from database
+    with mariadb_engine.connect() as connection:
+        results = connection.execute(text("SELECT * FROM users_table;"))
+        users_db = {
+            login: {"pwd": pwd, "admin": admin} for login, pwd, admin in results
+        }
+    return users_db
 
 
 # endpoint - register

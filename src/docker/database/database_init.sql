@@ -12,6 +12,15 @@ CREATE TABLE IF NOT EXISTS f1_score_table (
    f1_score FLOAT(17,16)
 );
 
+CREATE TABLE IF NOT EXISTS lineage_table (
+   Date TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   Debut VARCHAR(5),
+   Fin VARCHAR(5),
+   Duree VARCHAR(10),
+   User VARCHAR(25),
+   Commentaire VARCHAR(30)
+);
+
 INSERT INTO users_table (login, password, admin)
 VALUES
 ('admin', '4dmin', '2'),

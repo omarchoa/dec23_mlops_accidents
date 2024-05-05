@@ -1,11 +1,12 @@
 # >>>>>>>> IMPORTS <<<<<<<<
-
 import datetime
-
-import requests
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict
+import requests
+from sqlalchemy import text
+from sqlalchemy.engine import create_engine
+import time
 
 # >>>>>>>> CLASS DECLARATIONS <<<<<<<<
 
@@ -122,9 +123,16 @@ def log(data, logname):
 
 
 # >>>>>>>> API GATEWAY DECLARATION <<<<<<<<
-
-
 api = FastAPI(title="🛡️ SHIELD API Gateway")
+
+
+# define database connection
+SQLALCHEMY_DATABASE_URI = (
+    "mysql+pymysql://user:password@database:3306/shield_project_db"
+)
+mariadb_engine = create_engine(
+    SQLALCHEMY_DATABASE_URI, echo=False
+)  # echo is for debug mode
 
 
 # >>>>>>>> API GATEWAY STATUS CHECK <<<<<<<<
@@ -202,12 +210,25 @@ async def data_download_prep_status():
     name="download and prepare data",
 )
 async def data_download_prep_run(year_range: YearRange, identification=Header(None)):
-    verify_rights(identification, 1)  # 1 for robot and administrator
+    user = verify_rights(identification, 1)  # 1 for robot and administrator
     payload = year_range.model_dump()
+    start = datetime.datetime.now()
     response = requests.post(
         url="http://data-download-prep:8003/run",
         json=payload,
     )
+    end = datetime.datetime.now()
+    duration = end - start
+    try:
+        ## save data in Database lineage
+        with mariadb_engine.connect() as connection:
+            connection.execute(
+                text(f'INSERT INTO lineage_table (Debut, Fin, Duree, User, Commentaire) VALUES ("{str(year_range.start_year)}", "{str(year_range.end_year)}", "{str(datetime.timedelta(duration.days, duration.seconds))}", "{user}", "téléchargement des données");')
+            )
+            connection.execute(text("COMMIT;"))
+    except BaseException as err:
+        print("WARN: data download prep not saved in lineage table")
+        print(f"WARN:{str(err)}")
     return return_request(response)
 
 
@@ -230,10 +251,23 @@ async def training_train(identification=Header(None)):
     start = datetime.datetime.now()
     response = requests.get(url="http://training:8004/train")
     end = datetime.datetime.now()
+    duration = end - start
     log(
         f"{start.strftime('%Y-%m-%d %H:%M:%S')}: {user}, training took {end - start}s",
         "training.csv",
     )
+
+    ## save data in Database lineage
+    try:
+        with mariadb_engine.connect() as connection:
+            connection.execute(
+                text(f'INSERT INTO lineage_table (Debut, Fin, Duree, User, Commentaire) VALUES ("-", "-", "{str(datetime.timedelta(duration.days, duration.seconds))}", "{user}", "entraînement du modèle");')
+            )
+            connection.execute(text("COMMIT;"))
+    except BaseException as err:
+        print("WARN: data of train not saved in lineage table")
+        print(f"WARN:{str(err)}")
+
     return return_request(response)
 
 
@@ -245,10 +279,24 @@ async def training_retrain(identification=Header(None)):
     start = datetime.datetime.now()
     response = requests.get(url="http://training:8004/retrain")
     end = datetime.datetime.now()
+    duration = end - start
     log(
         f"{start.strftime('%Y-%m-%d %H:%M:%S')}: {user}, retraining took {end - start}s",
         "training.csv",
     )
+
+    ## save data in Database lineage
+    try:
+        with mariadb_engine.connect() as connection:
+            connection.execute(
+                text(f'INSERT INTO lineage_table (Debut, Fin, Duree, User, Commentaire) VALUES ("-", "-", "{str(datetime.timedelta(duration.days, duration.seconds))}", "{user}", "réentraînement du modèle");')
+            )
+            connection.execute(text("COMMIT;"))
+    except BaseException as err:
+        print("WARN: data of retrain not saved in lineage table")
+        print(f"WARN:{str(err)}")
+
+
     return return_request(response)
 
 
@@ -370,3 +418,22 @@ async def scoring_get_latest_f1_score(identification=Header(None)):
 
     ## return latest f1-score
     return f1_score
+
+
+# >>>>>>>> LINEAGE <<<<<<<<
+
+@api.get(
+        path="/lineage/all",
+        tags=["MICROSERVICES -  Lineage"],
+        name="get all lineage logs"
+)
+async def lineage_all(identification=Header(None)):
+    user = verify_rights(identification, 1)  # 1 for robot and administrator
+# endpoint - all
+
+    with mariadb_engine.connect() as connection:
+        results = connection.execute(text("SELECT * FROM lineage_table;"))
+        lineage_db = {
+            time_stamp: {"Debut": start_year, "Fin": end_year, "Duree": delay, "User": user, "Commentaire": comment} for time_stamp, start_year, end_year, delay, user, comment in results
+        }
+    return lineage_db

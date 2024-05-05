@@ -1,8 +1,7 @@
 # imports
-import subprocess
-
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+import subprocess
 
 from config import paths
 

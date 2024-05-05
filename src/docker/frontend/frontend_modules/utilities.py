@@ -154,3 +154,24 @@ def logs_feature_importances(model: str = None):
     if model == "current":
         df_feature_importances = df_feature_importances.iloc[-1]
     return df_feature_importances
+
+
+def lineage():
+    st.title("Linéage")
+    authentication_string = st.session_state["authentication_string"]
+
+    ## get all lineage data from `database` microservice via `data-download-prep` microservice and api gateway
+    response = requests.get(
+        url="http://gateway:8001/lineage/all",
+        headers=authentication_string
+    )
+    lineage_db = response.json()
+
+    ## convert lineage_db into pandas dataframe
+    df = pd.DataFrame(lineage_db).T
+
+    ## rename index colum
+    df.index.name = "Date"
+
+    ## display lineage table
+    st.dataframe(df)

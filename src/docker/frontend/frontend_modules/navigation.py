@@ -32,6 +32,10 @@ def button_actions():
     if st.session_state["page"] == "logs":
         utilities.logs()
 
+    ## lineage
+    if st.session_state["page"] == "lineage":
+        utilities.lineage()
+
     ## users all
     if st.session_state["page"] == "users_all":
         users.all()

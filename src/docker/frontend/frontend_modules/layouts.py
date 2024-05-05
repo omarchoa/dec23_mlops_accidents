@@ -23,6 +23,8 @@ def admin():
         st.session_state["page"] = "status"
     if st.sidebar.button(label="Journaux"):
         st.session_state["page"] = "logs"
+    if st.sidebar.button(label="Linéage"):
+        st.session_state["page"] = "lineage"
 
     ## display users section
     st.sidebar.header(body="Utilisateurs")

@@ -1,21 +1,19 @@
 # imports
 import datetime
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 import json
+from pydantic import BaseModel
 import random
 import string
 import time
 
 import containerdata
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
-
 
 # define input data model for endpoint /run
 class YearRange(BaseModel):
     start_year: int
     end_year: int
-
 
 # create fastapi instance
 api = FastAPI(title="SHIELD Microservice API - Data-Download-Prep")
